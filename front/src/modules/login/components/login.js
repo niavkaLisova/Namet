@@ -3,6 +3,7 @@ import React from 'react';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import { Translate } from 'react-localize-redux';
 
 class Login extends React.Component {
   render() {
@@ -27,7 +28,7 @@ class Login extends React.Component {
           />
           <div className="button-holder">
             <RaisedButton
-              label="Login"
+              label={<Translate id="login">login</Translate>}
               primary={true}
               fullWidth={true}
               onClick={onLogin}

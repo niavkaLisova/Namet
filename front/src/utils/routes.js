@@ -14,10 +14,10 @@ export default (
 		<Route exact path="/" component={Welcome} />
 		<Route path="/register" component={RegisterContainer} />
 		<Route path="/login" component={LoginContainer} />
-		<Route component={DashboardContainer} >
-       		<Route path='user' component={UserContainer} />
-	       	<Route path='payment' component={PaymentContainer} />
-	    </Route>
+		<DashboardContainer>
+   			<Route path='/user' component={UserContainer} />
+     	   	<Route path='/payment' component={PaymentContainer} />
+     	</DashboardContainer>
 	</Switch>
 );
 

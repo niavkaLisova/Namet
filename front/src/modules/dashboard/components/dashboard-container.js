@@ -31,7 +31,7 @@ class DashboardContainer extends React.Component {
       <MuiThemeProvider>
         <div>
           <AppBar
-            title="Your App"
+            title="Намет"
             iconElementRight={
               <FlatButton
                 label="Logout"
@@ -42,7 +42,6 @@ class DashboardContainer extends React.Component {
             onLeftIconButtonClick={self.handleToggle.bind(self)}
           />
           <div className="limiter">
-          {console.log(this.props.children)}
             {this.props.children}
           </div>
           <LeftMenu

@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import TopMenu from '../../dashboard/components/top-menu'
 import * as LoginActions from '../actions/login-actions'
 import Login from './login'
 
@@ -35,13 +36,16 @@ class LoginContainer extends React.Component {
 
   render() {
     return (
-      <Login
-        username={this.state.username}
-        password={this.state.password}
-        onChangeUsername={this.onChangeUsername.bind(this)}
-        onChangePassword={this.onChangePassword.bind(this)}
-        onLogin={this.onLogin.bind(this)}
-      />
+      <div>
+        <TopMenu></TopMenu>
+        <Login
+          username={this.state.username}
+          password={this.state.password}
+          onChangeUsername={this.onChangeUsername.bind(this)}
+          onChangePassword={this.onChangePassword.bind(this)}
+          onLogin={this.onLogin.bind(this)}
+        />
+      </div>
     )
   }
 };
