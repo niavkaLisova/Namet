@@ -15,12 +15,21 @@ var mongoose = require('mongoose');
 mongoose.Promise = require('bluebird')
 mongoose.connect(config.database);
 
-app.listen(process.env.PORT || 3000, () => {
+var server = app.listen(process.env.PORT || 3000, () => {
   console.log('listening on 3000')
 })
 
-// app.use('/', function(req, res) {
-// 	res.sendFile(path.join(__dirname, '../front/dist/index.html'));
-// });
+var io = require('socket.io')(server);
 
+io.on('connection', function(socket){    
+	socket.on('message', function(msg){
+	    socket.emit('message', msg);
+	    socket.broadcast.emit('broadcast', msg);
+	});
+
+    socket.on('disconnect', function(){
+        socket.emit('userList', 'no');
+        socket.broadcast.emit('userList', 'no');
+    });
+});
 app.use('/api', userRoutes);

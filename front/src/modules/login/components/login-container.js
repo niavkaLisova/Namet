@@ -5,6 +5,12 @@ import TopMenu from '../../dashboard/components/top-menu'
 import * as LoginActions from '../actions/login-actions'
 import Login from './login'
 
+@connect((store, ownProps) => {
+  console.log(store)
+    return {
+      
+    };
+})
 class LoginContainer extends React.Component {
   constructor(props) {
     super(props);
@@ -28,10 +34,10 @@ class LoginContainer extends React.Component {
   }
 
   onLogin() {
-    this.props.actions.login(
+    this.props.dispatch(LoginActions.login(
       this.state.username,
       this.state.password
-    )
+    ))
   }
 
   render() {
@@ -50,10 +56,4 @@ class LoginContainer extends React.Component {
   }
 };
 
-function mapDispatchToProps(dispatch) {
-  return {
-    actions: bindActionCreators(LoginActions, dispatch)
-  };
-}
-
-export default connect(null, mapDispatchToProps)(LoginContainer);
+export default LoginContainer;

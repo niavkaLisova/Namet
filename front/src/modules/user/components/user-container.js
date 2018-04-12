@@ -5,11 +5,8 @@ import Drawer from 'material-ui/Drawer';
 import AppBar from 'material-ui/AppBar';
 import RaisedButton from 'material-ui/RaisedButton';
 
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import * as UserActions from '../actions/user-actions';
 import appHistory from '../../../utils/app-history';
-
 
 import {List, ListItem} from 'material-ui/List';
 import ActionGrade from 'material-ui/svg-icons/action/grade';
@@ -23,21 +20,29 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import UserFormContainer from './user-form-container';
 
-class UserContainer extends React.Component {
+import { connect } from "react-redux"
+import { setActiveLanguage } from 'react-localize-redux';
+
+@connect((store, ownProps) => {
+    return {
+      user: store.user
+    };
+})
+export default class UserContainer extends React.Component {
   componentDidMount() {
-    this.props.actions.getUser();
+    this.props.dispatch(UserActions.getUser());
   }
 
   updateUser() {
-    this.props.actions.updateUser(this.props.user);
+    this.props.dispatch(UserActions.updateUser(this.props.user));
   }
 
   onChangeEmail(event) {
-    this.props.actions.userDataUpdated({email: event.target.value});
+    this.props.dispatch(UserActions.userDataUpdated({email: event.target.value}));
   }
 
   onChangeSurname(event) {
-    this.props.actions.userDataUpdated({surname: event.target.value});
+    this.props.dispatch(UserActions.userDataUpdated({surname: event.target.value}));
   }
 
   render() {
@@ -57,20 +62,3 @@ class UserContainer extends React.Component {
   }
 };
 
-UserContainer.propTypes ={
-  actions: PropTypes.object.isRequired,
-};
-
-function mapStateToProps(state) {
-  return {
-    user: state.user
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    actions: bindActionCreators(UserActions, dispatch)
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(UserContainer);

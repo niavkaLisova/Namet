@@ -11,8 +11,19 @@ import ContentDrafts from 'material-ui/svg-icons/content/drafts';
 import ContentSend from 'material-ui/svg-icons/content/send';
 import Subheader from 'material-ui/Subheader';
 import appHistory from '../../../utils/app-history'
+import IconMenu from 'material-ui/IconMenu';
+import IconButton from 'material-ui/IconButton';
+import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
+import MenuItem from 'material-ui/MenuItem';
+// import { connect } from "react-redux"
+// import { setActiveLanguage } from 'react-localize-redux';
 
-class LeftMenu extends React.Component {
+// @connect((store, ownProps) => {
+//     return {
+//       languages: store.locale.languages
+//     };
+// })
+export default class LeftMenu extends React.Component {
 
   goToPayment() {
     appHistory.push('/payment');
@@ -31,6 +42,7 @@ class LeftMenu extends React.Component {
             onLeftIconButtonClick={this.props.handleToggle}
           />
           <List>
+          
             <Subheader>Menu description</Subheader>
             <ListItem primaryText="User" leftIcon={<ContentSend />} onClick={this.goToUser}/>
             <ListItem primaryText="Payment" leftIcon={<ContentDrafts />} onClick={this.goToPayment}/>
@@ -40,5 +52,3 @@ class LeftMenu extends React.Component {
     )
   }
 };
-
-export default LeftMenu;

@@ -13,6 +13,12 @@ const style = {
   //margin: 12
 };
 
+@connect((store, ownProps) => {
+  console.log(store)
+    return {
+      
+    };
+})
 class RegisterContainer extends React.Component {
   constructor(props) {
     super(props);
@@ -43,11 +49,11 @@ class RegisterContainer extends React.Component {
   }
 
   onRegister() {
-    this.props.actions.register(
+    this.props.dispatch(RegisterActions.register(
       this.state.username,
       this.state.password,
       this.state.email
-    )
+    ))
   }
 
   render() {
@@ -63,10 +69,4 @@ class RegisterContainer extends React.Component {
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    actions: bindActionCreators(RegisterActions, dispatch)
-  };
-}
-
-export default connect(null, mapDispatchToProps)(RegisterContainer);
+export default RegisterContainer;

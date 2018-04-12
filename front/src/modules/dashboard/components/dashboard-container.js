@@ -4,9 +4,15 @@ import FlatButton from 'material-ui/FlatButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import LeftMenu from './left-menu'
 import appHistory from '../../../utils/app-history'
-import { connect } from 'react-redux';
 import * as NotificationActions from '../../notification/actions/notification-actions'
+import { connect } from "react-redux"
 
+@connect((store, ownProps) => {
+  console.log(store)
+    return {
+      
+    };
+})
 class DashboardContainer extends React.Component {
   constructor(props) {
     super(props);
@@ -20,7 +26,7 @@ class DashboardContainer extends React.Component {
 
   onLogout() {
     localStorage.removeItem('token');
-    NotificationActions.show('Logged out!')(this.props.dispatch);
+    this.props.dispatch(NotificationActions.show('Logged out!'));
     appHistory.push('/');
   }
 
@@ -54,10 +60,4 @@ class DashboardContainer extends React.Component {
   }
 };
 
-function mapDispatchToProps(dispatch) {
-  return {
-    actions: bindActionCreators(NotificationActions, dispatch)
-  };
-}
-
-export default connect()(DashboardContainer);
+export default DashboardContainer;

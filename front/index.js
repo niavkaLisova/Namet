@@ -9,7 +9,12 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import appHistory from './src/utils/app-history';
 import routes from './src/utils/routes';
 import configureStore from './src/utils/configureStore';
+import { SocketProvider } from 'socket.io-react';
+import io from 'socket.io-client';
 //import injectTapEventPlugin from 'react-tap-event-plugin';
+
+var socket = io('http://localhost:3000');
+socket.on('message', msg => console.log(msg));
 
 import Snackbar from './src/modules/notification/components/snackbar'
 
@@ -21,7 +26,9 @@ ReactDOM.render(
     <Provider store={store}>
       <Router history={appHistory}>
       	<MuiThemeProvider>
-        	{routes}
+          <SocketProvider socket={socket}>
+        	 {routes}
+          </SocketProvider>
         </MuiThemeProvider>
       </Router>
     </Provider>
