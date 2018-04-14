@@ -1,9 +1,8 @@
 const express = require('express')
 const bcrypt = require('bcrypt')
 const jwt    = require('jsonwebtoken')
-const _ = require('lodash');
-const bson = require('bson');
-
+const _ = require('lodash')
+const bson = require('bson')
 const User = require('../models/user')
 const config = require('../config/config')
 

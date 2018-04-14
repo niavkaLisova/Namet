@@ -6,6 +6,7 @@ var path = require('path');
 const config = require('./config/config.js')
 const allowCrossDomain = require('./headers/cross-domain')
 const userRoutes = require('./controller/user')
+const chatRoutes = require('./controller/chat')
 
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
@@ -33,3 +34,4 @@ io.on('connection', function(socket){
     });
 });
 app.use('/api', userRoutes);
+app.use('/chat', chatRoutes);
