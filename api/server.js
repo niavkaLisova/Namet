@@ -25,7 +25,7 @@ var io = require('socket.io')(server);
 io.on('connection', function(socket){    
 	socket.on('message', function(msg){
 	    socket.emit('message', msg);
-	    socket.broadcast.emit('broadcast', msg);
+	    socket.broadcast.emit('message', msg);
 	});
 
     socket.on('disconnect', function(){

@@ -7,7 +7,7 @@ import translations from '../translate/vocabulary';
 export default function configureStore(initialState) {
 	const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
 	const store = createStoreWithMiddleware(rootReducer, initialState);
-	const languages = ['en', 'pl'];
+	const languages = ['en', 'pl', 'ua'];
 
 	store.dispatch(initialize(languages, { defaultLanguage: 'en' }));
 

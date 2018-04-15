@@ -8,7 +8,9 @@ var messageSchema = Schema({
     ref: 'Group',
   },
   text: String,
+  author: String,
   user: Object,
+  read: false,
   time: Date
 }, { timestamps: true });
 

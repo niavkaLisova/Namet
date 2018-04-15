@@ -15,14 +15,7 @@ import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton';
 import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
 import MenuItem from 'material-ui/MenuItem';
-// import { connect } from "react-redux"
-// import { setActiveLanguage } from 'react-localize-redux';
 
-// @connect((store, ownProps) => {
-//     return {
-//       languages: store.locale.languages
-//     };
-// })
 export default class LeftMenu extends React.Component {
 
   goToPayment() {
@@ -31,6 +24,10 @@ export default class LeftMenu extends React.Component {
 
   goToUser() {
     appHistory.push('/user');
+  }
+
+  goToChat() {
+    appHistory.push('/chat');
   }
 
   render() {
@@ -46,6 +43,7 @@ export default class LeftMenu extends React.Component {
             <Subheader>Menu description</Subheader>
             <ListItem primaryText="User" leftIcon={<ContentSend />} onClick={this.goToUser}/>
             <ListItem primaryText="Payment" leftIcon={<ContentDrafts />} onClick={this.goToPayment}/>
+            <ListItem primaryText="Chat" leftIcon={<ContentDrafts />} onClick={this.goToChat}/>
           </List>
         </Drawer>
       </MuiThemeProvider>

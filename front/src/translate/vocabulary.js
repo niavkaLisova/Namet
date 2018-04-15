@@ -1,7 +1,7 @@
 const translations = {
-	login: ['Login', 'Zaloguj się'],
-	register: ['Register', 'Zarejestruj się'],
-	update: ['Update', 'Odśwież']
+	login: ['Login', 'Zaloguj się', "Залогуйся"],
+	register: ['Register', 'Zarejestruj się', "Зареєструйся"],
+	update: ['Update', 'Odśwież', 'Оновити']
 };
 
 export default translations;

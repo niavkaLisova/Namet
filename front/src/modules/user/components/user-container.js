@@ -29,10 +29,6 @@ import { setActiveLanguage } from 'react-localize-redux';
     };
 })
 export default class UserContainer extends React.Component {
-  componentDidMount() {
-    this.props.dispatch(UserActions.getUser());
-  }
-
   updateUser() {
     this.props.dispatch(UserActions.updateUser(this.props.user));
   }

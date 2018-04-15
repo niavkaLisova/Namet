@@ -50,22 +50,31 @@ chatRoutes.post('/room/new', function(req, res) {
 	    });	
 });
 
+chatRoutes.get('/room/:id', function(req, res) {
+	Room
+	    .findById(req.params.id)
+	    .exec()
+	    .then(function(room) {
+	    	res.json(room);
+	    });
+});
+
 chatRoutes.post('/message/new', async function(req, res) {
-	const { roomId, text, user } = req.body;
+	const { roomId, text, author, user } = req.body;
 
 	try {
-    	const { message } = Room.addMessage(roomId, { text, user });
-    	return res.json(message );
+    	const { message } = await Room.addMessage(roomId, { text, author, user });
+    	return res.json(message);
   	} catch (e) {
     	return res.status(400).json({ error: true, message: 'Message cannot be created!' });
   	}
 });
 
-chatRoutes.post('/message/all', async function(req, res) {
-	const { roomId } = req.body;
+chatRoutes.post('/message/all', function(req, res) {
+	const { roomId, user } = req.body;
 
-	Room
-	    .find({ "_id": roomId })
+	Message
+	    .find({ "roomID": roomId, 'user': user })
 	    .exec()
 	    .then(function(messages) {
 	    	res.json(messages);
