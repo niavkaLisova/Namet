@@ -14,7 +14,6 @@ import io from 'socket.io-client';
 //import injectTapEventPlugin from 'react-tap-event-plugin';
 
 var socket = io('http://localhost:3000');
-socket.on('message', msg => console.log(msg));
 
 import Snackbar from './src/modules/notification/components/snackbar'
 

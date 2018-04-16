@@ -12,17 +12,10 @@ const style = {
 };
 
 class Welcome extends React.Component {
-  sendMessage() {
-    this.props.socket.emit('message', 'Hello world!');
-  }
-
   render() {
     return (
       <div>
         <TopMenu></TopMenu>
-          <button onClick={this.sendMessage.bind(this)}>
-        Send!
-    </button>
         <MuiThemeProvider> 
          <RaisedButton
             label={<Translate id="login">login</Translate>}

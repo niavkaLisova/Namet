@@ -11,7 +11,8 @@ import { socketConnect } from 'socket.io-react'
       chat: store.chat.room,
       roomId: store.chat.roomId,
       between: store.chat.between,
-      messages: store.chat.messages
+      messages: store.chat.messages,
+      betweenName: store.chat.betweenName
     };
 })
 class MessageContainer extends React.Component {
@@ -20,9 +21,16 @@ class MessageContainer extends React.Component {
 
 	    this.state = {
 	    	message: '',
-	    	roomId: ''
-	    };
-	    
+	    	roomId: '',
+	    	id: ''
+	    }; 
+
+	    this.props.socket.on('message', (msg) => {
+			console.log(msg.user, msg.user == localStorage.getItem('userId'))
+			if(msg.user == localStorage.getItem('userId')) {
+				this.props.dispatch(ChatActions.messageAdd(msg));
+			}
+		});  
 	}
 
 	onChangeMessage(event) {
@@ -48,7 +56,7 @@ class MessageContainer extends React.Component {
 					return (
 						<Card key={msg._id}>
 						    <CardHeader
-						      title={msg.createdAt}
+						      title={this.props.betweenName.map((user) => (user.id == msg.author)? user.name: '')}
 						      subtitle={msg.text}
 						      avatar=""
 						    />

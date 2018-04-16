@@ -101,7 +101,8 @@ userRoutes.get('/users/:id', function(req, res) {
           res.json({
             name: user.name,
             email: user.email,
-            surname: user.surname
+            surname: user.surname,
+            id: user._id
           })
         }, config.delay);
     });
@@ -127,6 +128,19 @@ userRoutes.get('/users', function(req, res) {
   User.find({}, function(err, users) {
     res.json(users);
   });
+});
+
+userRoutes.post('/user/find', function(req, res) {
+  const { id, search } = req.body;
+  const regexp = new RegExp("^"+ search);
+  User
+      .find({ "name": regexp })
+      .where('_id').ne(id)
+      .limit(10)
+      .exec()
+      .then(function(messages) {
+        res.json(messages);
+      });
 });
 
 module.exports = userRoutes;

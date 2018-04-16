@@ -22,16 +22,7 @@ var server = app.listen(process.env.PORT || 3000, () => {
 
 var io = require('socket.io')(server);
 
-io.on('connection', function(socket){    
-	socket.on('message', function(msg){
-	    socket.emit('message', msg);
-	    socket.broadcast.emit('message', msg);
-	});
+const socketEvents = require('./socketEvents')(io);
 
-    socket.on('disconnect', function(){
-        socket.emit('userList', 'no');
-        socket.broadcast.emit('userList', 'no');
-    });
-});
 app.use('/api', userRoutes);
 app.use('/chat', chatRoutes);

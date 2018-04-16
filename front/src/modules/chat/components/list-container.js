@@ -8,6 +8,7 @@ import {List, ListItem} from 'material-ui/List'
 import Subheader from 'material-ui/Subheader'
 import Divider from 'material-ui/Divider'
 import * as ChatActions from '../actions/chat-actions'
+import { socketConnect } from 'socket.io-react'
 import { connect } from "react-redux"
 
 @connect((store, ownProps) => {
@@ -17,7 +18,7 @@ import { connect } from "react-redux"
       beetwen: store.chat.beetwen
     };
 })
-export default class ListContainer extends React.Component {
+class ListContainer extends React.Component {
 	constructor(props) {
     	super(props);
 
@@ -40,6 +41,7 @@ export default class ListContainer extends React.Component {
 	    this.setState({
 	      receiver: event.target.value
 	    });
+	    this.props.dispatch(ChatActions.findUser(event.target.value));
 	}
 
 	newChat() {
@@ -51,8 +53,13 @@ export default class ListContainer extends React.Component {
 	}
 
 	roomIdUpdated(id) {
+		if(this.props.roomId != '') {
+			this.props.socket.emit('leave room', this.props.roomId);
+		}
 		this.props.dispatch(ChatActions.beetwenUpdated(id));
-		this.props.dispatch(ChatActions.getMessages(id))
+		//this.props.dispatch(ChatActions.getMessages(id))
+		this.props.dispatch(ChatActions.getMessagesRoom(id))
+		this.props.socket.emit('join room', id)
 	}
 
 	render() {
@@ -78,8 +85,7 @@ export default class ListContainer extends React.Component {
 					      onClick={() => this.roomIdUpdated(this.props.chat[key]._id)}
 					      key={key}
 					      primaryText={this.props.chat[key].name}
-					      leftAvatar={<Avatar src=""
-					      />}
+					      
 				    />
 					})}
 			    </List>
@@ -103,3 +109,5 @@ export default class ListContainer extends React.Component {
 		)
 	}
 }
+
+export default socketConnect(ListContainer);

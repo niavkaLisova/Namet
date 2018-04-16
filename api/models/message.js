@@ -5,7 +5,7 @@ var ObjectId = Schema.Types.ObjectId;
 var messageSchema = Schema({
   roomID: {
     type: ObjectId,
-    ref: 'Group',
+    ref: 'Room',
   },
   text: String,
   author: String,

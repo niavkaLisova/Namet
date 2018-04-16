@@ -81,5 +81,23 @@ chatRoutes.post('/message/all', function(req, res) {
 	    });
 });
 
+chatRoutes.post('/message/room', async function(req, res) {
+	const { roomId, user } = req.body;
+
+	const room = await Room.findById(roomId);
+
+	if (!room) {
+		return res.json({ error: true, message: 'Room not exist' });
+  	}
+
+  	try {
+    	return res.json({
+      		error: false,
+     		message: await Message.find({ roomID: roomId, user: user }).populate('room'),
+    	});
+  	} catch (e) {
+    	return res.json({ error: true, message: 'Cannot fetch message' });
+  	}
+});
 
 module.exports = chatRoutes;

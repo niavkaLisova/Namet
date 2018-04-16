@@ -9,7 +9,6 @@ import * as NotificationActions from '../../notification/actions/notification-ac
 import { connect } from "react-redux"
 
 @connect((store, ownProps) => {
-  console.log(store)
     return {
       user: store.user
     };
