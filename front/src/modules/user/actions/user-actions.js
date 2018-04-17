@@ -44,6 +44,6 @@ export function userUpdated(data) {
   return {type: 'USER_UPDATED', data};
 }
 
-export function userGet(user) {
-  return {type: 'USER_GET', user: user};
+export function userGet(data) {
+  return {type: 'USER_GET', data};
 }

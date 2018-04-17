@@ -72,7 +72,8 @@ userRoutes.post('/register', function(req, res) {
             surname: surname,
             email: email,
             password: hash,
-            admin: false
+            admin: false,
+            online: []
           });
 
           user.save(function(err) {
@@ -102,7 +103,8 @@ userRoutes.get('/users/:id', function(req, res) {
             name: user.name,
             email: user.email,
             surname: user.surname,
-            id: user._id
+            id: user._id,
+            online: user.online
           })
         }, config.delay);
     });
@@ -118,9 +120,24 @@ userRoutes.post('/users/:id', function(req, res) {
   User.update({ _id: req.params.id }, { $set: userInfo}, function (err, user) {
     if (err) throw err;
 
-    setTimeout(function() {
-      res.json(user)
-    }, config.delay);
+    res.json(user)
+  });
+});
+
+userRoutes.post('/users/online/:id', function(req, res) {
+  User.update({ _id: req.params.id }, { $addToSet: {online: req.body.online}}, function (err, user) {
+    if (err) throw err;
+
+    res.json(user)
+  });
+});
+
+userRoutes.post('/users/online/del/:id', function(req, res) {
+  console.log(res.body.online);
+  User.update({ _id: req.params.id }, { $pull: { online: { $in: [ req.body.online ] } }}, function (err, user) {
+    if (err) throw err;
+    
+    res.json(user)
   });
 });
 
@@ -134,7 +151,7 @@ userRoutes.post('/user/find', function(req, res) {
   const { id, search } = req.body;
   const regexp = new RegExp("^"+ search);
   User
-      .find({ "name": regexp })
+      .find({ "name": regexp }, {name: 1, email: 1, surname: 1, _id: 1})
       .where('_id').ne(id)
       .limit(10)
       .exec()

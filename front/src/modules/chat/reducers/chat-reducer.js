@@ -6,7 +6,8 @@ let init = {
   roomId: '',
   between: [],
   messages: [],
-  betweenName: []
+  betweenName: [],
+  findUser: []
 }
 
 function chatReducer(state = init, action) {
@@ -22,6 +23,12 @@ function chatReducer(state = init, action) {
       return {
         ...state,
         room: action.data
+      }
+      break;
+    case 'CHAT_ADD':
+      return {
+        ...state,
+        room: state.room.concat(action.data)
       }
       break;
     case 'MESSAGE_SET':
@@ -47,6 +54,12 @@ function chatReducer(state = init, action) {
       return {
         ...state,
         betweenName: []
+      }
+      break;
+    case 'CHAT_FIND_USER':
+      return {
+        ...state,
+        findUser: action.data
       }
       break;
 

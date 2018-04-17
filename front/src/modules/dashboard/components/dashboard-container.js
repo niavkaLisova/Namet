@@ -5,10 +5,13 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import LeftMenu from './left-menu'
 import * as UserActions from '../../user/actions/user-actions'
 import appHistory from '../../../utils/app-history'
+import * as DashboardActions from '../actions/dashboard-actions'
 import * as NotificationActions from '../../notification/actions/notification-actions'
 import { connect } from "react-redux"
+import { socketConnect } from 'socket.io-react'
 
 @connect((store, ownProps) => {
+  //console.log('user', store)
     return {
       user: store.user
     };
@@ -21,6 +24,15 @@ class DashboardContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {open: false};
+
+    this.props.socket.on('online', (id) => {
+      console.log('socket', id);
+      //this.props.dispatch(DashboardActions.onlineSave(id));
+      this.props.dispatch(DashboardActions.online(id));
+  
+      this.props.socket.emit('get info', localStorage.getItem('userId'))
+    });
+
   }
 
   handleToggle() {
@@ -63,4 +75,4 @@ class DashboardContainer extends React.Component {
   }
 };
 
-export default DashboardContainer;
+export default socketConnect(DashboardContainer);

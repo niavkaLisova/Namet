@@ -15,19 +15,22 @@ export function allChat() {
   }
 }
 
-export function newChat(id) {
+export function newChat(user, myname, that) {
   return (dispatch) => {
       request
         .post(Config.API_DOMAIN + 'chat/room/new')
         .set('x-access-token', localStorage.getItem('token'))
         .send({
-			name: id + 'vs' + localStorage.getItem('userId'),
-        	private: true,
- 			between: [id, localStorage.getItem('userId')]
-			})
+			    name: user.name + ' VS ' + myname,
+          private: true,
+ 			    between: [user._id, localStorage.getItem('userId')]
+			  })
         .end((error, response) => {
+          that.props.socket.emit('user join room', response.body);
+          dispatch(chatAddRoom(response.body));
+
         	if(response.body.success == false) {
-        		return NotificationActions.show('Niea')(dispatch);
+        		return NotificationActions.show('Nie')(dispatch);
           	} else {
           		// dispatch(userUpdated(response.body));
           		return NotificationActions.show('Room created')(dispatch);
@@ -122,8 +125,8 @@ export function findUser(search) {
           'search': search
         })
         .end((error, response) => {
-          console.log('find User', response.body)
-          //dispatch(chatUpdated(response.body));
+          // console.log('find User', response.body)
+          dispatch(chatFindUser(response.body));
         });
   }
 }
@@ -150,4 +153,12 @@ export function betweenName(data) {
 
 export function beetwenNameClean() {
   return {type: 'BETWEEN_NAME_CLEAN'};
+}
+
+export function chatFindUser(data) {
+  return {type: 'CHAT_FIND_USER', data};
+}
+
+export function chatAddRoom(data) {
+  return {type: 'CHAT_ADD', data};
 }

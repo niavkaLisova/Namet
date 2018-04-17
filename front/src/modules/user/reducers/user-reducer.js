@@ -2,16 +2,32 @@ import Immutable from 'immutable'
 import _ from 'lodash';
 
 let init = {
+  name: '',
   surname: '',
-  email: ''
+  email: '',
+  online: []
 }
 
 function userReducer(state = init, action) {
   switch (action.type) {
     case 'USER_GET':
-      return action.user
+      return {
+        ...state,
+        name: action.data.name,
+        online: action.data.online,
+        surname: action.data.surname,
+        email: action.data.email
+      }
       break;
-    case 'USER_DATA_UPDATED': return actionUserDataUpdated(state, action); break;
+    case 'ONLINE_SAVE':
+      return {
+        ...state,
+        online: state.online.concat(action.data)
+      }
+      break;
+    case 'USER_DATA_UPDATED': 
+      return actionUserDataUpdated(state, action); 
+      break;
     default: return state;
   }
 }
