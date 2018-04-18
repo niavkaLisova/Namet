@@ -11,10 +11,10 @@ import { connect } from "react-redux"
 import { socketConnect } from 'socket.io-react'
 
 @connect((store, ownProps) => {
-  //console.log('user', store)
-    return {
-      user: store.user
-    };
+  // console.log('user', store)
+  return {
+    user: store.user
+  };
 })
 class DashboardContainer extends React.Component {
   componentDidMount() {
@@ -26,11 +26,13 @@ class DashboardContainer extends React.Component {
     this.state = {open: false};
 
     this.props.socket.on('online', (id) => {
-      console.log('socket', id);
-      //this.props.dispatch(DashboardActions.onlineSave(id));
       this.props.dispatch(DashboardActions.online(id));
   
       this.props.socket.emit('get info', localStorage.getItem('userId'))
+    });
+
+    this.props.socket.on('message g', (data) => {
+      console.log('message globale', data);
     });
 
   }

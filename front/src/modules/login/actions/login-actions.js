@@ -47,3 +47,17 @@ export function loginSuccess(data) {
 export function loginFailure(error) {
   return {type: 'LOGGED_FAILURE', error};
 }
+
+export function online(online) {
+  return (dispatch) => {   
+    request
+      .post(Config.API_DOMAIN + 'api/users/online/' + localStorage.getItem('userId'))
+      .set('x-access-token', localStorage.getItem('token'))
+      .send({
+          'online': online
+      })
+      .end((error, response) => {
+        // console.log('fertig')
+      })
+  }
+}

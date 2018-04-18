@@ -84,8 +84,8 @@ userRoutes.post('/register', function(req, res) {
     });
 });
 
-const tokenVerifier = require('../auth/token-verifier')
-userRoutes.use(tokenVerifier);
+// const tokenVerifier = require('../auth/token-verifier')
+// userRoutes.use(tokenVerifier);
 
 userRoutes.get('/users/:id', function(req, res) {
   var userId = req.params.id;

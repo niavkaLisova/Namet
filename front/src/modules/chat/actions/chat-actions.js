@@ -31,10 +31,10 @@ export function newChat(user, myname, that) {
 
         	if(response.body.success == false) {
         		return NotificationActions.show('Nie')(dispatch);
-          	} else {
-          		// dispatch(userUpdated(response.body));
-          		return NotificationActions.show('Room created')(dispatch);
-          	}
+          } else {
+            that.props.socket.emit('new room', response.body, user._id);
+          	return NotificationActions.show('Room created')(dispatch);
+          }
         });
   }
 }
@@ -54,19 +54,47 @@ export function sendMessage(id, text, user, that) {
           that.props.socket.emit('message', {'roomId': id, 'msg': response.body})
           if(response.body.user == localStorage.getItem('userId')) {
             dispatch(messageAdd(response.body));
+
+            that.props.between.map( (uid) => {
+              if(uid != localStorage.getItem('userId')) {
+                dispatch(socketMessage(uid, id, text, user, that));   
+              }
+            })
           }
         });
   }
 }
 
-export function getMessages(roomId) {
+export function socketMessage(uid, id, text, user, that) {
+  return (dispatch) => {
+      request
+        .get(Config.API_DOMAIN + 'api/users/' + uid)
+        .set('x-access-token', localStorage.getItem('token'))
+        .end((error, response) => {
+          const user = response.body;
+          if(user.online.length && user.online.length > 0) {
+            user.online.map( (id_online) => {
+              that.props.socket.emit('message global', id_online, {
+                'roomId': id,
+                'text': text,
+                'author': localStorage.getItem('userId'),
+                'user': user
+              } );
+            })
+          }
+        });
+  }
+}
+
+export function getMessages(roomId, limit) {
   return (dispatch) => {
       request
         .post(Config.API_DOMAIN + 'chat/message/all')
         .set('x-access-token', localStorage.getItem('token'))
         .send({
           'roomId': roomId,
-          'user': localStorage.getItem('userId')
+          'user': localStorage.getItem('userId'),
+          'limit': limit 
         })
         .end((error, response) => {
           dispatch(messageUpdated(response.body));
@@ -74,14 +102,15 @@ export function getMessages(roomId) {
   }
 }
 
-export function getMessagesRoom(roomId) {
+export function getMessagesRoom(roomId, limit) {
   return (dispatch) => {
       request
         .post(Config.API_DOMAIN + 'chat/message/room')
         .set('x-access-token', localStorage.getItem('token'))
         .send({
           'roomId': roomId,
-          'user': localStorage.getItem('userId')
+          'user': localStorage.getItem('userId'),
+          'limit': limit 
         })
         .end((error, response) => {
           dispatch(messageUpdated(response.body.message));
@@ -161,4 +190,8 @@ export function chatFindUser(data) {
 
 export function chatAddRoom(data) {
   return {type: 'CHAT_ADD', data};
+}
+
+export function limitSet(data) {
+  return {type: 'LIMIT_SET', data};
 }

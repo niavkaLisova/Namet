@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux'
 import TopMenu from '../../dashboard/components/top-menu'
 import * as LoginActions from '../actions/login-actions'
 import Login from './login'
+import { socketConnect } from 'socket.io-react'
 
 @connect((store, ownProps) => {
   console.log(store)
@@ -34,10 +35,16 @@ class LoginContainer extends React.Component {
   }
 
   onLogin() {
+    console.log('login', this.props.socket.id);
+    this.props.dispatch(LoginActions.online(this.props.socket.id))
     this.props.dispatch(LoginActions.login(
       this.state.username,
       this.state.password
     ))
+  }
+
+  refresh() {
+    window.location.reload();
   }
 
   render() {
@@ -56,4 +63,4 @@ class LoginContainer extends React.Component {
   }
 };
 
-export default LoginContainer;
+export default socketConnect(LoginContainer);

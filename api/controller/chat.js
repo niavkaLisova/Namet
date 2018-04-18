@@ -71,10 +71,11 @@ chatRoutes.post('/message/new', async function(req, res) {
 });
 
 chatRoutes.post('/message/all', function(req, res) {
-	const { roomId, user } = req.body;
+	const { roomId, user, limit } = req.body;
 
 	Message
 	    .find({ "roomID": roomId, 'user': user })
+	   	.limit(limit)
 	    .exec()
 	    .then(function(messages) {
 	    	res.json(messages);
@@ -82,7 +83,7 @@ chatRoutes.post('/message/all', function(req, res) {
 });
 
 chatRoutes.post('/message/room', async function(req, res) {
-	const { roomId, user } = req.body;
+	const { roomId, user, limit } = req.body;
 
 	const room = await Room.findById(roomId);
 
@@ -93,7 +94,7 @@ chatRoutes.post('/message/room', async function(req, res) {
   	try {
     	return res.json({
       		error: false,
-     		message: await Message.find({ roomID: roomId, user: user }).populate('room'),
+     		message: await Message.find({ roomID: roomId, user: user }).limit(limit).populate('room'),
     	});
   	} catch (e) {
     	return res.json({ error: true, message: 'Cannot fetch message' });

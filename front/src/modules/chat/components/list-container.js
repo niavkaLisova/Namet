@@ -31,8 +31,9 @@ class ListContainer extends React.Component {
 	    };
 	    this.props.dispatch(ChatActions.allChat());
 
-	    
-		// this.props.socket.emit('join room', id)
+		this.props.socket.on('room created', (data) => {
+	    	this.props.dispatch(ChatActions.chatAddRoom(data));
+	    })
 	}
 
 
@@ -80,7 +81,7 @@ class ListContainer extends React.Component {
 			this.props.socket.emit('leave room', this.props.roomId);
 		}
 		this.props.dispatch(ChatActions.beetwenUpdated(id));
-		this.props.dispatch(ChatActions.getMessagesRoom(id))
+		this.props.dispatch(ChatActions.getMessagesRoom(id, 5))
 		this.props.socket.emit('join room', id);
 	}
 

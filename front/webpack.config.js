@@ -20,6 +20,11 @@ module.exports = {
           presets: ['es2015', 'react', 'stage-0'],
           plugins: ['react-html-attrs', 'transform-class-properties', 'transform-decorators-legacy']
         }
+      },
+      {
+        test: /\.sass$/,
+        loader: 'style-loader!css-loader!autoprefixer-loader!sass-loader',
+        exclude: /node_modules/
       }
     ]
   }
