@@ -8,7 +8,7 @@ let init = {
   messages: [],
   betweenName: [],
   findUser: [],
-  limit: 5
+  limit: 10
 }
 
 function chatReducer(state = init, action) {
@@ -67,6 +67,12 @@ function chatReducer(state = init, action) {
       return {
         ...state,
         limit: state.limit + action.data
+      }
+      break;
+    case 'LIMIT_START':
+      return {
+        ...state,
+        limit: 10
       }
       break;
 

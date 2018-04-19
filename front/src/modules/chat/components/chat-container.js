@@ -1,12 +1,11 @@
 import React from 'react'
 import { Container, Row, Col } from 'react-grid-system'
 import ListContainer from './list-container'
-import MessageContainer from './message-container'
+import BoxContainer from './box-container'
 import { connect } from "react-redux"
 
 @connect((store, ownProps) => {
     return {
-      chat: store.chat.room
     };
 })
 export default class ChatContainer extends React.Component {
@@ -18,7 +17,7 @@ export default class ChatContainer extends React.Component {
 						<ListContainer />
 				    </Col>
 				    <Col sm={8}>
-				    	<MessageContainer />
+				    	<BoxContainer />
 					</Col>
 			  	</Row>
 			</Container>

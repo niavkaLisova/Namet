@@ -39,7 +39,7 @@ export function newChat(user, myname, that) {
   }
 }
 
-export function sendMessage(id, text, user, that) {
+export function sendMessage(id, text, user, that, node, height) {
   return (dispatch) => {
       request
         .post(Config.API_DOMAIN + 'chat/message/new')
@@ -55,6 +55,7 @@ export function sendMessage(id, text, user, that) {
           if(response.body.user == localStorage.getItem('userId')) {
             dispatch(messageAdd(response.body));
 
+            node.scrollTo(0, height);  
             that.props.between.map( (uid) => {
               if(uid != localStorage.getItem('userId')) {
                 dispatch(socketMessage(uid, id, text, user, that));   
@@ -194,4 +195,8 @@ export function chatAddRoom(data) {
 
 export function limitSet(data) {
   return {type: 'LIMIT_SET', data};
+}
+
+export function limitStart() {
+  return {type: 'LIMIT_START'};
 }

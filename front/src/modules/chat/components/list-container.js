@@ -6,18 +6,17 @@ import Avatar from 'material-ui/Avatar'
 import { List, ListItem } from 'material-ui/List'
 import { Card, CardActions, CardHeader, CardMedia, CardTitle, CardText } from 'material-ui/Card';
 import Subheader from 'material-ui/Subheader'
-import Divider from 'material-ui/Divider'
 import * as ChatActions from '../actions/chat-actions'
+import ListroomsContainer from './listrooms-container'
 import { socketConnect } from 'socket.io-react'
 import { connect } from "react-redux"
 
 @connect((store, ownProps) => {
     return {
-      chat: store.chat.room,
       roomId: store.chat.roomId,
-      beetwen: store.chat.beetwen,
       findUser: store.chat.findUser,
-      user: store.user.name
+      user: store.user.name,
+      limit: store.chat.limit
     };
 })
 class ListContainer extends React.Component {
@@ -81,8 +80,13 @@ class ListContainer extends React.Component {
 			this.props.socket.emit('leave room', this.props.roomId);
 		}
 		this.props.dispatch(ChatActions.beetwenUpdated(id));
-		this.props.dispatch(ChatActions.getMessagesRoom(id, 5))
+		this.props.dispatch(ChatActions.getMessagesRoom(id, this.props.limit))
 		this.props.socket.emit('join room', id);
+		this.props.dispatch(ChatActions.limitStart());
+		let style = window.getComputedStyle(window.document.getElementById('scroll'), null);
+		let height = style.getPropertyValue("height");
+
+		window.document.getElementById('scrollContainer').scrollTo(0, parseFloat(height))
 	}
 
 	findReceiver(user) {
@@ -104,11 +108,11 @@ class ListContainer extends React.Component {
 				            onChange={this.onChangeReceiver.bind(this)}
 				            floatingLabelText="Receiver"
 				    	/> 
-				    	<FlatButton
-					        label="add" 
-					        primary={true} 
-					        onClick={this.newChat.bind(this)} 
-					      />
+			    	<FlatButton
+				        label="add" 
+				        primary={true} 
+				        onClick={this.newChat.bind(this)} 
+				      />
 				
 					{this.props.findUser.map( (user) => {
 						return (
@@ -124,18 +128,7 @@ class ListContainer extends React.Component {
 					})
 					}
 				</List>
-				<List style={this.state.visible ? {} : { display: 'none' }}>
-				    <Subheader>Chats</Subheader>
-				    {(Object.keys(this.props.chat)).map((key) => {
-					    return <ListItem
-					      onClick={() => this.roomIdUpdated(this.props.chat[key]._id)}
-					      key={key}
-					      primaryText={this.props.chat[key].name}
-					      
-				    />
-					})}
-			    </List>
-			
+				<ListroomsContainer visible={this.state.visible} />
 			</div>
 		)
 	}
