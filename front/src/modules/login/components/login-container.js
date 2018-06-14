@@ -7,7 +7,7 @@ import Login from './login'
 import { socketConnect } from 'socket.io-react'
 
 @connect((store, ownProps) => {
-  console.log(store)
+  // console.log(store)
     return {
       
     };
@@ -17,14 +17,14 @@ class LoginContainer extends React.Component {
     super(props);
 
     this.state = {
-      username: '',
+      email: '',
       password: ''
     };
   }
 
-  onChangeUsername(event) {
+  onChangeEmail(event) {
     this.setState({
-      username: event.target.value
+      email: event.target.value
     });
   }
 
@@ -35,10 +35,10 @@ class LoginContainer extends React.Component {
   }
 
   onLogin() {
-    console.log('login', this.props.socket.id);
+    // console.log('login', this.props.socket.id);
     this.props.dispatch(LoginActions.online(this.props.socket.id))
     this.props.dispatch(LoginActions.login(
-      this.state.username,
+      this.state.email,
       this.state.password
     ))
   }
@@ -52,9 +52,9 @@ class LoginContainer extends React.Component {
       <div>
         <TopMenu></TopMenu>
         <Login
-          username={this.state.username}
+          email={this.state.email}
           password={this.state.password}
-          onChangeUsername={this.onChangeUsername.bind(this)}
+          onChangeEmail={this.onChangeEmail.bind(this)}
           onChangePassword={this.onChangePassword.bind(this)}
           onLogin={this.onLogin.bind(this)}
         />

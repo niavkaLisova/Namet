@@ -4,14 +4,14 @@ import appHistory from '../../../utils/app-history'
 import * as Config from '../../../utils/config'
 import * as NotificationActions from '../../notification/actions/notification-actions'
 
-export function login(username, password) {
+export function login(email, password) {
   return (dispatch) => {
     NotificationActions.show('Loging in. Please wait.')(dispatch);
 
     request
       .post(Config.API_DOMAIN + 'api/authenticate')
       .send({
-        name: username,
+        email: email,
         password: password
       })
       .end((error, response) => {

@@ -7,6 +7,7 @@ import appHistory from '../../../utils/app-history'
 import Register from './register'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import zxcvbn  from 'zxcvbn'
 import * as RegisterActions from '../actions/register-actions'
 
 const style = {
@@ -24,22 +25,41 @@ class RegisterContainer extends React.Component {
     super(props);
 
     this.state = {
-      username: '',
       password: '',
-      email: ''
+      email: '',
+      type: 'password',
+      score: 'null'
     };
   }
 
-  onChangeUsername(event) {
+  showHide(e){
+    e.preventDefault();
+    e.stopPropagation();
     this.setState({
-      username: event.target.value
-    });
+      type: this.state.type === 'input' ? 'password' : 'input'
+    })  
+  }
+  
+  passwordStrength(e){
+    if(e.target.value === ''){
+      this.setState({
+        score: 'null'
+      })
+    }
+    else{
+      var pw = zxcvbn(e.target.value);
+      this.setState({
+        score: pw.score
+      });      
+    }
+    console.log('str', this.state.score)
   }
 
   onChangePassword(event) {
     this.setState({
       password: event.target.value
     });
+    this.passwordStrength(event);
   }
 
   onChangeEmail(event) {
@@ -50,7 +70,6 @@ class RegisterContainer extends React.Component {
 
   onRegister() {
     this.props.dispatch(RegisterActions.register(
-      this.state.username,
       this.state.password,
       this.state.email
     ))
@@ -60,10 +79,13 @@ class RegisterContainer extends React.Component {
     return (
       <Register
         {...this.state}
-        onChangeUsername={this.onChangeUsername.bind(this)}
         onChangePassword={this.onChangePassword.bind(this)}
         onChangeEmail={this.onChangeEmail.bind(this)}
         onRegister={this.onRegister.bind(this)}
+        showHide={this.showHide.bind(this)}
+        passwordStrength={this.passwordStrength.bind(this)}
+        type={this.state.type}
+        score={this.state.score}
       />
     )
   }

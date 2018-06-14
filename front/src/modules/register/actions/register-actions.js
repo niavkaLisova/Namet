@@ -4,12 +4,11 @@ import * as Config from '../../../utils/config'
 import * as NotificationActions from '../../notification/actions/notification-actions'
 import appHistory from '../../../utils/app-history'
 
-export function register(username, password, email) {
+export function register(password, email) {
   return (dispatch) => {
     request
       .post(Config.API_DOMAIN + 'api/register')
       .send({
-        name: username,
         password: password,
         email: email
       })
