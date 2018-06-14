@@ -1,4 +1,5 @@
 import Immutable from 'immutable'
+import update from 'react-addons-update'; // ES6
 import _ from 'lodash';
 
 let init = {
@@ -8,7 +9,8 @@ let init = {
   messages: [],
   betweenName: [],
   findUser: [],
-  limit: 10
+  limit: 10,
+  unread: []
 }
 
 function chatReducer(state = init, action) {
@@ -74,6 +76,14 @@ function chatReducer(state = init, action) {
         ...state,
         limit: 10
       }
+      break;
+    case 'UNREAD_SET':
+      return update(state, { 
+        unread: { 
+          [action.data.key]: {$set: action.data.length}  
+        }
+
+      });
       break;
 
     default: return state;

@@ -10,7 +10,8 @@ import { connect } from "react-redux"
     return {
       roomId: store.chat.roomId,
       between: store.chat.between,
-      messages: store.chat.messages
+      messages: store.chat.messages,
+      activeRoom: store.user.activeRoom
     };
 })
 class TextareaContainer extends React.Component {
@@ -40,14 +41,19 @@ class TextareaContainer extends React.Component {
 		let height = parseFloat(style.getPropertyValue("height"));
 
 		this.props.between.map((user) => {
-			this.props.dispatch(ChatActions.sendMessage(this.props.roomId, this.state.message, user, this, node, height));
+			if(user == localStorage.getItem('userId')) {
+				this.props.dispatch(ChatActions.sendMessage(this.props.roomId, this.state.message, user, this, node, height, true));
+			} else {
+				this.props.dispatch(ChatActions.sendMessage(this.props.roomId, this.state.message, user, this, node, height, false));
+			}
 		})
+		this.props.dispatch(ChatActions.allChat());
 
 	}
 
 	render() {
 		return (
-			<div style={this.props.roomId? {} : { display: 'none' }}>
+			<div style={this.props.activeRoom != '0' ? {} : { display: 'none' }}>
 		    	<TextField
 			     	hintText="text"
 			     	name={'message'}
@@ -55,6 +61,7 @@ class TextareaContainer extends React.Component {
 		            value={this.state.message}
 		            onChange={this.onChangeMessage.bind(this)}
 		            floatingLabelText="Message"
+		            multiLine={true}
 		    	/>
 		    	<RaisedButton 
 		    		primary={true}

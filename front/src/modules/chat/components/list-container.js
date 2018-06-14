@@ -16,7 +16,9 @@ import { connect } from "react-redux"
       roomId: store.chat.roomId,
       findUser: store.chat.findUser,
       user: store.user.name,
-      limit: store.chat.limit
+      limit: store.chat.limit,
+      test: store.chat.room,
+      translate: store.locale.translations
     };
 })
 class ListContainer extends React.Component {
@@ -56,37 +58,32 @@ class ListContainer extends React.Component {
 
 			if (!this.state.receiverObj._id) {
 				this.props.findUser.map( (user) => {
-					console.log(this.state.receiver == user.name)
 					if (this.state.receiver == user.name) {
 						userAdd = user;
 					}
 				});
 			}
 
-		    this.props.dispatch(ChatActions.chatFindUser([]));
-			
-			this.props.dispatch(ChatActions.newChat(userAdd, this.props.user, this));
-			
-			this.setState({
-		      receiver: '',
-		      receiverObj: {},
-		      visible: true
-		    });
-		}
-	}
+			if(this.state.receiverObj._id) {
+			    this.props.dispatch(ChatActions.chatFindUser([]));
+				
+				this.props.dispatch(ChatActions.newChat(userAdd, this.props.user, this));
+				
+				this.setState({
+			      receiver: '',
+			      receiverObj: {},
+			      visible: true
+			    });
+			} else {
+				this.setState({
+			      receiver: '',
+			      receiverObj: {},
+			      visible: true
+			    });
 
-	roomIdUpdated(id) {
-		if(this.props.roomId != '') {
-			this.props.socket.emit('leave room', this.props.roomId);
+			    this.props.dispatch(ChatActions.chatNoCreate())
+			}
 		}
-		this.props.dispatch(ChatActions.beetwenUpdated(id));
-		this.props.dispatch(ChatActions.getMessagesRoom(id, this.props.limit))
-		this.props.socket.emit('join room', id);
-		this.props.dispatch(ChatActions.limitStart());
-		let style = window.getComputedStyle(window.document.getElementById('scroll'), null);
-		let height = style.getPropertyValue("height");
-
-		window.document.getElementById('scrollContainer').scrollTo(0, parseFloat(height))
 	}
 
 	findReceiver(user) {
@@ -111,7 +108,7 @@ class ListContainer extends React.Component {
 			    	<FlatButton
 				        label="add" 
 				        primary={true} 
-				        onClick={this.newChat.bind(this)} 
+				        onClick={this.newChat.bind(this)}
 				      />
 				
 					{this.props.findUser.map( (user) => {
@@ -128,7 +125,9 @@ class ListContainer extends React.Component {
 					})
 					}
 				</List>
-				<ListroomsContainer visible={this.state.visible} />
+				{ (this.props.test.length)? <ListroomsContainer visible={this.state.visible} startChat={this.props.test} />
+			:'' }
+				
 			</div>
 		)
 	}

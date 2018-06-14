@@ -16,9 +16,9 @@ export default (
 		<Route path="/register" component={RegisterContainer} />
 		<Route path="/login" component={LoginContainer} />
 		<DashboardContainer>
-   			<Route path='/user' component={UserContainer} />
+   			<Route path='/user/:id' component={UserContainer} />
      	   	<Route path='/payment' component={PaymentContainer} />
-     	   	<Route path="/chat" component={ChatContainer} />
+     	   	<Route path='/chat/' component={ChatContainer} />
      	</DashboardContainer>
 	</Switch>
 );

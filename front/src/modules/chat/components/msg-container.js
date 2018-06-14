@@ -1,8 +1,10 @@
 import React from 'react'
-import { Card, CardActions, CardHeader, CardMedia, CardTitle, CardText } from 'material-ui/Card';
-import { connect } from "react-redux"
-
+import { List, ListItem } from 'material-ui/List'
+import { Container, Row, Col } from 'react-grid-system'
+import { connect } from 'react-redux'
 import './Message.sass';
+const ReactIntl = require('react-intl');
+const FormattedRelative = ReactIntl.FormattedRelative;
 
 @connect((store, ownProps) => {
     return {
@@ -12,17 +14,36 @@ import './Message.sass';
 class MsgContainer extends React.Component {
 	render() {
 		return (
-			// <ListItem>
-			<Card key={this.props.msg._id} class={ (localStorage.getItem('userId') == this.props.msg.author)? 'right': 'left'}>
-			    <CardHeader
-			      title={this.props.betweenName.map((user) => (user.id == this.props.msg.author)? user.name: '')}
-			      subtitle={this.props.msg.text}
-			      avatar=""
-			    />
-			</Card>
-			//
-			// </ListItem>
+			<div class={(this.props.msg.read)? '': 'read'} key={this.props._id}>
+	        	<ListItem
+		          class={(localStorage.getItem('userId') == this.props.msg.author)? 'right': 'left'}
+		          primaryText={
+		          	<Container>
+		          		<span class='msgName'>{this.props.betweenName.map((user) => (user.id == this.props.msg.author)? user.name: '')}</span>
+					</Container>
+		          }
+		          secondaryText={
+		            <Container>
+		            	<Row>
+		            		<Col sm={12}>
+		          				{this.props.msg.text}
+		          			</Col>
+		          		</Row>
+		          		<Row>
+			          		<Col sm={8}>
 
+			          		</Col>
+							<Col sm={4}>
+								<FormattedRelative value={this.props.msg.createdAt} />
+							</Col>
+						</Row>
+		                
+		            </Container>
+		          }
+		          secondaryTextLines={2}
+		        />
+
+	        </div>
 		)
 	}
 }

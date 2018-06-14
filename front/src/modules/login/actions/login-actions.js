@@ -57,7 +57,7 @@ export function online(online) {
           'online': online
       })
       .end((error, response) => {
-        // console.log('fertig')
+        console.log('fertig')
       })
   }
 }

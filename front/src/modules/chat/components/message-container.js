@@ -6,7 +6,9 @@ import { socketConnect } from 'socket.io-react'
 import { List, ListItem } from 'material-ui/List'
 import * as ChatActions from '../actions/chat-actions'
 import MsgContainer from './msg-container'
+import Divider from 'material-ui/Divider';
 import { connect } from "react-redux"
+import { IntlProvider } from 'react-intl'
 
 import './Message.sass';
 
@@ -23,7 +25,7 @@ class MessageContainer extends React.Component {
 
 	    this.state = {
   	  		loading: false
-	    }; 
+		};
 	}
 
 	incrementLimit() {
@@ -57,13 +59,19 @@ class MessageContainer extends React.Component {
 			      status="loading"
 			      style={this.state.loading ? {} : { display: 'none' }}
 			    />
-				<div class='messagesList' id='scroll' ref="messageList">
+				<List class='messagesList' id='scroll' ref="messageList">
 					{this.props.messages.map( (msg) => {
+						// console.log('msg view', msg)
 						return (
-							<MsgContainer msg={msg} key={msg._id} />
+							<div key={msg._id}>
+								<IntlProvider locale="en">
+									<MsgContainer msg={msg} />
+								</IntlProvider>
+								<Divider />
+							</div>
 						)
 					})}
-				</div>
+				</List>
 			</List>
 		)
 	}

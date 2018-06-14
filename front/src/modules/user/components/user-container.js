@@ -24,8 +24,10 @@ import { connect } from "react-redux"
 import { setActiveLanguage } from 'react-localize-redux';
 
 @connect((store, ownProps) => {
+  console.log('ownProps', ownProps);
     return {
-      user: store.user
+      user: store.user,
+      id: ownProps.match.params.id
     };
 })
 export default class UserContainer extends React.Component {
@@ -46,6 +48,7 @@ export default class UserContainer extends React.Component {
 
     return (
       <MuiThemeProvider>
+        <h1>ID {this.props.id}</h1>
         <UserFormContainer
           user={user}
           actionType={'edit'}

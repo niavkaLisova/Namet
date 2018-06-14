@@ -39,7 +39,7 @@ export function newChat(user, myname, that) {
   }
 }
 
-export function sendMessage(id, text, user, that, node, height) {
+export function sendMessage(id, text, user, that, node, height, read) {
   return (dispatch) => {
       request
         .post(Config.API_DOMAIN + 'chat/message/new')
@@ -48,17 +48,18 @@ export function sendMessage(id, text, user, that, node, height) {
           'roomId': id,
           'text': text,
           'author': localStorage.getItem('userId'),
-          'user': user
+          'user': user,
+          'read': read
         })
         .end((error, response) => {
-          that.props.socket.emit('message', {'roomId': id, 'msg': response.body})
+          that.props.socket.emit('message', {'roomId': id, 'msg': response.body});
           if(response.body.user == localStorage.getItem('userId')) {
             dispatch(messageAdd(response.body));
 
             node.scrollTo(0, height);  
             that.props.between.map( (uid) => {
               if(uid != localStorage.getItem('userId')) {
-                dispatch(socketMessage(uid, id, text, user, that));   
+                dispatch(socketMessage(uid, id, text, user, that,  response.body.createdAt));   
               }
             })
           }
@@ -66,7 +67,7 @@ export function sendMessage(id, text, user, that, node, height) {
   }
 }
 
-export function socketMessage(uid, id, text, user, that) {
+export function socketMessage(uid, id, text, user, that, createdAt) {
   return (dispatch) => {
       request
         .get(Config.API_DOMAIN + 'api/users/' + uid)
@@ -79,7 +80,9 @@ export function socketMessage(uid, id, text, user, that) {
                 'roomId': id,
                 'text': text,
                 'author': localStorage.getItem('userId'),
-                'user': user
+                'user': user,
+                'read': false,
+                'createdAt': createdAt
               } );
             })
           }
@@ -103,6 +106,12 @@ export function getMessages(roomId, limit) {
   }
 }
 
+export function chatNoCreate() {
+  return (dispatch) => {
+    NotificationActions.show('nie')(dispatch);
+  }
+}
+
 export function getMessagesRoom(roomId, limit) {
   return (dispatch) => {
       request
@@ -114,7 +123,21 @@ export function getMessagesRoom(roomId, limit) {
           'limit': limit 
         })
         .end((error, response) => {
+          // console.log('get messages', roomId, response.body)
           dispatch(messageUpdated(response.body.message));
+        });
+  }
+}
+
+export function makeReaded(messageId) {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'chat/message/make/readed')
+        .set('x-access-token', localStorage.getItem('token'))
+        .send({
+          'id':messageId
+        })
+        .end((error, response) => {
         });
   }
 }
@@ -161,6 +184,36 @@ export function findUser(search) {
   }
 }
 
+export function messageRead(id) {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'chat/message/read')
+        .set('x-access-token', localStorage.getItem('token'))
+        .send({
+          'id': localStorage.getItem('userId'),
+          'roomId': id
+        })
+        .end((error, response) => {
+        });
+  }
+}
+
+export function unreadSelect(roomId, key) {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'chat/message/select/unread')
+        .set('x-access-token', localStorage.getItem('token'))
+        .send({
+          'id': localStorage.getItem('userId'),
+          'roomId': roomId
+        })
+        .end((error, response) => {
+          dispatch(unreadSet({'length': response.body.length, 'key': key}));
+        });
+  }
+}
+
+
 export function chatUpdated(data) {
 	return {type: 'CHAT_UPDATED', data};
 }
@@ -199,4 +252,8 @@ export function limitSet(data) {
 
 export function limitStart() {
   return {type: 'LIMIT_START'};
+}
+
+export function unreadSet(data) {
+  return {type: 'UNREAD_SET', data};
 }

@@ -5,7 +5,8 @@ let init = {
   name: '',
   surname: '',
   email: '',
-  online: []
+  online: [],
+  activeRoom: ''
 }
 
 function userReducer(state = init, action) {
@@ -16,7 +17,8 @@ function userReducer(state = init, action) {
         name: action.data.name,
         online: action.data.online,
         surname: action.data.surname,
-        email: action.data.email
+        email: action.data.email,
+        activeRoom: action.data.activeRoom
       }
       break;
     case 'ONLINE_SAVE':
@@ -27,6 +29,12 @@ function userReducer(state = init, action) {
       break;
     case 'USER_DATA_UPDATED': 
       return actionUserDataUpdated(state, action); 
+      break;
+    case 'ACTIVE_SAVE':
+      return {
+        ...state,
+        activeRoom: action.data    
+      }
       break;
     default: return state;
   }
