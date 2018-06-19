@@ -41,6 +41,7 @@ class LoginContainer extends React.Component {
       this.state.email,
       this.state.password
     ))
+    console.log('container');
   }
 
   refresh() {

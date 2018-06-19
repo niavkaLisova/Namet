@@ -31,11 +31,21 @@ export function login(email, password) {
           localStorage.setItem('userId', userId);
 
           dispatch(loginSuccess({userId: userId, token: token}));
-          appHistory.push('/user');
+          appHistory.push('/user/' + userId);
         } else {
           NotificationActions.show('Wrong username or password')(dispatch);
           localStorage.removeItem('token');
         }
+      });
+  }
+}
+
+export function emailConfirm(email, id) {
+  return (dispatch) => {
+    request
+      .post(Config.API_DOMAIN + `api/confirm/email/${email}/${id}`)
+      .end((error, response) => {
+        console.log('email confirmed', response.body)
       });
   }
 }

@@ -74,6 +74,20 @@ export function selectActiveRoom(activeRoom) {
   }
 }
 
+export function sendEmail() {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'api/send/email')
+        .set('x-access-token', localStorage.getItem('token'))
+        .send({
+          'joj': 'joj'
+        })
+        .end((error, response) => {
+          // dispatch(activeSave(activeRoom))
+        });
+  }
+}
+
 export function unreadUpdate(data) {
   return {type: 'UNREAD_UPDATE', data};
 }

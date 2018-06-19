@@ -43,19 +43,17 @@ export default class UserContainer extends React.Component {
     this.props.dispatch(UserActions.userDataUpdated({surname: event.target.value}));
   }
 
+  sendEmail() {
+    this.props.dispatch(UserActions.sendEmail());
+  }
+
   render() {
     const { user } = this.props;
 
     return (
       <MuiThemeProvider>
-        <h1>ID {this.props.id}</h1>
-        <UserFormContainer
-          user={user}
-          actionType={'edit'}
-          updateUser={this.updateUser.bind(this)}
-          onChangeEmail={this.onChangeEmail.bind(this)}
-          onChangeSurname={this.onChangeSurname.bind(this)}
-        />
+        <h2 onClick={this.sendEmail.bind(this)}>Send Email</h2>
+        
       </MuiThemeProvider>
     )
   }

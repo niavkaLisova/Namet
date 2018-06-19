@@ -15,10 +15,10 @@ const style = {
 };
 
 @connect((store, ownProps) => {
-  console.log(store)
-    return {
-      
-    };
+  // console.log(store)
+  return {
+    
+  };
 })
 class RegisterContainer extends React.Component {
   constructor(props) {
@@ -52,7 +52,6 @@ class RegisterContainer extends React.Component {
         score: pw.score
       });      
     }
-    console.log('str', this.state.score)
   }
 
   onChangePassword(event) {

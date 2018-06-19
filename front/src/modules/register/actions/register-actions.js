@@ -23,12 +23,32 @@ export function register(password, email) {
 
         if (response.body.success) {
           NotificationActions.show(response.body.message)(dispatch);
+          console.log(response.body.doc.email, response.body.doc._id);
+          dispatch(emailConfirm(response.body.doc.email, response.body.doc._id));
           appHistory.push('/login');
         }
 
         if (!response.body.success) {
           NotificationActions.show(response.body.message)(dispatch);
         }
+      });
+  }
+}
+
+export function emailConfirm(email, id) {
+  let subject = 'Confirm Email';
+  let text = 'Please confirm your email ' + Config.API_DOMAIN + '#/confirm/' + email + '/' + id;
+
+  return (dispatch) => {
+    request
+      .post(Config.API_DOMAIN + 'api/email/confirm')
+      .send({
+        receiver: email,
+        subject: subject,
+        text: text
+      })
+      .end((error, response) => {
+        console.log('email sended', response.body)
       });
   }
 }
