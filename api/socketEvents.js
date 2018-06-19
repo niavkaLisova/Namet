@@ -1,4 +1,5 @@
 const User = require('./models/user')
+const Message = require('./models/message')
 
 exports = module.exports = function(io) {
 	io.on('connection', function(socket){
@@ -38,14 +39,14 @@ exports = module.exports = function(io) {
 		socket.on('message global', function(id_online, data){
 	    	socket.to(id_online).emit('message g', data);
 		});
-
+		
 	    socket.on('disconnect', function(){
-	    	console.log('disconnect', socket.id);
+	    	console.log('disconnect', id, socket.id);
 			User.update({ _id: id }, { $pull: { online: { $in: [ socket.id ] } }}, function (err, user) {
 		    	if (err) throw err;
-		  	});//
+		  	});
 	
-	        socket.broadcast.emit('userList', 'no');
+	        // socket.broadcast.emit('userList', 'no');
 	    });
 	});
 }

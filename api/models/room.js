@@ -9,13 +9,16 @@ const RoomSchema = new Schema({
   message: [{
     type: ObjectId,
     ref: 'Message',
-  }]
+  }],
+  lastTime: Date
 });
 
 RoomSchema.statics.addMessage = async function(id, args) {
   const Message = mongoose.model('Message');
   const message = await new Message({ ...args, roomID: id });
-  await this.findByIdAndUpdate(id, { $push: { message: message.id } });
+
+  // await this.findByIdAndUpdate(id, { $push: { message: message.id } });
+  await this.findByIdAndUpdate(id, { $set: {lastTime: new Date().getTime() }});
 
   return {
     message: await message.save(),

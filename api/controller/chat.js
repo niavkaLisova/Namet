@@ -20,7 +20,8 @@ chatRoutes.post('/room/all', function(req, res) {
 		    ,{ "between": { $size: 2 } }
 		]}
 		)
-	    .exec()
+		.sort({'lastTime': -1})
+		.exec()
 	    .then(function(room) {
 	    	res.json(room);
 	    });
@@ -38,7 +39,11 @@ chatRoutes.post('/room/new', function(req, res) {
 	    	if (room != null ) {
 	        	return throwFailed(res, 'There is already such room exist.');
 	    	} 
-    		const newRoom = new Room(req.body);
+	    	
+	    	let data = req.body;
+	    	data.lastTime=new Date().getTime();
+
+    		const newRoom = new Room(data);
 		    newRoom.save(function (err, data) {
 		    	if(err) {
 		    		console.log(err);
@@ -60,10 +65,10 @@ chatRoutes.get('/room/:id', function(req, res) {
 });
 
 chatRoutes.post('/message/new', async function(req, res) {
-	const { roomId, text, author, user } = req.body;
+	const { roomId, text, author, user, read } = req.body;
 
 	try {
-    	const { message } = await Room.addMessage(roomId, { text, author, user });
+    	const { message } = await Room.addMessage(roomId, { text, author, user, read });
     	return res.json(message);
   	} catch (e) {
     	return res.status(400).json({ error: true, message: 'Message cannot be created!' });
@@ -75,7 +80,27 @@ chatRoutes.post('/message/all', function(req, res) {
 
 	Message
 	    .find({ "roomID": roomId, 'user': user })
+	    .sort({createdAt:-1})
 	   	.limit(limit)
+	    .exec()
+	    .then(function(messages) {
+	    	res.json(messages.reverse());
+	    });
+});
+
+chatRoutes.post('/message/unread', function(req, res) {
+	Message
+	    .find({ 'user': req.body.user, read: false })
+	    .exec()
+	    .then(function(messages) {
+	    	res.json(messages);
+	    });
+});
+
+chatRoutes.post('/message/make/readed', function(req, res) {
+	console.log(req.body)
+	Message
+	    .update({ '_id': req.body.id}, {read: true })
 	    .exec()
 	    .then(function(messages) {
 	    	res.json(messages);
@@ -94,11 +119,39 @@ chatRoutes.post('/message/room', async function(req, res) {
   	try {
     	return res.json({
       		error: false,
-     		message: await Message.find({ roomID: roomId, user: user }).limit(limit).populate('room'),
+     		message: (await Message.find({ roomID: roomId, user: user }).sort({createdAt:-1}).limit(limit).populate('room')).reverse(),
     	});
   	} catch (e) {
     	return res.json({ error: true, message: 'Cannot fetch message' });
   	}
+});
+
+chatRoutes.post('/message/read', function(req, res) {
+	const { id, roomId } = req.body;
+
+	const userInfo = {
+	      read: true
+	};
+
+	Message.update({ roomID: roomId, user: id, read: false }, { $set: userInfo }, {'multi': true}, function (err, updateMsg) {
+	    if (err) throw err;
+
+	    Message.find({ roomID: roomId, user: id}, function(err, messages) {
+	    	if (err) throw err;
+	    	res.json(messages)
+	    })
+	});
+});
+
+chatRoutes.post('/message/select/unread', function(req, res) {
+	const { id, roomId } = req.body;
+
+	Message
+	    .find({user: id, roomID: roomId, read: false})
+	    .exec()
+	    .then(function(messages) {
+	    	res.json(messages);
+	    });
 });
 
 module.exports = chatRoutes;

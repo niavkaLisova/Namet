@@ -10,7 +10,10 @@ var messageSchema = Schema({
   text: String,
   author: String,
   user: Object,
-  read: false,
+  read: { 
+  	type: Boolean,
+  	default: false
+  },
   time: Date
 }, { timestamps: true });
 
