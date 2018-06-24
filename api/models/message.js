@@ -14,6 +14,7 @@ var messageSchema = Schema({
   	type: Boolean,
   	default: false
   },
+  random: String,
   time: Date
 }, { timestamps: true });
 

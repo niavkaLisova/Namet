@@ -24,11 +24,10 @@ import { connect } from "react-redux"
 import { setActiveLanguage } from 'react-localize-redux';
 
 @connect((store, ownProps) => {
-  console.log('ownProps', ownProps);
-    return {
-      user: store.user,
-      id: ownProps.match.params.id
-    };
+  return {
+    user: store.user,
+    id: ownProps.match.params.id
+  };
 })
 export default class UserContainer extends React.Component {
   updateUser() {
@@ -43,17 +42,13 @@ export default class UserContainer extends React.Component {
     this.props.dispatch(UserActions.userDataUpdated({surname: event.target.value}));
   }
 
-  sendEmail() {
-    this.props.dispatch(UserActions.sendEmail());
-  }
-
   render() {
     const { user } = this.props;
 
     return (
       <MuiThemeProvider>
-        <h2 onClick={this.sendEmail.bind(this)}>Send Email</h2>
-        
+        <h2>{this.props.user.name}</h2>
+
       </MuiThemeProvider>
     )
   }

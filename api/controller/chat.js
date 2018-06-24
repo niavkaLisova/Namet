@@ -65,10 +65,10 @@ chatRoutes.get('/room/:id', function(req, res) {
 });
 
 chatRoutes.post('/message/new', async function(req, res) {
-	const { roomId, text, author, user, read } = req.body;
+	const { roomId, text, author, user, read, random } = req.body;
 
 	try {
-    	const { message } = await Room.addMessage(roomId, { text, author, user, read });
+    	const { message } = await Room.addMessage(roomId, { text, author, user, read, random });
     	return res.json(message);
   	} catch (e) {
     	return res.status(400).json({ error: true, message: 'Message cannot be created!' });
@@ -119,7 +119,7 @@ chatRoutes.post('/message/room', async function(req, res) {
   	try {
     	return res.json({
       		error: false,
-     		message: (await Message.find({ roomID: roomId, user: user }).sort({createdAt:-1}).limit(limit).populate('room')).reverse(),
+     		message: (await Message.find({ roomID: roomId}).sort({createdAt:-1}).limit(limit * 2).populate('room')).reverse(),
     	});
   	} catch (e) {
     	return res.json({ error: true, message: 'Cannot fetch message' });

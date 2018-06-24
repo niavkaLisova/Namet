@@ -10,14 +10,13 @@ import { connect } from "react-redux"
 
 @connect((store, ownProps) => {
     return {
-      chat: store.chat.room,
       roomId: store.chat.roomId,
       limit: store.chat.limit,
       messages: store.chat.messages,
       unread: store.chat.unread
     };
 })
-class ListroomsContainer extends React.Component {
+class ListroomsContainer2 extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -76,4 +75,4 @@ class ListroomsContainer extends React.Component {
 	}
 }
 
-export default socketConnect(ListroomsContainer);
+export default socketConnect(ListroomsContainer2);

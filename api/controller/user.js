@@ -27,7 +27,10 @@ userRoutes.post('/authenticate', function(req, res) {
   }
 
   User
-    .findOne({ email: email })
+    .findOne({ "$or": [ 
+        { "email": email },
+        { "name": email }
+     ]}  )
     .exec()
     .then(function(user) {
       if (!user) {
@@ -103,8 +106,8 @@ userRoutes.get('/users/:id', function(req, res) {
       setTimeout(function() {
         res.json({
           name: user.name,
+          nickname: user.nickname,
           email: user.email,
-          surname: user.surname,
           id: user._id,
           online: user.online,
           activeRoom: user.activeRoom
@@ -163,7 +166,7 @@ userRoutes.post('/user/find', function(req, res) {
   const { id, search } = req.body;
   const regexp = new RegExp("^"+ search);
   User
-      .find({ "name": regexp }, {name: 1, email: 1, surname: 1, _id: 1})
+      .find({ "name": regexp }, {name: 1, email: 1, nickname: 1, _id: 1})
       .where('_id').ne(id)
       .limit(10)
       .exec()

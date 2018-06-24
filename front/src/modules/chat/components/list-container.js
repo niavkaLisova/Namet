@@ -8,6 +8,7 @@ import { Card, CardActions, CardHeader, CardMedia, CardTitle, CardText } from 'm
 import Subheader from 'material-ui/Subheader'
 import * as ChatActions from '../actions/chat-actions'
 import ListroomsContainer from './listrooms-container'
+import FriendChatList from './friendChatList-container'
 import { socketConnect } from 'socket.io-react'
 import { connect } from "react-redux"
 
@@ -58,13 +59,13 @@ class ListContainer extends React.Component {
 
 			if (!this.state.receiverObj._id) {
 				this.props.findUser.map( (user) => {
-					if (this.state.receiver == user.name) {
+					if (user.nickname.includes(this.state.receiver)) {
 						userAdd = user;
 					}
 				});
 			}
 
-			if(this.state.receiverObj._id) {
+			if(userAdd._id) {
 			    this.props.dispatch(ChatActions.chatFindUser([]));
 				
 				this.props.dispatch(ChatActions.newChat(userAdd, this.props.user, this));
@@ -99,7 +100,7 @@ class ListContainer extends React.Component {
 				<List>
 					<Subheader>Find user</Subheader>
 					<TextField
-							hintText="Receiver or receivers"
+							hintText="Receiver"
 					     	name={'Receiver or receivers'}
 				            value={this.state.receiver}
 				            onChange={this.onChangeReceiver.bind(this)}
@@ -127,7 +128,7 @@ class ListContainer extends React.Component {
 				</List>
 				{ (this.props.test.length)? <ListroomsContainer visible={this.state.visible} startChat={this.props.test} />
 			:'' }
-				
+				<FriendChatList chat={this.props.test} friend={this.props.findUser} />
 			</div>
 		)
 	}

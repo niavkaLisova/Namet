@@ -26,12 +26,10 @@ export function newChat(user, myname, that) {
  			    between: [user._id, localStorage.getItem('userId')]
 			  })
         .end((error, response) => {
-          that.props.socket.emit('user join room', response.body);
-          dispatch(chatAddRoom(response.body));
-
         	if(response.body.success == false) {
         		return NotificationActions.show('Nie')(dispatch);
           } else {
+            dispatch(chatAddRoom(response.body));
             that.props.socket.emit('new room', response.body, user._id);
           	return NotificationActions.show('Room created')(dispatch);
           }
@@ -39,7 +37,8 @@ export function newChat(user, myname, that) {
   }
 }
 
-export function sendMessage(id, text, user, that, node, height, read) {
+export function sendMessage(id, text, user, that, node, height, read, random) {
+  console.log('action', random.toString())
   return (dispatch) => {
       request
         .post(Config.API_DOMAIN + 'chat/message/new')
@@ -49,7 +48,8 @@ export function sendMessage(id, text, user, that, node, height, read) {
           'text': text,
           'author': localStorage.getItem('userId'),
           'user': user,
-          'read': read
+          'read': read,
+          'random': random.toString()
         })
         .end((error, response) => {
           that.props.socket.emit('message', {'roomId': id, 'msg': response.body});
@@ -59,7 +59,7 @@ export function sendMessage(id, text, user, that, node, height, read) {
             node.scrollTo(0, height);  
             that.props.between.map( (uid) => {
               if(uid != localStorage.getItem('userId')) {
-                dispatch(socketMessage(uid, id, text, user, that,  response.body.createdAt));   
+                dispatch(socketMessage(uid, id, text, user, that,  response.body.createdAt, random));   
               }
             })
           }
@@ -67,7 +67,7 @@ export function sendMessage(id, text, user, that, node, height, read) {
   }
 }
 
-export function socketMessage(uid, id, text, user, that, createdAt) {
+export function socketMessage(uid, id, text, user, that, createdAt, random) {
   return (dispatch) => {
       request
         .get(Config.API_DOMAIN + 'api/users/' + uid)
@@ -82,7 +82,8 @@ export function socketMessage(uid, id, text, user, that, createdAt) {
                 'author': localStorage.getItem('userId'),
                 'user': user,
                 'read': false,
-                'createdAt': createdAt
+                'createdAt': createdAt,
+                'random': random
               } );
             })
           }
@@ -213,6 +214,22 @@ export function unreadSelect(roomId, key) {
   }
 }
 
+export function getUser(user1, user2, key) {
+  return (dispatch) => {
+      request
+        .get(Config.API_DOMAIN + 'api/users/' + user1)
+        .set('x-access-token', localStorage.getItem('token'))
+        .end((error, response) => {
+          let res1 = response.body;
+          request
+          .get(Config.API_DOMAIN + 'api/users/' + user2)
+          .set('x-access-token', localStorage.getItem('token'))
+          .end((error, response) => {
+            dispatch(chatName({value: [res1.nickname, response.body.nickname], key: key}));
+          });
+        });
+  }
+}
 
 export function chatUpdated(data) {
 	return {type: 'CHAT_UPDATED', data};
@@ -256,4 +273,8 @@ export function limitStart() {
 
 export function unreadSet(data) {
   return {type: 'UNREAD_SET', data};
+}
+
+export function chatName(data) {
+  return {type: 'CHAT_NAME', data};
 }

@@ -10,7 +10,8 @@ let init = {
   betweenName: [],
   findUser: [],
   limit: 10,
-  unread: []
+  unread: [],
+  chatName: {}
 }
 
 function chatReducer(state = init, action) {
@@ -81,6 +82,14 @@ function chatReducer(state = init, action) {
       return update(state, { 
         unread: { 
           [action.data.key]: {$set: action.data.length}  
+        }
+
+      });
+      break;
+    case 'CHAT_NAME':
+      return update(state, { 
+        chatName: { 
+          [action.data.key]: {$set: action.data.value[0] + ' VS ' + action.data.value[1]}  
         }
 
       });
