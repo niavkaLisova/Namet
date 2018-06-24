@@ -33,6 +33,7 @@ class ListroomsContainer extends React.Component {
 			this.props.dispatch(ChatActions.unreadSelect(item._id, index));
 			});
 	      this.props.dispatch(ChatActions.allChat());
+	      console.log(data, 'g')
 	    });
 	}
 

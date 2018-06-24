@@ -69,7 +69,7 @@ class MessageContainer extends React.Component {
 									</IntlProvider>
 									<Divider />
 								</div>
-								) : 'non'
+								) : ''
 						)
 					})}
 				</List>

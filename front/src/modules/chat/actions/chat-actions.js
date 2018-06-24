@@ -130,10 +130,10 @@ export function getMessagesRoom(roomId, limit) {
   }
 }
 
-export function makeReaded(messageId) {
+export function makeRead(messageId) {
   return (dispatch) => {
       request
-        .post(Config.API_DOMAIN + 'chat/message/make/readed')
+        .post(Config.API_DOMAIN + 'chat/message/make/read')
         .set('x-access-token', localStorage.getItem('token'))
         .send({
           'id':messageId

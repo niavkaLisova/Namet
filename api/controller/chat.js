@@ -97,7 +97,7 @@ chatRoutes.post('/message/unread', function(req, res) {
 	    });
 });
 
-chatRoutes.post('/message/make/readed', function(req, res) {
+chatRoutes.post('/message/make/read', function(req, res) {
 	console.log(req.body)
 	Message
 	    .update({ '_id': req.body.id}, {read: true })

@@ -2,7 +2,6 @@ import React from 'react'
 import { List, ListItem } from 'material-ui/List'
 import { Container, Row, Col } from 'react-grid-system'
 import { connect } from 'react-redux'
-import ReadContainer from './read-container'
 import './Message.sass';
 const ReactIntl = require('react-intl');
 const FormattedRelative = ReactIntl.FormattedRelative;
@@ -14,6 +13,10 @@ const FormattedRelative = ReactIntl.FormattedRelative;
     };
 })
 class MsgContainer extends React.Component {
+	findMsg(element) {
+		console.log('elem', element);
+		return <p>1</p>;
+	}
 	render() {
 		return (
 			<div class={(this.props.msg.read)? '': 'read'} key={this.props._id}>
@@ -33,14 +36,11 @@ class MsgContainer extends React.Component {
 		          		</Row>
 		          		<Row>
 			          		<Col sm={8}>
-			          		{((this.props.messages[this.props.number - 1])?
-			          		((this.props.msg.random == (this.props.messages[this.props.number - 1]).random)) ? (
-			          			<ReadContainer value={(this.props.messages[this.props.number - 1])} />): ' ' :
-			          		('') )}
-			          		{((this.props.messages[this.props.number + 1])?
-			          		((this.props.msg.random == (this.props.messages[this.props.number + 1]).random)) ? (' YES '): ' ' :
-			          		('') )}
-			          			
+			          		{	
+			          			(this.props.messages.find(x => (x.random == this.props.msg.random && x.user != localStorage.getItem('userId'))) )? (
+								(this.props.messages.find(x => (x.random == this.props.msg.random && x.user != localStorage.getItem('userId'))).read) ? 'read': 'not read'
+			          			): ('nema')
+			          		}
 			          		</Col>
 							<Col sm={4}>
 								<FormattedRelative value={this.props.msg.createdAt} />
