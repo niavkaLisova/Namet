@@ -19,7 +19,7 @@ class BoxContainer extends React.Component {
 			if(msg.user == localStorage.getItem('userId')) {
 	    		if(msg.roomID == this.props.roomId) {
 	    			msg.read = true;
-	    			this.props.dispatch(ChatActions.makeReaded(msg._id));
+	    			this.props.dispatch(ChatActions.messageRead(msg._id, msg.roomId));
 	    		}	
 	    		this.props.dispatch(ChatActions.messageAdd(msg));	
 	    		let nodeList = window.document.getElementById('scroll')

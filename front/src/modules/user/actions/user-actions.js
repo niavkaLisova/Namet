@@ -46,20 +46,6 @@ export function userDataUpdated(user) {
   }
 }
 
-export function getUnreadMessages() {
-  return (dispatch) => {
-      request
-        .post(Config.API_DOMAIN + 'chat/message/unread')
-        .set('x-access-token', localStorage.getItem('token'))
-        .send({
-          'user': localStorage.getItem('userId'),
-        })
-        .end((error, response) => {
-          dispatch(unreadUpdate(response.body.length));
-        });
-  }
-}
-
 export function selectActiveRoom(activeRoom) {
   return (dispatch) => {
       request

@@ -26,10 +26,22 @@ exports = module.exports = function(io) {
 	      socket.join(room)
 	    })
 	    
+	    socket.on('reload read message b', function(user_id){
+	    	User.findById(user_id, function(err, user) {
+	    		if(err) return null
+
+	    		if(user.online.length && user.online.length > 0) {
+		    		user.online.map( (id) => {
+		    				socket.to(id).emit('reload read message');
+		    			}
+		    		)
+		    	}
+	    	})
+		});
+	    
 	    socket.on('new room', function(data, user_id){
 	    	User.findById(user_id, function(err, user) {
 	    		user.online.map( (id) => {
-	    				console.log('id', id); 
 	    				socket.to(id).emit('room created', data);
 	    			}
 	    		)

@@ -42,14 +42,15 @@ class TextareaContainer extends React.Component {
 
 		const random = Math.random(); 
 		
-		this.props.between.map((user) => {
-			
-			if(user == localStorage.getItem('userId')) {
-				this.props.dispatch(ChatActions.sendMessage(this.props.roomId, this.state.message, user, this, node, height, true, random));
-			} else {
-				this.props.dispatch(ChatActions.sendMessage(this.props.roomId, this.state.message, user, this, node, height, false, random));
-			}
-		})
+		const obj = {
+			id: this.props.roomId, 
+			text: this.state.message,
+			that: this, 
+			node, 
+			height
+		}
+		this.props.dispatch(ChatActions.sendMessage(obj));
+
 		this.props.dispatch(ChatActions.allChat());
 
 	}

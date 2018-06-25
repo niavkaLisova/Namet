@@ -21,7 +21,6 @@ class MsgContainer extends React.Component {
 		return (
 			<div class={(this.props.msg.read)? '': 'read'} key={this.props._id}>
 	        	<ListItem
-		          class={(localStorage.getItem('userId') == this.props.msg.author)? 'right': 'left'}
 		          primaryText={
 		          	<Container>
 		          		<span class='msgName'>{this.props.betweenName.map((user) => (user.id == this.props.msg.author)? user.name: '')}</span>
@@ -36,11 +35,7 @@ class MsgContainer extends React.Component {
 		          		</Row>
 		          		<Row>
 			          		<Col sm={8}>
-			          		{	
-			          			(this.props.messages.find(x => (x.random == this.props.msg.random && x.user != localStorage.getItem('userId'))) )? (
-								(this.props.messages.find(x => (x.random == this.props.msg.random && x.user != localStorage.getItem('userId'))).read) ? 'read': 'not read'
-			          			): ('nema')
-			          		}
+			          		
 			          		</Col>
 							<Col sm={4}>
 								<FormattedRelative value={this.props.msg.createdAt} />

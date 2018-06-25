@@ -65,10 +65,10 @@ chatRoutes.get('/room/:id', function(req, res) {
 });
 
 chatRoutes.post('/message/new', async function(req, res) {
-	const { roomId, text, author, user, read, random } = req.body;
+	const { roomId, text, author } = req.body;
 
 	try {
-    	const { message } = await Room.addMessage(roomId, { text, author, user, read, random });
+    	const { message } = await Room.addMessage(roomId, { text, author });
     	return res.json(message);
   	} catch (e) {
     	return res.status(400).json({ error: true, message: 'Message cannot be created!' });
@@ -133,7 +133,7 @@ chatRoutes.post('/message/read', function(req, res) {
 	      read: true
 	};
 
-	Message.update({ roomID: roomId, user: id, read: false }, { $set: userInfo }, {'multi': true}, function (err, updateMsg) {
+	Message.update({ roomID: roomId, read: false, author: { $ne: id } }, { $set: userInfo }, {'multi': true}, function (err, updateMsg) {
 	    if (err) throw err;
 
 	    Message.find({ roomID: roomId, user: id}, function(err, messages) {
@@ -147,7 +147,8 @@ chatRoutes.post('/message/select/unread', function(req, res) {
 	const { id, roomId } = req.body;
 
 	Message
-	    .find({user: id, roomID: roomId, read: false})
+	    .find({roomID: roomId, read: false})
+	    .where('author').ne(id)
 	    .exec()
 	    .then(function(messages) {
 	    	res.json(messages);

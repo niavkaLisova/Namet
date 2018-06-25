@@ -33,6 +33,14 @@ class ListroomsContainer2 extends React.Component {
 			});
 	      this.props.dispatch(ChatActions.allChat());
 	    });
+
+	    this.props.socket.on('reload read message', () => {
+	    	console.log('reload msg');
+	    	this.props.chat.map((item, index) => {
+				// this.props.dispatch(ChatActions.unreadSelect(item._id, index));
+				this.props.dispatch(ChatActions.getMessagesRoom(this.props.roomId, this.props.limit))
+			});
+	    })
 	}
 
 	roomIdUpdated(id) {
@@ -44,7 +52,7 @@ class ListroomsContainer2 extends React.Component {
 		this.props.dispatch(ChatActions.getMessagesRoom(id, this.props.limit))
 		this.props.socket.emit('join room', id);
 		this.props.dispatch(ChatActions.limitStart());
-		this.props.dispatch(ChatActions.messageRead(id));
+		this.props.dispatch(ChatActions.messageRead(id, this));
 		
 		// console.log('new chats', this.props.chat);
 		// this.props.dispatch(UserActions.getUnreadMessages());

@@ -14,7 +14,8 @@ import { connect } from "react-redux"
       roomId: store.chat.roomId,
       limit: store.chat.limit,
       messages: store.chat.messages,
-      unread: store.chat.unread
+      unread: store.chat.unread,
+      between: store.chat.between
     };
 })
 class ListroomsContainer extends React.Component {
@@ -30,11 +31,22 @@ class ListroomsContainer extends React.Component {
 
 		this.props.socket.on('message g', (data) => {
 	      this.props.chat.map((item, index) => {
-			this.props.dispatch(ChatActions.unreadSelect(item._id, index));
+				this.props.dispatch(ChatActions.unreadSelect(item._id, index));
 			});
 	      this.props.dispatch(ChatActions.allChat());
 	      console.log(data, 'g')
 	    });
+
+	    this.props.socket.on('reload read message', () => {
+	    	this.props.chat.map((item, index) => {
+				this.props.dispatch(ChatActions.getMessagesRoom(this.props.roomId, this.props.limit))
+			});
+	    })
+
+		this.props.socket.on('message', (data) =>{
+			this.props.dispatch(ChatActions.messageRead(this.props.roomId, this));
+			this.props.dispatch(ChatActions.getMessagesRoom(this.props.roomId, this.props.limit))
+		})
 	}
 
 	roomIdUpdated(id) {
@@ -46,7 +58,7 @@ class ListroomsContainer extends React.Component {
 		this.props.dispatch(ChatActions.getMessagesRoom(id, this.props.limit))
 		this.props.socket.emit('join room', id);
 		this.props.dispatch(ChatActions.limitStart());
-		this.props.dispatch(ChatActions.messageRead(id));
+		this.props.dispatch(ChatActions.messageRead(id, this));
 		
 		// console.log('new chats', this.props.chat);
 		// this.props.dispatch(UserActions.getUnreadMessages());

@@ -60,16 +60,14 @@ class MessageContainer extends React.Component {
 			      style={this.state.loading ? {} : { display: 'none' }}
 			    />
 				<List class='messagesList' id='scroll' ref="messageList">
-					{this.props.messages.map( (msg, key) => {
+					{this.props.messages.map( (msg) => {
 						return (
-							(localStorage.getItem('userId') == msg.user) ? (
-								<div key={msg._id}>
-									<IntlProvider locale="en">
-										<MsgContainer msg={msg} number={key} />
-									</IntlProvider>
-									<Divider />
-								</div>
-								) : ''
+							<div key={msg._id}>
+								<IntlProvider locale="en">
+									<MsgContainer msg={msg} />
+								</IntlProvider>
+								<Divider />
+							</div>
 						)
 					})}
 				</List>

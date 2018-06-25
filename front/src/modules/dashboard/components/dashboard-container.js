@@ -21,7 +21,6 @@ import { socketConnect } from 'socket.io-react'
 class DashboardContainer extends React.Component {
   componentDidMount() {
     this.props.dispatch(UserActions.getUser(this.props.socket));
-    // this.props.dispatch(UserActions.getUnreadMessages());
   }
 
   constructor(props) {
@@ -33,12 +32,6 @@ class DashboardContainer extends React.Component {
   
       this.props.socket.emit('get info', localStorage.getItem('userId'))
     });
-
-    this.props.socket.on('message g', (data) => {
-      console.log('message globale', data);
-      this.props.dispatch(UserActions.getUnreadMessages());
-    });
-
   }
 
   handleToggle() {

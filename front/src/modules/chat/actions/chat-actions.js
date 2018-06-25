@@ -37,53 +37,49 @@ export function newChat(user, myname, that) {
   }
 }
 
-export function sendMessage(id, text, user, that, node, height, read, random) {
-  console.log('action', random.toString())
+export function sendMessage(obj) {
   return (dispatch) => {
       request
         .post(Config.API_DOMAIN + 'chat/message/new')
         .set('x-access-token', localStorage.getItem('token'))
         .send({
-          'roomId': id,
-          'text': text,
-          'author': localStorage.getItem('userId'),
-          'user': user,
-          'read': read,
-          'random': random.toString()
+          'roomId': obj.id,
+          'text': obj.text,
+          'author': localStorage.getItem('userId')
         })
         .end((error, response) => {
-          that.props.socket.emit('message', {'roomId': id, 'msg': response.body});
-          if(response.body.user == localStorage.getItem('userId')) {
-            dispatch(messageAdd(response.body));
+          obj.that.props.socket.emit('message', {'roomId': obj.id, 'msg': response.body});
+          dispatch(messageAdd(response.body));
 
-            node.scrollTo(0, height);  
-            that.props.between.map( (uid) => {
-              if(uid != localStorage.getItem('userId')) {
-                dispatch(socketMessage(uid, id, text, user, that,  response.body.createdAt, random));   
-              }
-            })
-          }
+          obj.node.scrollTo(0, obj.height);  
+          obj.that.props.between.map( (uid) => {
+            const object = {
+              uid, 
+              id: obj.roomId, 
+              text: obj.text, 
+              that: obj.that, 
+              createdAt: response.body.createdAt
+            }
+            dispatch(socketMessage(object));   
+          })
         });
   }
 }
 
-export function socketMessage(uid, id, text, user, that, createdAt, random) {
+export function socketMessage(object) {
   return (dispatch) => {
       request
-        .get(Config.API_DOMAIN + 'api/users/' + uid)
+        .get(Config.API_DOMAIN + 'api/users/' + object.uid)
         .set('x-access-token', localStorage.getItem('token'))
         .end((error, response) => {
           const user = response.body;
           if(user.online.length && user.online.length > 0) {
             user.online.map( (id_online) => {
-              that.props.socket.emit('message global', id_online, {
-                'roomId': id,
-                'text': text,
+              object.that.props.socket.emit('message global', id_online, {
+                'roomId': object.id,
+                'text': object.text,
                 'author': localStorage.getItem('userId'),
-                'user': user,
-                'read': false,
-                'createdAt': createdAt,
-                'random': random
+                'createdAt': object.createdAt
               } );
             })
           }
@@ -185,7 +181,7 @@ export function findUser(search) {
   }
 }
 
-export function messageRead(id) {
+export function messageRead(id, that) {
   return (dispatch) => {
       request
         .post(Config.API_DOMAIN + 'chat/message/read')
@@ -195,6 +191,11 @@ export function messageRead(id) {
           'roomId': id
         })
         .end((error, response) => {
+            that.props.between.map( (uid) => {
+              if(uid != localStorage.getItem('userId')) {
+                that.props.socket.emit('reload read message b', uid);
+              }
+          })
         });
   }
 }

@@ -9,12 +9,11 @@ var messageSchema = Schema({
   },
   text: String,
   author: String,
-  user: Object,
+  delUser: [],
   read: { 
   	type: Boolean,
   	default: false
   },
-  random: String,
   time: Date
 }, { timestamps: true });
 
