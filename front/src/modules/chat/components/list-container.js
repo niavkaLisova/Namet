@@ -126,7 +126,7 @@ class ListContainer extends React.Component {
 					})
 					}
 				</List>
-				{ (this.props.test.length)? <ListroomsContainer visible={this.state.visible} startChat={this.props.test} />
+				{ (this.props.test.length)? <ListroomsContainer chat={this.props.test} visible={this.state.visible} startChat={this.props.test} />
 			:'' }
 				<FriendChatList chat={this.props.test} friend={this.props.findUser} />
 			</div>

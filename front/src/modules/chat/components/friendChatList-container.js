@@ -1,6 +1,6 @@
 import React from 'react'
 
-import ListroomsContainer2 from './listrooms2-container'
+import ListroomsContainer from './listrooms-container'
 import { List, ListItem } from 'material-ui/List'
 import * as ChatActions from '../actions/chat-actions'
 
@@ -23,7 +23,7 @@ export default function FriendChatList(props) {
 				})
 
             } 
-    		{(listFriend.length > 0)? <ListroomsContainer2 visible={true} chat={listFriend} startChat={listFriend} />: '' }
+    		{(listFriend.length > 0)? <ListroomsContainer visible={true} chat={listFriend} startChat={listFriend} />: '' }
         </div>
     )
 }

@@ -75,18 +75,18 @@ chatRoutes.post('/message/new', async function(req, res) {
   	}
 });
 
-chatRoutes.post('/message/all', function(req, res) {
-	const { roomId, user, limit } = req.body;
+// chatRoutes.post('/message/all', function(req, res) {
+// 	const { roomId, user, limit } = req.body;
 
-	Message
-	    .find({ "roomID": roomId, 'user': user })
-	    .sort({createdAt:-1})
-	   	.limit(limit)
-	    .exec()
-	    .then(function(messages) {
-	    	res.json(messages.reverse());
-	    });
-});
+// 	Message
+// 	    .find({ "roomID": roomId, 'user': user })
+// 	    .sort({createdAt:-1})
+// 	   	.limit(limit)
+// 	    .exec()
+// 	    .then(function(messages) {
+// 	    	res.json(messages.reverse());
+// 	    });
+// });
 
 chatRoutes.post('/message/unread', function(req, res) {
 	Message
@@ -98,7 +98,7 @@ chatRoutes.post('/message/unread', function(req, res) {
 });
 
 chatRoutes.post('/message/make/read', function(req, res) {
-	console.log(req.body)
+	// console.log(req.body)
 	Message
 	    .update({ '_id': req.body.id}, {read: true })
 	    .exec()
@@ -119,7 +119,7 @@ chatRoutes.post('/message/room', async function(req, res) {
   	try {
     	return res.json({
       		error: false,
-     		message: (await Message.find({ roomID: roomId}).sort({createdAt:-1}).limit(limit * 2).populate('room')).reverse(),
+     		message: (await Message.find({ roomID: roomId, delUser: { $ne: user }}).sort({createdAt:-1}).limit(limit * 2).populate('room')).reverse(),
     	});
   	} catch (e) {
     	return res.json({ error: true, message: 'Cannot fetch message' });
@@ -141,6 +141,23 @@ chatRoutes.post('/message/read', function(req, res) {
 	    	res.json(messages)
 	    })
 	});
+});
+
+chatRoutes.post('/room/delete/user', function(req, res) {
+	const { msgId, user, len } = req.body;
+
+	Message
+		.findOne({'_id': msgId})
+		.exec()
+		.then(function(msg) {
+			if((len - 1) == msg.delUser.length) {
+				msg.remove();	
+			} else {
+				msg.delUser.push(user);
+				msg.save();
+			}
+	})
+	
 });
 
 chatRoutes.post('/message/select/unread', function(req, res) {

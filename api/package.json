@@ -29,9 +29,7 @@
     "mongodb": "2.1.4",
     "mongoose": "^4.4.19",
     "morgan": "1.7.0",
-    "nodemailer": "^4.6.6",
-    "nodemailer-smtp-transport": "^2.7.4",
-    "socket.io": "^2.1.0"
+    "nodemailer": "^4.6.6"
   },
   "devDependencies": {
     "mongoose": "4.4.19",

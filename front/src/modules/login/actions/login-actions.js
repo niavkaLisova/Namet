@@ -32,6 +32,7 @@ export function login(email, password) {
 
           dispatch(loginSuccess({userId: userId, token: token}));
           appHistory.push('/user/' + userId);
+          window.location.reload();
         } else {
           NotificationActions.show('Wrong username or password')(dispatch);
           localStorage.removeItem('token');

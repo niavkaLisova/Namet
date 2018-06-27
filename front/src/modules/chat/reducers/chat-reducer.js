@@ -10,7 +10,7 @@ let init = {
   betweenName: [],
   findUser: [],
   limit: 10,
-  unread: [],
+  unread: {},
   chatName: {}
 }
 

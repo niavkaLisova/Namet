@@ -26,7 +26,7 @@ class TextareaContainer extends React.Component {
 
 	onChangeMessage(event) {
 		this.setState({
-	      message: event.target.value
+	    	message: event.target.value
 	    });
 	}
 
@@ -39,8 +39,6 @@ class TextareaContainer extends React.Component {
 	    let node = window.document.getElementById('scrollContainer')
 		let style = window.getComputedStyle(nodeList, null);
 		let height = parseFloat(style.getPropertyValue("height"));
-
-		const random = Math.random(); 
 		
 		const obj = {
 			id: this.props.roomId, 

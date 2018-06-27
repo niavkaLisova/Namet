@@ -10,7 +10,6 @@ import { connect } from "react-redux"
 
 @connect((store, ownProps) => {
     return {
-      chat: store.chat.room,
       roomId: store.chat.roomId,
       limit: store.chat.limit,
       messages: store.chat.messages,
@@ -25,13 +24,13 @@ class ListroomsContainer extends React.Component {
 		this.state = {
   	  		msg: ''
 		};
-		this.props.startChat.map((item, index) => {
-			this.props.dispatch(ChatActions.unreadSelect(item._id, index));
+		this.props.startChat.map((item) => {
+			this.props.dispatch(ChatActions.unreadSelect(item._id));
 		})
 
 		this.props.socket.on('message g', (data) => {
-	      this.props.chat.map((item, index) => {
-				this.props.dispatch(ChatActions.unreadSelect(item._id, index));
+	      this.props.chat.map((item) => {
+				this.props.dispatch(ChatActions.unreadSelect(item._id));
 			});
 	      this.props.dispatch(ChatActions.allChat());
 	      console.log(data, 'g')
@@ -45,8 +44,20 @@ class ListroomsContainer extends React.Component {
 
 		this.props.socket.on('message', (data) =>{
 			this.props.dispatch(ChatActions.messageRead(this.props.roomId, this));
-			this.props.dispatch(ChatActions.getMessagesRoom(this.props.roomId, this.props.limit))
+			data.read = true
+			this.props.dispatch(ChatActions.messageAdd(data));
+
+			let nodeList = window.document.getElementById('scroll')
+		    let node = window.document.getElementById('scrollContainer')
+			let style = window.getComputedStyle(nodeList, null);
+			let height = parseFloat(style.getPropertyValue("height"));
+			node.scrollTo(0, height); 
 		})
+		setTimeout(function(){
+			let style = window.getComputedStyle(window.document.getElementById('scroll'), null);
+			let height = parseFloat(style.getPropertyValue("height"));
+			window.document.getElementById('scrollContainer').scrollTo(0, height)
+		}.bind(this), 1000)
 	}
 
 	roomIdUpdated(id) {
@@ -63,13 +74,16 @@ class ListroomsContainer extends React.Component {
 		// console.log('new chats', this.props.chat);
 		// this.props.dispatch(UserActions.getUnreadMessages());
 		this.props.dispatch(UserActions.selectActiveRoom(id));
-		this.props.chat.map((item, index) => {
-			this.props.dispatch(ChatActions.unreadSelect(item._id, index));
+		this.props.chat.map((item) => {
+			this.props.dispatch(ChatActions.unreadSelect(item._id));
 		});
-		let style = window.getComputedStyle(window.document.getElementById('scroll'), null);
-		let height = parseFloat(style.getPropertyValue("height"));
-
-		window.document.getElementById('scrollContainer').scrollTo(0, height);
+	
+		setTimeout(function(){
+			let style = window.getComputedStyle(window.document.getElementById('scroll'), null);
+			let height = parseFloat(style.getPropertyValue("height"));
+			window.document.getElementById('scrollContainer').scrollTo(0, height)
+		}.bind(this), 1000)
+		
 	}
 
 	render() {
@@ -81,7 +95,7 @@ class ListroomsContainer extends React.Component {
 				      onClick={() => this.roomIdUpdated(this.props.chat[key]._id)}
 				      key={key}
 				      leftAvatar={<Avatar src='' />}
-				      primaryText={<CounterMessages id={key} that={this.props.dispatch} unread={this.props.unread[key]} active={this.props.chat[key]._id == this.props.roomId}  between={this.props.chat[key].between} />}      
+				      primaryText={<CounterMessages id={key} that={this.props.dispatch} unread={this.props.unread[this.props.chat[key]._id]} active={this.props.chat[key]._id == this.props.roomId}  between={this.props.chat[key].between} />}      
 			    	/>
 				})}
 		    </List>

@@ -10,7 +10,7 @@ export default function CounterMessages(props) {
 
     return (
         <div>
-            <CounterMessagesName id={props.id} /> {props.unread}
+            <CounterMessagesName id={props.id} /> {(props.unread)? props.unread: ''}
             {(props.active) ? 'Kessa': 'Doar'}      
         </div>
     )

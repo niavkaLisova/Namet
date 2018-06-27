@@ -6,7 +6,6 @@ const bson = require('bson')
 const User = require('../models/user')
 const config = require('../config/config')
 var nodemailer = require('nodemailer');
-var smtpTransport = require('nodemailer-smtp-transport')
 
 const userRoutes = express.Router();
 
@@ -204,31 +203,30 @@ userRoutes.post('/send/email', function(req, res) {
 userRoutes.post('/email/confirm', function(req, res) {
   let { receiver, subject, text } = req.body;
 
-  var transporter = nodemailer.createTransport(smtpTransport({
-    service: 'gmail',
-    host: 'smtp.gmail.com',
-    auth: {
-      user: 'nametUnterstutzung@gmail.com',
-      pass: 'nadiabeka1'
-    }
-  }));
+  // var transporter = nodemailer.createTransport({
+  //   service: 'gmail',
+  //   auth: {
+  //     user: 'nametUnterstutzung@gmail.com',
+  //     pass: 'nadiabeka1'
+  //   }
+  // });
 
-  var mailOptions = {
-    from: 'nametUnterstutzung@gmail.com',
-    to: receiver,
-    subject: subject,
-    text: text
-  };
+  // var mailOptions = {
+  //   from: 'nametUnterstutzung@gmail.com',
+  //   to: receiver,
+  //   subject: subject,
+  //   text: text
+  // };
 
-  transporter.sendMail(mailOptions, function(error, info){
-    if (error) {
-      console.log(error);
-      res.json(false);
-    } else {
-      console.log('Email sent: ' + info.response);
-      res.json(true);
-    }
-  });
+  // transporter.sendMail(mailOptions, function(error, info){
+  //   if (error) {
+  //     console.log(error);
+  //     res.json(false);
+  //   } else {
+  //     console.log('Email sent: ' + info.response);
+  //     res.json(true);
+  //   }
+  // });
 });
 
 userRoutes.post('/confirm/email/:email/:id', function(req, res) {

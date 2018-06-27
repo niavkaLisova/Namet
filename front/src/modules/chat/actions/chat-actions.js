@@ -103,6 +103,22 @@ export function getMessages(roomId, limit) {
   }
 }
 
+export function deleteUserFromChat(msg, len, that) {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'chat/room/delete/user')
+        .set('x-access-token', localStorage.getItem('token'))
+        .send({
+          msgId: msg._id,
+          user: localStorage.getItem('userId'),
+          len
+        })
+        .end((error, response) => {
+          
+        });
+  }
+}
+
 export function chatNoCreate() {
   return (dispatch) => {
     NotificationActions.show('nie')(dispatch);
@@ -191,16 +207,16 @@ export function messageRead(id, that) {
           'roomId': id
         })
         .end((error, response) => {
-            that.props.between.map( (uid) => {
-              if(uid != localStorage.getItem('userId')) {
-                that.props.socket.emit('reload read message b', uid);
-              }
+          that.props.between.map( (uid) => {
+            if(uid != localStorage.getItem('userId')) {
+              that.props.socket.emit('reload read message b', uid);
+            }
           })
         });
   }
 }
 
-export function unreadSelect(roomId, key) {
+export function unreadSelect(roomId) {
   return (dispatch) => {
       request
         .post(Config.API_DOMAIN + 'chat/message/select/unread')
@@ -210,7 +226,7 @@ export function unreadSelect(roomId, key) {
           'roomId': roomId
         })
         .end((error, response) => {
-          dispatch(unreadSet({'length': response.body.length, 'key': key}));
+          dispatch(unreadSet({length: response.body.length, key: roomId}));
         });
   }
 }
