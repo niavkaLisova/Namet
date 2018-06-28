@@ -38,8 +38,7 @@ export default class LeftMenu extends React.Component {
             title="Menu"
             onLeftIconButtonClick={this.props.handleToggle}
           />
-          <List>
-          
+          <List>        
             <Subheader>Menu description</Subheader>
             <ListItem primaryText="User" leftIcon={<ContentSend />} onClick={this.goToUser}/>
             <ListItem primaryText="Payment" leftIcon={<ContentDrafts />} onClick={this.goToPayment}/>

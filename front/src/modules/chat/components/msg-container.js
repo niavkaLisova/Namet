@@ -51,7 +51,7 @@ class MsgContainer extends React.Component {
 			          		<Row>
 				          		<Col sm={8}>
 				          			<div onClick={() => this.handleDelete(this.props.msg)}>
-				          				del
+				          				<i class="material-icons">delete</i>
 				          			</div>
 				          		</Col>
 								<Col sm={4}>

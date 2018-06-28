@@ -64,7 +64,7 @@ userRoutes.post('/register', function(req, res) {
     .exec()
     .then(function(user) {
       if (user) {
-        return throwFailed(res, 'There is already user with such username.');
+        return throwFailed(res, 'There is already user with such email.');
       }
 
       const saltRounds = 10;

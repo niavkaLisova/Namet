@@ -23,7 +23,7 @@ export default function FriendChatList(props) {
 				})
 
             } 
-    		{(listFriend.length > 0)? <ListroomsContainer visible={true} chat={listFriend} startChat={listFriend} />: '' }
+    		{(listFriend.length > 0)? <ListroomsContainer visible={props.visible} chat={listFriend} startChat={listFriend} />: '' }
         </div>
     )
 }

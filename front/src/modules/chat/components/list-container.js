@@ -9,6 +9,7 @@ import Subheader from 'material-ui/Subheader'
 import * as ChatActions from '../actions/chat-actions'
 import ListroomsContainer from './listrooms-container'
 import FriendChatList from './friendChatList-container'
+import FindUserDialog from './findUser-dialog.js'
 import { socketConnect } from 'socket.io-react'
 import { connect } from "react-redux"
 
@@ -29,7 +30,8 @@ class ListContainer extends React.Component {
 	    this.state = {
 	    	receiver: '',
 	    	visible: true,
-	    	receiverObj: {}
+	    	receiverObj: {},
+	    	open: false,
 	    };
 	    this.props.dispatch(ChatActions.allChat());
 
@@ -38,6 +40,17 @@ class ListContainer extends React.Component {
 	    })
 	}
 
+	handleOpen = () => {
+		this.setState({open: true});
+	};
+
+	handleClose = () => {
+		this.setState({open: false});
+	};
+
+	setUserAdd = (data) => {
+		this.setState({receiverObj: data})
+	};
 
 	onChangeReceiver(event) {
 		let visible = (event.target.value.length > 0)? false: true;
@@ -53,37 +66,29 @@ class ListContainer extends React.Component {
 	    }
 	}
 
+	userAddFunc() {
+		if(this.state.receiverObj._id) {
+		    this.props.dispatch(ChatActions.chatFindUser([]));
+			this.props.dispatch(ChatActions.newChat(this.state.receiverObj, this.props.user, this));
+		} else {
+		    this.props.dispatch(ChatActions.chatNoCreate())
+		}
+
+		this.setState({
+	    	receiver: '',
+	    	receiverObj: {},
+	    	visible: true,
+	    	open: false
+	    });
+	}
+
 	newChat() {
 		if(this.state.receiver) {
-			let userAdd = this.state.receiverObj;
-
-			if (!this.state.receiverObj._id) {
-				this.props.findUser.map( (user) => {
-					if (user.nickname.includes(this.state.receiver)) {
-						userAdd = user;
-					}
-				});
-			}
-
-			if(userAdd._id) {
-			    this.props.dispatch(ChatActions.chatFindUser([]));
-				
-				this.props.dispatch(ChatActions.newChat(userAdd, this.props.user, this));
-				
-				this.setState({
-			      receiver: '',
-			      receiverObj: {},
-			      visible: true
-			    });
+			if (!this.state.receiverObj._id && this.props.findUser.length > 0) {
+				this.handleOpen();
 			} else {
-				this.setState({
-			      receiver: '',
-			      receiverObj: {},
-			      visible: true
-			    });
-
-			    this.props.dispatch(ChatActions.chatNoCreate())
-			}
+				this.userAddFunc();
+			}	
 		}
 	}
 
@@ -97,6 +102,14 @@ class ListContainer extends React.Component {
 	render() {
 		return (
 			<div>
+				<FindUserDialog 
+					handleClose={this.handleClose.bind(this)}
+					handleOpen={this.handleOpen.bind(this)}
+					open={this.state.open}
+					findUser={this.props.findUser}
+					setUserAdd={this.setUserAdd.bind(this)}
+					userAddFunc={this.userAddFunc.bind(this)}
+				 />
 				<List>
 					<Subheader>Find user</Subheader>
 					<TextField
@@ -112,7 +125,7 @@ class ListContainer extends React.Component {
 				        onClick={this.newChat.bind(this)}
 				      />
 				
-					{this.props.findUser.map( (user) => {
+					{(!this.state.visible) ? (this.props.findUser.map( (user) => {
 						return (
 							<Card key={user._id}>
 							    <CardHeader
@@ -123,12 +136,12 @@ class ListContainer extends React.Component {
 							    />
 							</Card>
 							)
-					})
+					})) : ''
 					}
 				</List>
 				{ (this.props.test.length)? <ListroomsContainer chat={this.props.test} visible={this.state.visible} startChat={this.props.test} />
 			:'' }
-				<FriendChatList chat={this.props.test} friend={this.props.findUser} />
+				<FriendChatList chat={this.props.test} friend={this.props.findUser} visible={!this.state.visible} />
 			</div>
 		)
 	}
