@@ -1,11 +1,32 @@
 const express = require('express')
 const _ = require('lodash')
 const bson = require('bson')
+const crypto = require('crypto')
+const algorithm = 'aes-256-ctr'
+const password = 'd6F3Efeq'
 
 const Room = require('../models/room')
 const Message = require('../models/message')
 const User = require('../models/user')
 const config = require('../config/config')
+
+function encrypt(text){
+  var cipher = crypto.createCipher(algorithm,password)
+  var crypted = cipher.update(text,'utf8','hex')
+  crypted += cipher.final('hex');
+  return crypted;
+}
+ 
+function decrypt(text){
+  var decipher = crypto.createDecipher(algorithm,password)
+  var dec = decipher.update(text,'hex','utf8')
+  dec += decipher.final('utf8');
+  return dec;
+}
+ 
+const hw = encrypt("hello world")
+
+// console.log(decrypt(hw));
 
 const chatRoutes = express.Router();
 
@@ -85,9 +106,10 @@ chatRoutes.get('/room/:id', function(req, res) {
 
 chatRoutes.post('/message/new', async function(req, res) {
 	const { roomId, text, author } = req.body;
+	let textEn = encrypt(text);
 
 	try {
-    	const { message } = await Room.addMessage(roomId, { text, author });
+    	const { message } = await Room.addMessage(roomId, { text: textEn, author });
     	return res.json(message);
   	} catch (e) {
     	return res.status(400).json({ error: true, message: 'Message cannot be created!' });
@@ -136,10 +158,19 @@ chatRoutes.post('/message/room', async function(req, res) {
   	}
 
   	try {
-    	return res.json({
-      		error: false,
-     		message: (await Message.find({ roomID: roomId, delUser: { $ne: user }}).sort({createdAt:-1}).limit(limit * 2).populate('room')).reverse(),
-    	});
+  		Message
+  			.find({ roomID: roomId, delUser: { $ne: user }})
+  			.sort({createdAt:-1})
+  			.limit(limit * 2)
+  			.then((msgs) => {
+  				msgs.map((msg, key) => {
+  					msgs[key].text = decrypt(msg.text)
+  				})
+  				return res.json({
+		      		error: false,
+		     		message: msgs.reverse()
+		    	});
+  			})
   	} catch (e) {
     	return res.json({ error: true, message: 'Cannot fetch message' });
   	}

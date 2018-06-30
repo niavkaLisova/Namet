@@ -54,8 +54,11 @@ export function sendMessage(obj) {
           'author': localStorage.getItem('userId')
         })
         .end((error, response) => {
-          obj.that.props.socket.emit('message', {'roomId': obj.id, 'msg': response.body});
-          dispatch(messageAdd(response.body));
+          let newMsg = response.body;
+          newMsg.text = obj.text;
+
+          obj.that.props.socket.emit('message', {'roomId': obj.id, 'msg': newMsg});
+          dispatch(messageAdd(newMsg));
 
           obj.node.scrollTo(0, obj.height);  
           obj.that.props.between.map( (uid) => {
