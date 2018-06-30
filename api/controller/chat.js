@@ -4,6 +4,7 @@ const bson = require('bson')
 
 const Room = require('../models/room')
 const Message = require('../models/message')
+const User = require('../models/user')
 const config = require('../config/config')
 
 const chatRoutes = express.Router();
@@ -18,26 +19,44 @@ chatRoutes.post('/room/all', function(req, res) {
 	    { "$and": [ 
 		    { "between": { $elemMatch: {$in: [req.body.userId] }}}
 		    ,{ "between": { $size: 2 } }
-		]}
+			],
+			delUser: { $ne: req.body.userId }}
 		)
 		.sort({'lastTime': -1})
 		.exec()
 	    .then(function(room) {
-	    	res.json(room);
+			res.json(room);
 	    });
 });
 
 chatRoutes.post('/room/new', function(req, res) {
+	const { userId, between } = req.body
     Room
 	    .findOne(
 	    { "$and": [ 
-		    { "between": { "$all": req.body.between } },
-		    { "between": { "$size": req.body.between.length } }
+		    { "between": { "$all": between } },
+		    { "between": { "$size": between.length } }
 		]})
 	    .exec()
 	    .then(function(room) {
 	    	if (room != null ) {
-	        	return throwFailed(res, 'There is already such room exist.');
+	    		if(room.delUser.includes(userId)) {
+		    		let delUser = room.delUser.find((user) => {
+		    			return user != userId 
+		    		})
+
+		    		if(!delUser) {
+		    			delUser = [];
+		    		}
+
+		    		room.delUser = delUser;
+		    		room.save();
+		    		
+		    		res.json({data: room, socket: false});
+		    		return false;
+		    	} else {
+		        	return throwFailed(res, 'There is already such room exist.');
+	    		}
 	    	} 
 	    	
 	    	let data = req.body;
@@ -50,7 +69,7 @@ chatRoutes.post('/room/new', function(req, res) {
 		        	return res.status(500).json({msg: 'internal server error'});
 		      	}
 
-	      		res.json(data);
+	      		res.json({data, socket: true});
 	    	});
 	    });	
 });
@@ -127,20 +146,36 @@ chatRoutes.post('/message/room', async function(req, res) {
 });
 
 chatRoutes.post('/message/read', function(req, res) {
-	const { id, roomId } = req.body;
+	function makeRead(roomID, id, userInfo) {
+		Message.update({ roomID, read: false, author: { $ne: id } }, { $set: userInfo }, {'multi': true}, function (err, updateMsg) {
+		    if (err) throw err;
 
+		    Message.find({ roomID, user: id}, function(err, messages) {
+		    	if (err) throw err;
+		    	res.json(messages)
+		    })
+		});
+	}
+	const { id, roomId } = req.body;
+	
 	const userInfo = {
-	      read: true
+	    read: true
 	};
 
-	Message.update({ roomID: roomId, read: false, author: { $ne: id } }, { $set: userInfo }, {'multi': true}, function (err, updateMsg) {
-	    if (err) throw err;
-
-	    Message.find({ roomID: roomId, user: id}, function(err, messages) {
-	    	if (err) throw err;
-	    	res.json(messages)
-	    })
-	});
+	if(roomId) {
+		makeRead(roomId, id, userInfo);
+	} else {
+		User
+			.findOne({'_id': id})
+			.exec()
+			.then(function(user) {
+				if(user.activeRoom != '0') {
+					makeRead(user.activeRoom, id, userInfo)
+				} else {
+					res.json('no')
+				}
+			})
+	}
 });
 
 chatRoutes.post('/room/delete/user', function(req, res) {
@@ -156,6 +191,48 @@ chatRoutes.post('/room/delete/user', function(req, res) {
 				msg.delUser.push(user);
 				msg.save();
 			}
+	})
+});
+
+chatRoutes.post('/delete/room', function(req, res) {
+	const { roomId, user, len } = req.body;
+
+	Room
+		.findOne({'_id': roomId})
+		.exec()
+		.then(function(docs) {
+			if((len - 1) == docs.delUser.length) {
+				docs.remove();	
+			} else {
+				docs.delUser.push(user);
+				docs.save();
+			}
+
+			User.findById(user)
+			  .exec()
+			  .then(function(findUser) {
+				findUser.activeRoom = '0';
+				findUser.save();
+			  })
+			res.json({ success: true, message: 'ok' })
+	})
+});
+
+chatRoutes.post('/room/delete/messages', function(req, res) {
+	const { roomId, user, len } = req.body;
+
+	Message
+		.find({'roomID': roomId})
+		.exec()
+		.then(function(docs) {
+			docs.map((doc) => {
+				if((len - 1) == doc.delUser.length) {
+					doc.remove();	
+				} else {
+					doc.delUser.push(user);
+					doc.save();
+				}
+			})
 	})
 	
 });

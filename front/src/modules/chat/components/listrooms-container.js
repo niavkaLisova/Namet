@@ -14,7 +14,7 @@ import { connect } from "react-redux"
       limit: store.chat.limit,
       messages: store.chat.messages,
       unread: store.chat.unread,
-      between: store.chat.between
+      between: store.chat.between,
     };
 })
 class ListroomsContainer extends React.Component {
@@ -22,11 +22,15 @@ class ListroomsContainer extends React.Component {
 		super(props);
 
 		this.state = {
-  	  		msg: ''
+  	  		msg: '',
+  	  		anchorEl: null
 		};
+
 		this.props.startChat.map((item) => {
 			this.props.dispatch(ChatActions.unreadSelect(item._id));
 		})
+
+		this.props.dispatch(ChatActions.messageRead('', this));
 
 		this.props.socket.on('message g', (data) => {
 	      this.props.chat.map((item) => {
@@ -86,6 +90,37 @@ class ListroomsContainer extends React.Component {
 		
 	}
 
+	handleClick = event => {
+		this.setState({ anchorEl: event.currentTarget });
+	};
+
+	handleClose = () => {
+		this.setState({ anchorEl: null });
+	};
+
+	seeOptions(e) {
+		this.handleClick(e);
+	}
+
+	handleDeleteAllM() {
+		if(this.props.messages.length > 0) {
+			this.props.dispatch(ChatActions.deleteUserFromChatAllM(this.props.roomId, this.props.between.length))
+			this.props.dispatch(ChatActions.getMessagesRoom(this.props.roomId, this.props.limit))
+		}
+		this.handleClose();
+	}
+
+	handleDeleteRoom() {
+		console.log('delete room', this.props.roomId);
+
+		if(this.props.messages.length > 0) {
+			this.props.dispatch(ChatActions.deleteUserFromChatAllM(this.props.roomId, this.props.between.length))
+		}
+		this.handleClose();
+		this.props.dispatch(ChatActions.deleteRoom(this.props.roomId, this.props.between.length, this.props.socket))
+		this.props.socket.emit('leave room', this.props.roomId);
+	}
+
 	render() {
 		return (
 			<List style={this.props.visible ? {} : { display: 'none' }}>
@@ -95,7 +130,20 @@ class ListroomsContainer extends React.Component {
 				      onClick={() => this.roomIdUpdated(this.props.chat[key]._id)}
 				      key={key}
 				      leftAvatar={<Avatar src='' />}
-				      primaryText={<CounterMessages id={key} that={this.props.dispatch} unread={this.props.unread[this.props.chat[key]._id]} active={this.props.chat[key]._id == this.props.roomId}  between={this.props.chat[key].between} />}      
+				      primaryText={<CounterMessages 
+				      	seeOptions={this.seeOptions.bind(this)} 
+				      	id={key} 
+				      	that={this.props.dispatch} 
+				      	unread={this.props.unread[this.props.chat[key]._id]} 
+				      	active={this.props.chat[key]._id == this.props.roomId}  
+				      	between={this.props.chat[key].between}
+				      	handleClick={this.handleClick.bind(this)}
+				      	handleClose={this.handleClose.bind(this)}
+				      	anchorEl={this.state.anchorEl}
+				      	handleDeleteAllM={this.handleDeleteAllM.bind(this)}
+				      	handleDeleteRoom={this.handleDeleteRoom.bind(this)}
+				      	 />
+				      	}
 			    	/>
 				})}
 		    </List>

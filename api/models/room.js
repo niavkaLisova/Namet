@@ -10,6 +10,7 @@ const RoomSchema = new Schema({
     type: ObjectId,
     ref: 'Message',
   }],
+  delUser: [],
   lastTime: Date
 });
 

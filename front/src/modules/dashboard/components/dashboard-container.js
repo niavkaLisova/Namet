@@ -1,6 +1,6 @@
 import React from 'react'
 import AppBar from 'material-ui/AppBar'
-import FlatButton from 'material-ui/FlatButton';
+import FlatButton from 'material-ui/FlatButton'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import LeftMenu from './left-menu'
 import * as UserActions from '../../user/actions/user-actions'
@@ -15,7 +15,7 @@ import { socketConnect } from 'socket.io-react'
   // console.log('user', store)
   return {
     user: store.user,
-    unread: store.dashboard.unread
+    // unread: store.dashboard.unread
   };
 })
 class DashboardContainer extends React.Component {

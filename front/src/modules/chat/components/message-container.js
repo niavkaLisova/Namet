@@ -16,7 +16,8 @@ import './Message.sass';
     return {
       roomId: store.chat.roomId,
       messages: store.chat.messages,
-      limit: store.chat.limit
+      limit: store.chat.limit,
+      user: store.user
     };
 })
 class MessageContainer extends React.Component {
@@ -51,7 +52,14 @@ class MessageContainer extends React.Component {
 
 	render() {
 		return (
-			<List class='messageContainer' id='scrollContainer' ref="messageContainer" onScroll={ () => this.onScroll() }>
+			<div>
+			{(this.props.user.activeRoom == '0')? '' : (
+			<List 
+				class='messageContainer' 
+				id='scrollContainer' 
+				ref="messageContainer" 
+				onScroll={ () => this.onScroll() }
+				>
 				<RefreshIndicator
 			      size={40}
 			      left={10}
@@ -72,6 +80,8 @@ class MessageContainer extends React.Component {
 					})}
 				</List>
 			</List>
+			)}
+			</div>
 		)
 	}
 }

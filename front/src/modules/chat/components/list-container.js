@@ -31,7 +31,7 @@ class ListContainer extends React.Component {
 	    	receiver: '',
 	    	visible: true,
 	    	receiverObj: {},
-	    	open: false,
+	    	openModal: false,
 	    };
 	    this.props.dispatch(ChatActions.allChat());
 
@@ -41,11 +41,11 @@ class ListContainer extends React.Component {
 	}
 
 	handleOpen = () => {
-		this.setState({open: true});
+		this.setState({openModal: true});
 	};
 
 	handleClose = () => {
-		this.setState({open: false});
+		this.setState({openModal: false});
 	};
 
 	setUserAdd = (data) => {
@@ -78,7 +78,7 @@ class ListContainer extends React.Component {
 	    	receiver: '',
 	    	receiverObj: {},
 	    	visible: true,
-	    	open: false
+	    	openModal: false
 	    });
 	}
 
@@ -105,14 +105,14 @@ class ListContainer extends React.Component {
 				<FindUserDialog 
 					handleClose={this.handleClose.bind(this)}
 					handleOpen={this.handleOpen.bind(this)}
-					open={this.state.open}
+					open={this.state.openModal}
 					findUser={this.props.findUser}
 					setUserAdd={this.setUserAdd.bind(this)}
 					userAddFunc={this.userAddFunc.bind(this)}
 				 />
 				<List>
 					<Subheader>Find user</Subheader>
-					<TextField
+			    	<TextField
 							hintText="Receiver"
 					     	name={'Receiver or receivers'}
 				            value={this.state.receiver}

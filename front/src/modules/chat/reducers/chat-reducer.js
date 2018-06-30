@@ -36,6 +36,7 @@ function chatReducer(state = init, action) {
       }
       break;
     case 'MESSAGE_SET':
+    console.log('messages reducer', action.data)
       return {
         ...state,
         messages: action.data

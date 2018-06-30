@@ -3,6 +3,12 @@ import { List, ListItem } from 'material-ui/List'
 import { Container, Row, Col } from 'react-grid-system'
 import { connect } from 'react-redux'
 import * as ChatActions from '../actions/chat-actions'
+
+import IconMenu from 'material-ui/IconMenu'
+import IconButton from 'material-ui/IconButton'
+import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more'
+import MenuItem2 from 'material-ui/MenuItem'
+
 import './Message.sass';
 const ReactIntl = require('react-intl');
 const FormattedRelative = ReactIntl.FormattedRelative;
@@ -20,11 +26,13 @@ class MsgContainer extends React.Component {
 		this.state = {
 	    	visible: true
 	    }
+
+	    this.handleDelete = this.handleDelete.bind(this)
 	}
 
 	handleDelete(msg) {
 		if(!msg.delUser.includes(msg._id)) {
-			this.props.dispatch(ChatActions.deleteUserFromChat(msg, this.props.betweenName.length, this));
+			this.props.dispatch(ChatActions.deleteUserFromChatM(msg, this.props.betweenName.length));
 		}
 		this.setState({
 	    	visible: false
@@ -50,9 +58,18 @@ class MsgContainer extends React.Component {
 			          		</Row>
 			          		<Row>
 				          		<Col sm={8}>
-				          			<div onClick={() => this.handleDelete(this.props.msg)}>
-				          				<i class="material-icons">delete</i>
-				          			</div>
+				          			<IconMenu 
+								        iconButtonElement={
+							              <IconButton touch={true}>
+							                <i class="material-icons">delete</i>
+							              </IconButton>
+						            }>
+						            { [{'name': 'del', 'func': this.handleDelete}].map(item => 
+						              <MenuItem2 primaryText={item.name} key={item.name} onClick={ () => item.func(this.props.msg) } />
+						            )}
+						          </IconMenu>
+
+				          			
 				          		</Col>
 								<Col sm={4}>
 									<FormattedRelative value={this.props.msg.createdAt} />

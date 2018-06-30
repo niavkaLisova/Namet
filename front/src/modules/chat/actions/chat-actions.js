@@ -1,6 +1,7 @@
 import request from 'superagent';
 import _ from 'lodash';
 import * as Config from '../../../utils/config';
+import * as UserActions from '../../user/actions/user-actions'
 import * as NotificationActions from '../../notification/actions/notification-actions'
 
 export function allChat() {
@@ -8,7 +9,9 @@ export function allChat() {
       request
         .post(Config.API_DOMAIN + 'chat/room/all')
         .set('x-access-token', localStorage.getItem('token'))
-        .send({'userId': localStorage.getItem('userId')})
+        .send({
+          'userId': localStorage.getItem('userId')
+        })
         .end((error, response) => {
         	dispatch(chatUpdated(response.body));
         });
@@ -23,14 +26,17 @@ export function newChat(user, myname, that) {
         .send({
 			    name: user.name + ' VS ' + myname,
           private: true,
- 			    between: [user._id, localStorage.getItem('userId')]
+ 			    between: [user._id, localStorage.getItem('userId')],
+          userId: localStorage.getItem('userId')
 			  })
         .end((error, response) => {
         	if(response.body.success == false) {
         		return NotificationActions.show('Nie')(dispatch);
           } else {
-            dispatch(chatAddRoom(response.body));
-            that.props.socket.emit('new room', response.body, user._id);
+            dispatch(chatAddRoom(response.body.data));
+            if(response.body.socket) {
+              that.props.socket.emit('new room', response.body.data, user._id);
+            }
           	return NotificationActions.show('Room created')(dispatch);
           }
         });
@@ -103,7 +109,7 @@ export function getMessages(roomId, limit) {
   }
 }
 
-export function deleteUserFromChat(msg, len, that) {
+export function deleteUserFromChatM(msg, len) {
   return (dispatch) => {
       request
         .post(Config.API_DOMAIN + 'chat/room/delete/user')
@@ -115,6 +121,41 @@ export function deleteUserFromChat(msg, len, that) {
         })
         .end((error, response) => {
           
+        });
+  }
+}
+
+export function deleteUserFromChatAllM(roomId, len) {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'chat/room/delete/messages')
+        .set('x-access-token', localStorage.getItem('token'))
+        .send({
+          roomId,
+          user: localStorage.getItem('userId'),
+          len
+        })
+        .end((error, response) => {
+        });
+  }
+}
+
+export function deleteRoom(roomId, len, socket) {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'chat/delete/room')
+        .set('x-access-token', localStorage.getItem('token'))
+        .send({
+          roomId,
+          user: localStorage.getItem('userId'),
+          len
+        })
+        .end((error, response) => {
+          if(response.body.success) {
+            dispatch(allChat())
+            dispatch(messageUpdated([]));
+            dispatch(UserActions.getUser(socket))
+          }
         });
   }
 }
