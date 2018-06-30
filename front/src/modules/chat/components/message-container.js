@@ -52,8 +52,6 @@ class MessageContainer extends React.Component {
 
 	render() {
 		return (
-			<div>
-			{(this.props.user.activeRoom == '0')? '' : (
 			<List 
 				class='messageContainer' 
 				id='scrollContainer' 
@@ -67,6 +65,7 @@ class MessageContainer extends React.Component {
 			      status="loading"
 			      style={this.state.loading ? {} : { display: 'none' }}
 			    />
+			    {(this.props.user.activeRoom == '0')? '' : (
 				<List class='messagesList' id='scroll' ref="messageList">
 					{this.props.messages.map( (msg) => {
 						return (
@@ -79,9 +78,8 @@ class MessageContainer extends React.Component {
 						)
 					})}
 				</List>
+				)}
 			</List>
-			)}
-			</div>
 		)
 	}
 }

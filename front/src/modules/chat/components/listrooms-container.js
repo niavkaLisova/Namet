@@ -58,9 +58,11 @@ class ListroomsContainer extends React.Component {
 			node.scrollTo(0, height); 
 		})
 		setTimeout(function(){
-			let style = window.getComputedStyle(window.document.getElementById('scroll'), null);
-			let height = parseFloat(style.getPropertyValue("height"));
-			window.document.getElementById('scrollContainer').scrollTo(0, height)
+			if(window.document.getElementById('scroll')) {
+				let style = window.getComputedStyle(window.document.getElementById('scroll'), null);
+				let height = parseFloat(style.getPropertyValue("height"));
+				window.document.getElementById('scrollContainer').scrollTo(0, height)
+			}
 		}.bind(this), 1000)
 	}
 
@@ -111,8 +113,6 @@ class ListroomsContainer extends React.Component {
 	}
 
 	handleDeleteRoom() {
-		console.log('delete room', this.props.roomId);
-
 		if(this.props.messages.length > 0) {
 			this.props.dispatch(ChatActions.deleteUserFromChatAllM(this.props.roomId, this.props.between.length))
 		}

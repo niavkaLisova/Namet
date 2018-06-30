@@ -18,6 +18,10 @@ exports = module.exports = function(io) {
 			socket.to(data.roomId).emit('message', data.msg);
 		});
 
+		socket.on('type b', function(data){
+			socket.to(data.roomId).emit('type', data.user);
+		});
+
 		socket.on('leave room', function(room) {
 	      socket.leave(room)
 	    })

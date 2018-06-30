@@ -20,14 +20,28 @@ class TextareaContainer extends React.Component {
 
 	    this.state = {
 	    	message: '',
-	    	roomId: ''
+	    	roomId: '',
+	    	type: false
 	    }; 
+
+	    this.props.socket.on('type', (user) => {
+	    	this.setState({
+	    		type: true
+	    	});
+
+	    	setTimeout(() => {
+				this.setState({
+		    		type: false
+		    	});
+			}, 2000)
+	    })
 	}
 
 	onChangeMessage(event) {
 		this.setState({
 	    	message: event.target.value
 	    });
+	    this.props.socket.emit('type b', { roomId: this.props.roomId, user: localStorage.getItem('userId') })
 	}
 
 	sendMessage() {
@@ -65,6 +79,7 @@ class TextareaContainer extends React.Component {
 		            floatingLabelText="Message"
 		            multiLine={true}
 		    	/>
+		    	<p>{(this.state.type)? 'type...' : ''}</p>
 		    	<RaisedButton 
 		    		primary={true}
 					fullWidth={true}
