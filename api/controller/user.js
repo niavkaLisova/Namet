@@ -165,9 +165,9 @@ userRoutes.post('/user/find', function(req, res) {
   const { id, search } = req.body;
   const regexp = new RegExp("^"+ search);
   User
-      .find({ "name": regexp }, {name: 1, email: 1, nickname: 1, _id: 1})
+      .find({ 'nickname': regexp }, {name: 1, email: 1, nickname: 1, _id: 1})
       .where('_id').ne(id)
-      .limit(10)
+      .limit(4)
       .exec()
       .then(function(messages) {
         res.json(messages);

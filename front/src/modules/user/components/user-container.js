@@ -17,7 +17,6 @@ import Subheader from 'material-ui/Subheader';
 import PropTypes from 'prop-types';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-
 import UserFormContainer from './user-form-container';
 
 import { connect } from "react-redux"
@@ -30,6 +29,13 @@ import { setActiveLanguage } from 'react-localize-redux';
   };
 })
 export default class UserContainer extends React.Component {
+  constructor(props) {
+    super(props)
+
+    if(!this.props.id) appHistory.push('/user/' + localStorage.getItem('userId'));
+
+  }
+
   updateUser() {
     this.props.dispatch(UserActions.updateUser(this.props.user));
   }
@@ -47,7 +53,7 @@ export default class UserContainer extends React.Component {
 
     return (
       <MuiThemeProvider>
-        <h2>{this.props.user.name}</h2>
+        <h2>User {this.props.id}</h2>
 
       </MuiThemeProvider>
     )

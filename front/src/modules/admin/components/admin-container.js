@@ -1,0 +1,134 @@
+import React from 'react'
+import * as AdminActions from '../actions/admin-actions'
+import * as UserActions from '../../user/actions/user-actions'
+import { connect } from 'react-redux'
+import { socketConnect } from 'socket.io-react'
+
+import { Container, Row, Col } from 'react-grid-system'
+import classNames from 'classnames'
+
+import MenuContainer from './menu-container'
+import AppBarContainer from './appBar-container'
+
+import { withStyles } from '@material-ui/core/styles'
+
+const drawerWidth = 240;
+
+const styles = theme => ({
+  root: {
+    flexGrow: 1,
+    height: 430,
+    zIndex: 1,
+    overflow: 'hidden',
+    position: 'relative',
+    display: 'flex',
+  },
+  appBar: {
+    zIndex: theme.zIndex.drawer + 1,
+    transition: theme.transitions.create(['width', 'margin'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+  },
+  appBarShift: {
+    marginLeft: drawerWidth,
+    width: `calc(100% - ${drawerWidth}px)`,
+    transition: theme.transitions.create(['width', 'margin'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  },
+  menuButton: {
+    marginLeft: 12,
+    marginRight: 36,
+  },
+  hide: {
+    display: 'none',
+  },
+  drawerPaper: {
+    position: 'relative',
+    whiteSpace: 'nowrap',
+    width: drawerWidth,
+    transition: theme.transitions.create('width', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  },
+  drawerPaperClose: {
+    overflowX: 'hidden',
+    transition: theme.transitions.create('width', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    width: theme.spacing.unit * 7,
+    [theme.breakpoints.up('sm')]: {
+      width: theme.spacing.unit * 9,
+    },
+  },
+  toolbar: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    padding: '0 8px',
+    ...theme.mixins.toolbar,
+  },
+  content: {
+    flexGrow: 1,
+    backgroundColor: theme.palette.background.default,
+    padding: theme.spacing.unit * 3,
+  },
+});
+
+@connect((store, ownProps) => {
+  return {
+    user: store.user
+  };
+})
+class AdminContainer extends React.Component {
+	constructor(props) {
+    	super(props); 
+
+    	this.state = {
+			open: false,
+			value: 0,
+		};
+
+		this.props.dispatch(UserActions.getUser(this.props.socket))
+	}
+
+	handleDrawerOpen = () => {
+	    this.setState({ open: true });
+	};
+
+	handleDrawerClose = () => {
+	    this.setState({ open: false });
+	};
+
+	render() {
+		const { classes, theme } = this.props;
+
+	    return (
+	      <div className={classes.root}>
+	        <AppBarContainer 
+	        	classes={this.props.classes}
+	        	theme={this.props.theme}
+	        	open={this.state.open}
+	        	handleDrawerOpen={this.handleDrawerOpen}
+	        	/>
+	        <MenuContainer
+	        	classes={this.props.classes}
+	        	theme={this.props.theme}
+	        	open={this.state.open}
+	        	handleDrawerClose={this.handleDrawerClose}
+	        	/>
+	        
+	        <main className={classes.content}>
+	        	<div className={classes.toolbar} />
+	        	{this.props.children} 
+	        </main>
+	      </div>
+	    );
+	}
+}
+
+export default socketConnect(withStyles(styles, { withTheme: true })(AdminContainer));

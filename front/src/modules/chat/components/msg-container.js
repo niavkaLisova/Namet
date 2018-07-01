@@ -6,8 +6,8 @@ import * as ChatActions from '../actions/chat-actions'
 
 import IconMenu from 'material-ui/IconMenu'
 import IconButton from 'material-ui/IconButton'
-import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more'
 import MenuItem2 from 'material-ui/MenuItem'
+import Icon from '@material-ui/core/Icon'
 
 import './Message.sass';
 const ReactIntl = require('react-intl');
@@ -46,31 +46,26 @@ class MsgContainer extends React.Component {
 		        	<ListItem
 			          primaryText={
 			          	<Container>
-			          		<span class='msgName'>{this.props.betweenName.map((user) => (user.id == this.props.msg.author)? user.name: '')}</span>
+			          		<Row>
+				          		<Col sm={10}>
+				          			<span class='msgName'>{this.props.betweenName.map((user) => (user.id == this.props.msg.author)? user.name: '')}</span>
+				          		</Col>
+				          		<Col sm={2} onClick={ () => this.handleDelete(this.props.msg) }>
+				          			<Icon>clear</Icon>
+				          		</Col>
+			          		</Row>
 						</Container>
 			          }
 			          secondaryText={
-			            <Container>
+			            <Container class='msgContainer' style={{height: 'auto'}}>
 			            	<Row>
-			            		<Col sm={12}>
+			            		<Col sm={12} class='msgText'>
 			          				{this.props.msg.text}
 			          			</Col>
 			          		</Row>
 			          		<Row>
 				          		<Col sm={8}>
-				          			<IconMenu 
-								        iconButtonElement={
-							              <IconButton touch={true}>
-							                <i class="material-icons">delete</i>
-							              </IconButton>
-						            }>
-						            { [{'name': 'del', 'func': this.handleDelete}].map(item => 
-						              <MenuItem2 primaryText={item.name} key={item.name} onClick={ () => item.func(this.props.msg) } />
-						            )}
-						          </IconMenu>
-
-				          			
-				          		</Col>
+							    </Col>
 								<Col sm={4}>
 									<FormattedRelative value={this.props.msg.createdAt} />
 								</Col>

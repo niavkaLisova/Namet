@@ -15,15 +15,20 @@ import IconMenu from 'material-ui/IconMenu';
 import IconButton from 'material-ui/IconButton';
 import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
 import MenuItem from 'material-ui/MenuItem';
+import { connect } from "react-redux"
 
+@connect((store, ownProps) => {
+    return {
+      user: store.user
+    };
+})
 export default class LeftMenu extends React.Component {
-
-  goToPayment() {
-    appHistory.push('/payment');
+  goToAdmin() {
+    appHistory.push('/admin');
   }
 
   goToUser() {
-    appHistory.push('/user');
+    appHistory.push('/user/' + localStorage.getItem('userId'));
   }
 
   goToChat() {
@@ -33,18 +38,12 @@ export default class LeftMenu extends React.Component {
   render() {
     return (
       <MuiThemeProvider>
-        <Drawer docked={false} width={300} openSecondary={false} open={this.props.open} >
-          <AppBar
-            title="Menu"
-            onLeftIconButtonClick={this.props.handleToggle}
-          />
-          <List>        
-            <Subheader>Menu description</Subheader>
-            <ListItem primaryText="User" leftIcon={<ContentSend />} onClick={this.goToUser}/>
-            <ListItem primaryText="Payment" leftIcon={<ContentDrafts />} onClick={this.goToPayment}/>
-            <ListItem primaryText="Chat" leftIcon={<ContentDrafts />} onClick={this.goToChat}/>
-          </List>
-        </Drawer>
+        <List>        
+          <Subheader>Menu description</Subheader>
+          <ListItem primaryText="User" leftIcon={<ContentSend />} onClick={this.goToUser.bind(this)}/>
+          <ListItem primaryText="Admin" leftIcon={<ContentDrafts />} onClick={this.goToAdmin}/>
+          <ListItem primaryText="Chat" leftIcon={<ContentDrafts />} onClick={this.goToChat}/>
+        </List>
       </MuiThemeProvider>
     )
   }

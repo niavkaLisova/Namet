@@ -3,7 +3,7 @@ import _ from 'lodash';
 
 let init = {
   name: '',
-  surname: '',
+  nickname: '',
   email: '',
   online: [],
   activeRoom: ''
@@ -16,7 +16,7 @@ function userReducer(state = init, action) {
         ...state,
         name: action.data.name,
         online: action.data.online,
-        surname: action.data.surname,
+        nickname: action.data.nickname,
         email: action.data.email,
         activeRoom: action.data.activeRoom
       }

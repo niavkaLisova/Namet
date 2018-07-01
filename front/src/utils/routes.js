@@ -3,7 +3,9 @@ import { Route, IndexRoute, Switch } from 'react-router'
 import LoginContainer from '../modules/login/components/login-container'
 import ChatContainer from '../modules/chat/components/chat-container'
 import UserContainer from '../modules/user/components/user-container'
-import PaymentContainer from '../modules/payment/components/payment-container'
+import AdminPanelContainer from '../modules/admin/components/adminPanel-container'
+import AdminJuniorContainer from '../modules/admin/components/adminJunior-container'
+import ManagerContainer from '../modules/admin/components/manager-container'
 import DashboardContainer from '../modules/dashboard/components/dashboard-container'
 import Welcome from '../modules/register/components/welcome'
 import Confirm from '../modules/login/components/confirm'
@@ -17,9 +19,11 @@ export default (
 		<Route path="/register" component={RegisterContainer} />
 		<Route path="/login" component={LoginContainer} />
 		<Route path='/confirm/:email/:id' component={Confirm} />
+		<Route path='/admin/junior' component={AdminJuniorContainer} />
+		<Route path='/admin/manager' component={ManagerContainer} />
+		<Route path='/admin' component={AdminPanelContainer} />
 		<DashboardContainer>
-   			<Route path='/user/:id' component={UserContainer} />
-     	   	<Route path='/payment' component={PaymentContainer} />
+   			<Route path='/user/:id?' component={UserContainer} />
      	   	<Route path='/chat/' component={ChatContainer} />
      	</DashboardContainer>
 	</Switch>

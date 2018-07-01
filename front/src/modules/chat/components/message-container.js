@@ -25,7 +25,8 @@ class MessageContainer extends React.Component {
     	super(props);
 
 	    this.state = {
-  	  		loading: false
+  	  		loading: false,
+  	  		loader: true
 		};
 	}
 
@@ -35,12 +36,30 @@ class MessageContainer extends React.Component {
 	}
 
 	onScroll() {
+		if(!this.state.loader) return false;
+		
 		const node = ReactDOM.findDOMNode(this.refs.messageContainer)
+		let style = window.getComputedStyle(window.document.getElementById('scroll'), null);
+		let height = parseFloat(style.getPropertyValue("height"));
 
 		if(node.scrollTop == 0) {
 			this.setState({
 				loading: true
 			})
+
+			this.props.setTimeout(() => {
+				let style2 = window.getComputedStyle(window.document.getElementById('scroll'), null);
+				let height2 = parseFloat(style2.getPropertyValue("height"));
+
+				if(height == height2) {
+					this.setState({
+						loader: false
+					});
+				}
+
+				window.document.getElementById('scrollContainer').scrollTo(0, height2 - height)
+			}, 3000);
+
 			this.props.setTimeout(() => {
 				this.incrementLimit()
 				this.setState({
@@ -58,13 +77,15 @@ class MessageContainer extends React.Component {
 				ref="messageContainer" 
 				onScroll={ () => this.onScroll() }
 				>
-				<RefreshIndicator
-			      size={40}
-			      left={10}
-			      top={0}
-			      status="loading"
-			      style={this.state.loading ? {} : { display: 'none' }}
-			    />
+				{(this.state.loader)?(
+					<RefreshIndicator
+				      size={40}
+				      left={10}
+				      top={0}
+				      status="loading"
+				      style={this.state.loading ? {} : { display: 'none' }}
+				    />
+			    ): 'Start' }
 			    {(this.props.user.activeRoom == '0')? '' : (
 				<List class='messagesList' id='scroll' ref="messageList">
 					{this.props.messages.map( (msg) => {

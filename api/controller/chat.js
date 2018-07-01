@@ -23,10 +23,6 @@ function decrypt(text){
   dec += decipher.final('utf8');
   return dec;
 }
- 
-const hw = encrypt("hello world")
-
-// console.log(decrypt(hw));
 
 const chatRoutes = express.Router();
 

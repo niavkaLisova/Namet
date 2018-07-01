@@ -10,29 +10,46 @@ import * as DashboardActions from '../actions/dashboard-actions'
 import * as NotificationActions from '../../notification/actions/notification-actions'
 import { connect } from "react-redux"
 import { socketConnect } from 'socket.io-react'
+import Button from '@material-ui/core/Button'
+import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
+import { List, ListItem } from 'material-ui/List'
+import Icon from '@material-ui/core/Icon'
+import  { Redirect } from 'react-router-dom'
 
 @connect((store, ownProps) => {
-  // console.log('user', store)
   return {
-    user: store.user,
-    // unread: store.dashboard.unread
+    user: store.user
   };
 })
 class DashboardContainer extends React.Component {
   componentDidMount() {
-    this.props.dispatch(UserActions.getUser(this.props.socket));
+    if(localStorage.getItem('userId')) {
+      this.props.dispatch(UserActions.getUser(this.props.socket));
+    }
   }
 
   constructor(props) {
     super(props);
-    this.state = {open: false};
+    this.state = {
+      open: false,
+      left: false
+    };
 
-    this.props.socket.on('online', (id) => {
-      this.props.dispatch(DashboardActions.online(id));
-  
-      this.props.socket.emit('get info', localStorage.getItem('userId'))
-    });
+    if(localStorage.getItem('userId')) {
+
+      this.props.socket.on('online', (id) => {
+        this.props.dispatch(DashboardActions.online(id));
+    
+        this.props.socket.emit('get info', localStorage.getItem('userId'))
+      });
+    }
   }
+
+  toggleDrawer = (side, open) => () => {
+    this.setState({
+      [side]: open,
+    });
+  };
 
   handleToggle() {
     this.setState({open: !this.state.open});
@@ -41,6 +58,7 @@ class DashboardContainer extends React.Component {
   onLogout() {
     // this.props.socket.emit('disconnect', localStorage.getItem('userId'))
     localStorage.removeItem('token');
+    localStorage.removeItem('userId');
     this.props.dispatch(NotificationActions.show('Logged out!'));
     appHistory.push('/');
     window.location.reload();
@@ -52,24 +70,43 @@ class DashboardContainer extends React.Component {
     return (
       <MuiThemeProvider>
         <div>
-          <AppBar
-            title={"Намет"}
-            iconElementRight={
-              <FlatButton
-                label={this.props.user.name + " Logout" }
-                secondary={true}
-                onClick={self.onLogout.bind(self)}
+          {(localStorage.getItem('userId'))? (
+            <div>
+              <AppBar
+                title={"Намет"}
+                iconElementRight={
+                  <FlatButton
+                    label={this.props.user.name + " Logout" }
+                    secondary={true}
+                    onClick={self.onLogout.bind(self)}
+                  />
+                }
+                iconElementLeft={
+                  <Button onClick={this.toggleDrawer('left', true)}><Icon>menu</Icon></Button>
+                }
               />
-            }
-            onLeftIconButtonClick={self.handleToggle.bind(self)}
-          />
-          <div>
-            {this.props.children}
-          </div>
-          <LeftMenu
-            open={this.state.open}
-            handleToggle={self.handleToggle.bind(self)}
-          />
+              <div>
+                {this.props.children}
+              </div>
+              
+              <SwipeableDrawer
+              open={this.state.left}
+              onClose={this.toggleDrawer('left', false)}
+              onOpen={this.toggleDrawer('left', true)}
+            >
+              <div
+                tabIndex={0}
+                role="button"
+                onClick={this.toggleDrawer('left', false)}
+                onKeyDown={this.toggleDrawer('left', false)}
+              >
+                <LeftMenu
+                handleToggle={self.handleToggle.bind(self)}
+              />
+              </div>
+              </SwipeableDrawer>
+            </div>
+          ) : (<Redirect to='/login' />) }
         </div>
       </MuiThemeProvider>
     )
