@@ -6,7 +6,8 @@ let init = {
   nickname: '',
   email: '',
   online: [],
-  activeRoom: ''
+  activeRoom: '',
+  admin: ''
 }
 
 function userReducer(state = init, action) {
@@ -18,7 +19,8 @@ function userReducer(state = init, action) {
         online: action.data.online,
         nickname: action.data.nickname,
         email: action.data.email,
-        activeRoom: action.data.activeRoom
+        activeRoom: action.data.activeRoom,
+        admin: action.data.admin
       }
       break;
     case 'ONLINE_SAVE':

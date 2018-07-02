@@ -23,15 +23,15 @@ export function login(email, password) {
           return dispatch(loginFailure(error));
         }
 
-        var token = response.body.token;
-        var userId = response.body.userId;
+        const token = response.body.token;
+        const userId = response.body.userId;
 
         if (token && userId) {
           localStorage.setItem('token', token);
           localStorage.setItem('userId', userId);
 
           dispatch(loginSuccess({userId: userId, token: token}));
-          appHistory.push('/user/' + userId);
+          appHistory.replace('/user/' + userId);
           window.location.reload();
         } else {
           NotificationActions.show('Wrong username or password')(dispatch);

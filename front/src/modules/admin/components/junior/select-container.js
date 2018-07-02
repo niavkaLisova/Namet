@@ -1,8 +1,9 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-import * as AdminActions from '../actions/admin-actions'
-import Admin from './admin-container'
+import * as AdminActions from '../../actions/admin-actions'
+import Admin from '../admin-container'
+import ModalUser from './Modal'
 
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
@@ -14,6 +15,8 @@ import CardMedia from '@material-ui/core/CardMedia'
 import Typography from '@material-ui/core/Typography'
 import TextField from '@material-ui/core/TextField'
 import { connect } from 'react-redux'
+
+import '../Admin.sass'
 
 @connect((store, ownProps) => {
   	return {
@@ -27,15 +30,38 @@ export default class SelectContainer extends React.Component {
 		this.state = {
 			input: '',
 			juniorObj: {},
-			visible: false
+			visible: false,
+			openModal: false
 		}
 	}
 
-	selectJunior = (user) => {
-		console.log('select jun', user);
+	handleOpen = () => {
+		this.setState({openModal: true});
+	};
 
+	handleClose = () => {
+		this.setState({openModal: false});
+	};
+
+	selectJunior = (user) => {
 		this.setState({
 			juniorObj: user
+		})
+	}
+
+	setJunior = () => {
+		if(this.state.juniorObj._id) {
+			this.props.dispatch(AdminActions.setJunior(this.state.juniorObj._id, true));
+		} else {
+			if(this.props.findJunior.length > 0) {
+				this.handleOpen();
+			}
+		}
+
+		this.setState({
+			juniorObj: '',
+			input: '',
+			visible: false
 		})
 	}
 
@@ -53,6 +79,15 @@ export default class SelectContainer extends React.Component {
 	render() {
 		return (
 		  	<List>
+			  	<ModalUser
+			  		open={this.state.openModal}
+			  		handleOpen={this.handleOpen}
+			  		handleClose={this.handleClose}
+			  		findJunior={this.props.findJunior}
+			  		selectJunior={this.selectJunior}
+			  		setJunior={this.setJunior}
+			  		>
+		  		</ModalUser>
 			    <TextField
 		        	label="select user"
 		          	placeholder="junior"
@@ -60,13 +95,14 @@ export default class SelectContainer extends React.Component {
 			        value={this.state.input}
 			        onChange={this.onChangeSelect.bind(this)}
 		        />
-			    <Button variant='contained' onClick={this.selectJunior}>
+			    <Button variant='contained' onClick={this.setJunior}>
 			    	Add
 			    </Button>
-			
+
+				<div class='listJunior'>
 				{(this.state.visible) ? (this.props.findJunior.map( (user) => {
 					return (
-						<Card key={user._id}>    
+						<Card key={user._id} >    
 					        <CardContent>
 					          	<Typography gutterBottom variant="headline" component="h2">
 					            	{user.nickname}
@@ -81,7 +117,7 @@ export default class SelectContainer extends React.Component {
 				          		</Button>
 				          		<Button size="small" color="primary">
 				            		<Link to={`/user/${user._id}`}>
-										See page {user._id}
+										See page
 				            		</Link>
 				          		</Button>
 				        	</CardActions>
@@ -89,6 +125,7 @@ export default class SelectContainer extends React.Component {
 					)
 				})) : ''
 				}
+				</div>
 				
 			</List>
 		)

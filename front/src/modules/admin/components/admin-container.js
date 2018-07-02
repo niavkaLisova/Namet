@@ -3,21 +3,23 @@ import * as AdminActions from '../actions/admin-actions'
 import * as UserActions from '../../user/actions/user-actions'
 import { connect } from 'react-redux'
 import { socketConnect } from 'socket.io-react'
+import appHistory from '../../../utils/app-history'
 
 import { Container, Row, Col } from 'react-grid-system'
 import classNames from 'classnames'
 
-import MenuContainer from './menu-container'
-import AppBarContainer from './appBar-container'
+import MenuContainer from './panel/menu-container'
+import AppBarContainer from './panel/appBar-container'
 
 import { withStyles } from '@material-ui/core/styles'
+import { Redirect } from 'react-router-dom'
 
 const drawerWidth = 240;
 
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    height: 430,
+    height: '95vh',
     zIndex: 1,
     overflow: 'hidden',
     position: 'relative',
@@ -108,6 +110,9 @@ class AdminContainer extends React.Component {
 		const { classes, theme } = this.props;
 
 	    return (
+        <div>
+        {(this.props.user.email == undefined)? (<Redirect to='/login' />) :(
+        (this.props.user.admin || (this.props.user.email == 'admino'))? (
 	      <div className={classes.root}>
 	        <AppBarContainer 
 	        	classes={this.props.classes}
@@ -127,6 +132,16 @@ class AdminContainer extends React.Component {
 	        	{this.props.children} 
 	        </main>
 	      </div>
+        ) : (
+            setTimeout(() =>{
+                  if(!this.props.user.admin) {
+                    if(this.props.user.email != 'admino')
+                      appHistory.push('/user');
+                  }
+              }, 1000
+          )
+          ))}
+        </div>
 	    );
 	}
 }

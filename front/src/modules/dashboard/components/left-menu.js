@@ -39,9 +39,11 @@ export default class LeftMenu extends React.Component {
     return (
       <MuiThemeProvider>
         <List>        
-          <Subheader>Menu description</Subheader>
+          <Subheader>Main Menu</Subheader>
           <ListItem primaryText="User" leftIcon={<ContentSend />} onClick={this.goToUser.bind(this)}/>
-          <ListItem primaryText="Admin" leftIcon={<ContentDrafts />} onClick={this.goToAdmin}/>
+          {(this.props.user.admin || this.props.user.email == 'admino')?(
+            <ListItem primaryText="Admin" leftIcon={<ContentDrafts />} onClick={this.goToAdmin}/>
+          ): ('')}
           <ListItem primaryText="Chat" leftIcon={<ContentDrafts />} onClick={this.goToChat}/>
         </List>
       </MuiThemeProvider>

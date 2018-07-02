@@ -26,9 +26,9 @@ userRoutes.post('/authenticate', function(req, res) {
   }
 
   User
-    .findOne({ "$or": [ 
-        { "email": email },
-        { "name": email }
+    .findOne({ '$or': [ 
+        { 'email': email },
+        { 'name': email }
      ]}  )
     .exec()
     .then(function(user) {
@@ -41,6 +41,7 @@ userRoutes.post('/authenticate', function(req, res) {
           return throwFailed(res, 'Authentication failed. Wrong password.');
         }
 
+        console.log('USER', user._id)
         setTimeout(function() {
           return res.json({
             token: generateToken(email),
@@ -109,7 +110,8 @@ userRoutes.get('/users/:id', function(req, res) {
           email: user.email,
           id: user._id,
           online: user.online,
-          activeRoom: user.activeRoom
+          activeRoom: user.activeRoom,
+          admin: user.admin
         })
       }, config.delay);
     });
@@ -167,6 +169,7 @@ userRoutes.post('/user/find', function(req, res) {
   User
       .find({ 'nickname': regexp }, {name: 1, email: 1, nickname: 1, _id: 1})
       .where('_id').ne(id)
+      .where('email').ne('admino')
       .limit(4)
       .exec()
       .then(function(messages) {

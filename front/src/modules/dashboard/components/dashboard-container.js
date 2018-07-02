@@ -14,7 +14,9 @@ import Button from '@material-ui/core/Button'
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
 import { List, ListItem } from 'material-ui/List'
 import Icon from '@material-ui/core/Icon'
-import  { Redirect } from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
+
+import './Style.sass'
 
 @connect((store, ownProps) => {
   return {
@@ -60,7 +62,7 @@ class DashboardContainer extends React.Component {
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
     this.props.dispatch(NotificationActions.show('Logged out!'));
-    appHistory.push('/');
+    appHistory.replace('/');
     window.location.reload();
   }
 
@@ -90,20 +92,21 @@ class DashboardContainer extends React.Component {
               </div>
               
               <SwipeableDrawer
-              open={this.state.left}
-              onClose={this.toggleDrawer('left', false)}
-              onOpen={this.toggleDrawer('left', true)}
-            >
-              <div
-                tabIndex={0}
-                role="button"
-                onClick={this.toggleDrawer('left', false)}
-                onKeyDown={this.toggleDrawer('left', false)}
+                open={this.state.left}
+                onClose={this.toggleDrawer('left', false)}
+                onOpen={this.toggleDrawer('left', true)}
               >
-                <LeftMenu
-                handleToggle={self.handleToggle.bind(self)}
-              />
-              </div>
+                <div
+                  class='drawer'
+                  tabIndex={0}
+                  role="button"
+                  onClick={this.toggleDrawer('left', false)}
+                  onKeyDown={this.toggleDrawer('left', false)}
+                >
+                  <LeftMenu
+                  handleToggle={self.handleToggle.bind(self)}
+                />
+                </div>
               </SwipeableDrawer>
             </div>
           ) : (<Redirect to='/login' />) }

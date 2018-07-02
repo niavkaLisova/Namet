@@ -2,7 +2,8 @@ import Immutable from 'immutable'
 import _ from 'lodash';
 
 let init = {
-	findJunior: []
+	findJunior: [],
+	listJunior: []
 }
 
 function adminReducer(state = init, action) {
@@ -11,6 +12,12 @@ function adminReducer(state = init, action) {
 	      return {
 	        ...state,
 	        findJunior: action.data
+	      }
+	      break;
+	    case 'SET_LIST_JUNIOR':
+	      return {
+	        ...state,
+	        listJunior: action.data
 	      }
 	      break;
 

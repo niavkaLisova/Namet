@@ -1,5 +1,5 @@
 import React from 'react'
-import * as AdminActions from '../actions/admin-actions'
+import * as AdminActions from '../../actions/admin-actions'
 
 import classNames from 'classnames'
 import AppBar from '@material-ui/core/AppBar'
