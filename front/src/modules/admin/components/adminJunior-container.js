@@ -7,7 +7,7 @@ import appHistory from '../../../utils/app-history'
 import * as UserActions from '../../user/actions/user-actions'
 import Admin from './admin-container'
 import SelectContainer from './junior/select-container'
-import ListJuniorContainer from './junior/listJunior-container'
+import BoxContainer from './junior/boxJunior-container'
 import Paper from '@material-ui/core/Paper'
 
 import { Container, Row, Col } from 'react-grid-system'
@@ -19,26 +19,27 @@ import { Container, Row, Col } from 'react-grid-system'
 })
 class AdminJuniorContainer extends React.Component {
 	constructor(props) {
-    	super(props); 
-			this.props.dispatch(UserActions.getUser(this.props.socket))
-    
+    	super(props);
+
+		this.props.dispatch(UserActions.getUser(this.props.socket))
 	}
+	
 	render() {
 		return (
 			<div>
 			{(this.props.user.email == undefined)? (<Redirect to='/admin'  />): (
 				(this.props.user.email == 'admino')? (
 			  	<Admin>
-				    <Container>
+				    <div>
 				      <Row>
-				      	<Col sm={8}>
+				      	<Col md={8}>
 				      		<SelectContainer />
 				      	</Col>
-				      	<Col sm={4}>
-				      		<ListJuniorContainer />
+				      	<Col md={4}>
+				      		<BoxContainer />
 				      	</Col>
 				      </Row>
-				    </Container>
+				    </div>
 			    </Admin>
 			    ): (
 			    	setTimeout(() =>{

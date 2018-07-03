@@ -1,5 +1,6 @@
 import request from 'superagent';
 import _ from 'lodash';
+import appHistory from '../../../utils/app-history'
 import * as Config from '../../../utils/config';
 import * as ChatActions from '../../chat/actions/chat-actions'
 import * as NotificationActions from '../../notification/actions/notification-actions'
@@ -9,12 +10,21 @@ export function getUser(socket) {
       request
         .get(Config.API_DOMAIN + 'api/users/' + localStorage.getItem('userId'))
         .set('x-access-token', localStorage.getItem('token'))
-        .end((error, response) => {
-          dispatch(userGet(response.body));
-          if(response.body.activeRoom != '0') {
-            socket.emit('join room', response.body.activeRoom);
-            dispatch(ChatActions.beetwenUpdated(response.body.activeRoom));
-            dispatch(ChatActions.getMessagesRoom(response.body.activeRoom, 10))
+        .end((error, response) => { 
+          if(response.body.banned.length > 0) {
+            let d = new Date();
+            let n = d.getTime();
+            
+            if(!(n > response.body.banned)) {
+              appHistory.push('/error/'+ response.body.banned);
+            }
+          } else {
+            dispatch(userGet(response.body));
+            if(response.body.activeRoom != '0') {
+              socket.emit('join room', response.body.activeRoom);
+              dispatch(ChatActions.beetwenUpdated(response.body.activeRoom));
+              dispatch(ChatActions.getMessagesRoom(response.body.activeRoom, 10))
+            }
           }
         });
   }

@@ -13,7 +13,7 @@ import Checkbox from '@material-ui/core/Checkbox'
 
 import '../Admin.sass'
 
-export default class ListJuniorContainer extends React.Component {
+class ListUserContainer extends React.Component {
 	goUserPage = (id) => {
 	    appHistory.push('/user/' + id);
 	}
@@ -39,4 +39,5 @@ export default class ListJuniorContainer extends React.Component {
 		)
 	}
 }
- 
+
+export default ListUserContainer

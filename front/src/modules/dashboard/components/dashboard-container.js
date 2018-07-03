@@ -37,6 +37,8 @@ class DashboardContainer extends React.Component {
       left: false
     };
 
+    console.log('sock', this.props.socket)
+
     if(localStorage.getItem('userId')) {
 
       this.props.socket.on('online', (id) => {

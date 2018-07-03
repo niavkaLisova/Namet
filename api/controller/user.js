@@ -111,7 +111,8 @@ userRoutes.get('/users/:id', function(req, res) {
           id: user._id,
           online: user.online,
           activeRoom: user.activeRoom,
-          admin: user.admin
+          admin: user.admin,
+          banned: user.banned
         })
       }, config.delay);
     });
@@ -170,7 +171,6 @@ userRoutes.post('/user/find', function(req, res) {
       .find({ 'nickname': regexp }, {name: 1, email: 1, nickname: 1, _id: 1})
       .where('_id').ne(id)
       .where('email').ne('admino')
-      .limit(4)
       .exec()
       .then(function(messages) {
         res.json(messages);

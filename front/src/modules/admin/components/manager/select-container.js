@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 import * as AdminActions from '../../actions/admin-actions'
 import Admin from '../admin-container'
-import ModalSelect from './modalSelect'
+import ModalUser from './ModalUser'
 
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
@@ -20,7 +20,7 @@ import '../Admin.sass'
 
 @connect((store, ownProps) => {
   	return {
-    	findJunior: store.adminN.findJunior
+    	findUser: store.adminN.findUser
   	};
 })
 export default class SelectContainer extends React.Component {
@@ -29,7 +29,7 @@ export default class SelectContainer extends React.Component {
 
 		this.state = {
 			input: '',
-			juniorObj: {},
+			userObj: {},
 			visible: false,
 			openModal: false
 		}
@@ -43,24 +43,27 @@ export default class SelectContainer extends React.Component {
 		this.setState({openModal: false});
 	};
 
-	selectJunior = (user) => {
+	selectUser = (user) => {
 		this.setState({
-			juniorObj: user,
+			userObj: user,
 			input: user.nickname
 		})
 	}
 
-	setJunior = () => {
-		if(this.state.juniorObj._id && this.state.juniorObj.nickname == this.state.input) {
-			this.props.dispatch(AdminActions.setJunior(this.state.juniorObj._id, true));
+	setUser = () => {
+		if(this.state.userObj._id && this.state.userObj.nickname == this.state.input) {
+			let state = new Date();
+  			state.setDate(state.getDate() + 7);
+
+			this.props.dispatch(AdminActions.setUser(this.state.userObj._id, state.getTime()));
 		} else {
-			if(this.props.findJunior.length > 0 && this.state.input.length > 0) {
+			if(this.props.findUser.length > 0 && this.state.input.length > 0) {
 				this.handleOpen();
 			}
 		}
 
 		this.setState({
-			juniorObj: '',
+			userObj: '',
 			input: '',
 			visible: false
 		})
@@ -68,40 +71,40 @@ export default class SelectContainer extends React.Component {
 
 	onChangeSelect = (event) => {
 		let visible = (event.target.value.length > 0)? true: false;
-	    
+	 
 	    this.setState({
 	      input: event.target.value,
 	      visible
 	    });
 
-	    this.props.dispatch(AdminActions.findJunior(event.target.value));
+	    this.props.dispatch(AdminActions.findUser(event.target.value));
 	}
 
 	render() {
 		return (
 		  	<List>
-			  	<ModalSelect
+		  		<ModalUser
 			  		open={this.state.openModal}
 			  		handleOpen={this.handleOpen}
 			  		handleClose={this.handleClose}
-			  		findJunior={this.props.findJunior}
-			  		selectJunior={this.selectJunior}
-			  		setJunior={this.setJunior}
+			  		findUser={this.props.findUser}
+			  		selectUser={this.selectUser}
+			  		setUser={this.setUser}
 			  		>
-		  		</ModalSelect>
+		  		</ModalUser>
 			    <TextField
 		        	label="select user"
-		          	placeholder="junior"
+		          	placeholder="user"
 			        margin="normal"
 			        value={this.state.input}
 			        onChange={this.onChangeSelect.bind(this)}
 		        />
-			    <Button variant='contained' onClick={this.setJunior}>
+			    <Button variant='contained' onClick={this.setUser}>
 			    	Add
 			    </Button>
-
+				
 				<div class='listJunior'>
-				{(this.state.visible) ? (this.props.findJunior.map( (user) => {
+				{(this.state.visible) ? (this.props.findUser.map( (user) => {
 					return (
 						<Card key={user._id} >    
 					        <CardContent>
@@ -113,7 +116,7 @@ export default class SelectContainer extends React.Component {
 					          	</Typography>
 					        </CardContent>
 				        	<CardActions>
-				          		<Button size="small" color="primary" onClick={() => this.selectJunior(user)}>
+				          		<Button size="small" color="primary" onClick={() => this.selectUser(user)}>
 				            		Select
 				          		</Button>
 				          		<Button size="small" color="primary">
@@ -127,7 +130,6 @@ export default class SelectContainer extends React.Component {
 				})) : ''
 				}
 				</div>
-				
 			</List>
 		)
 	}

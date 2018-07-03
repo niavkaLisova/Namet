@@ -9,5 +9,9 @@ module.exports = mongoose.model('User', new Schema({
     admin: Boolean,
     online: [],
     confirm: Boolean,
-    activeRoom: String
+    activeRoom: String,
+    banned: { 
+		type: String,
+	  	default: ''
+	}
 }));

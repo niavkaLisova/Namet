@@ -1,8 +1,9 @@
 import React from 'react'
+import { socketConnect } from 'socket.io-react'
 
 import Admin from './admin-container'
 
-export default function AdminPanelContainer(props) {
+function AdminPanelContainer(props) {
   return (
     <Admin>
       <div>
@@ -11,3 +12,4 @@ export default function AdminPanelContainer(props) {
     </Admin>
   );
 }
+export default socketConnect(AdminPanelContainer);

@@ -95,6 +95,8 @@ class AdminContainer extends React.Component {
 			value: 0,
 		};
 
+    console.log(this.props.socket, 'adm')
+
 		this.props.dispatch(UserActions.getUser(this.props.socket))
 	}
 
