@@ -85,6 +85,37 @@ export function setUser(user, state) {
   }
 }
 
+export function findUserDelete(search) {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'admin/delete/user/find')
+        .set('x-access-token', localStorage.getItem('token'))
+        .send({
+          'id': localStorage.getItem('userId'),
+          'search': search
+        })
+        .end((error, response) => {
+          dispatch(setFindUser(response.body));
+        });
+  }
+}
+
+export function setUserDelete(user, email) {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'admin/delete/user/set')
+        .set('x-access-token', localStorage.getItem('token'))
+        .send({
+          'id': user,
+          email
+        })
+        .end((error, response) => {
+          console.log('deleted', response.body)
+          // dispatch(listUser());
+        });
+  }
+}
+
 export function setFindJunior(data) {
   return {type: 'SET_FIND_JUNIOR', data};
 }

@@ -120,8 +120,6 @@ class BoxContainer extends React.Component {
 					>
 					</ListUserContainer>
 				)}
-				
-				
 
 				<p onClick={this.checkedDelete}>Delete checked</p>
 			</Paper>

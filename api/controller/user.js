@@ -166,7 +166,7 @@ userRoutes.get('/users', function(req, res) {
 
 userRoutes.post('/user/find', function(req, res) {
   const { id, search } = req.body;
-  const regexp = new RegExp("^"+ search);
+  const regexp = new RegExp(search);
   User
       .find({ 'nickname': regexp }, {name: 1, email: 1, nickname: 1, _id: 1})
       .where('_id').ne(id)

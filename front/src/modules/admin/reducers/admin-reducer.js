@@ -33,7 +33,7 @@ function adminReducer(state = init, action) {
 	        ...state,
 	        listUser: action.data
 	      }
-	      break;
+	      break; 
 
 	    default: return state;
   	}
