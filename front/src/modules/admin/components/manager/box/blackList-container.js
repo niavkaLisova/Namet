@@ -1,13 +1,11 @@
 import React from 'react'
-import appHistory from '../../../../utils/app-history'
+import appHistory from '../../../../../utils/app-history'
 
-import * as AdminActions from '../../actions/admin-actions'
-import Admin from '../admin-container'
-import TimeContainer from './time-container'
+import * as AdminActions from '../../../actions/admin-actions'
+import TimeContainer from '../time-container'
 
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
-import Avatar from '@material-ui/core/Avatar'
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import ListItemText from '@material-ui/core/ListItemText'
 import Checkbox from '@material-ui/core/Checkbox'
@@ -16,13 +14,9 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
 import Typography from '@material-ui/core/Typography'
 
-import '../Admin.sass'
+import '../../Admin.sass'
 
-class ListUserContainer extends React.Component {
-	goUserPage = (id) => {
-	    appHistory.push('/user/' + id);
-	}
-
+class BlackListContainer extends React.Component {
 	render() {
 		return (
 		  	<List class='listJunior'>
@@ -31,8 +25,7 @@ class ListUserContainer extends React.Component {
 					<ExpansionPanel key={user._id}>
 				        <ExpansionPanelSummary>
 					        <ListItem dense button>
-					        	<Avatar alt='user.name' src='' onClick={() => this.goUserPage(user._id)} />
-					        	<ListItemText primary={user.nickname} />
+					        	<ListItemText primary={user.email} />
 					        	<ListItemSecondaryAction>
 					                <Checkbox
 					                  onChange={this.props.handleToggle(user._id)}
@@ -42,8 +35,8 @@ class ListUserContainer extends React.Component {
 		              		</ListItem>
 				        </ExpansionPanelSummary>
 				        <ExpansionPanelDetails>
-				        	<Typography>
-				            	<TimeContainer time={user.banned} />
+				        	<Typography> 
+				        		<TimeContainer time={user.createdAt} text={'from'} />
 				          	</Typography>
 					    </ExpansionPanelDetails>
 		            </ExpansionPanel>
@@ -54,4 +47,4 @@ class ListUserContainer extends React.Component {
 	}
 }
 
-export default ListUserContainer
+export default BlackListContainer

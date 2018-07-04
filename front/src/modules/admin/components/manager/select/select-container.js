@@ -1,11 +1,11 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-import * as AdminActions from '../../actions/admin-actions'
-import Admin from '../admin-container'
-import ModalUser from './ModalUser'
+import * as AdminActions from '../../../actions/admin-actions'
+import ModalUser from '../ModalUser'
 import SelectBlockContainer from './selectBlock-container'
 import SelectDeleteContainer from './selectDelete-container'
+import BoxShowContainer from '../boxShow-container'
 
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
@@ -23,7 +23,7 @@ import FormControl from '@material-ui/core/FormControl'
 import Icon from '@material-ui/core/Icon'
 import { connect } from 'react-redux'
 
-import '../Admin.sass'
+import '../../Admin.sass'
 
 @connect((store, ownProps) => {
   	return {
@@ -47,11 +47,9 @@ export default class SelectContainer extends React.Component {
 		return (
 		  	<List>
 		  		
-				<div>
-					<div onClick={() => this.showBox(0)}>none</div>
-					<div onClick={() =>this.showBox(1)}>block</div>
-					<div onClick={() =>this.showBox(2)}>delete</div>
-				</div>
+				<BoxShowContainer
+		  			showBox={this.showBox}
+		  		/>
 
 				{(this.state.show == 0)? '': ''}
 				{(this.state.show == 1)? (

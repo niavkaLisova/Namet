@@ -1,8 +1,8 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-import * as AdminActions from '../../actions/admin-actions'
-import ModalUser from './ModalUser'
+import * as AdminActions from '../../../actions/admin-actions'
+import ModalUser from '../ModalUser'
 import SelectUserListContainer from './selectUserList-container'
 
 import Button from '@material-ui/core/Button'
@@ -19,7 +19,7 @@ import FormControl from '@material-ui/core/FormControl'
 import Icon from '@material-ui/core/Icon'
 import { connect } from 'react-redux'
 
-import '../Admin.sass'
+import '../../Admin.sass'
 
 @connect((store, ownProps) => {
   	return {
@@ -56,9 +56,11 @@ export default class SelectBlockContainer extends React.Component {
 
 	setUser = () => {
 		if(this.state.userObj._id && this.state.userObj.nickname == this.state.input) {
-			this.props.dispatch(AdminActions.setUserDelete(this.state.userObj._id, this.state.userObj.email));
+			let state = new Date();
+  			state.setDate(state.getDate() + this.state.day);
+
+			this.props.dispatch(AdminActions.setUser(this.state.userObj._id, state.getTime()));
 		} else {
-			consle.log('no')
 			if(this.props.findUser.length > 0 && this.state.input.length > 0) {
 				this.handleOpen();
 			}
@@ -79,8 +81,12 @@ export default class SelectBlockContainer extends React.Component {
 	      visible
 	    });
 
-	    this.props.dispatch(AdminActions.findUserDelete(event.target.value));
+	    this.props.dispatch(AdminActions.findUser(event.target.value));
 	}
+
+	handleChangeDay = event => {
+	    this.setState({ [event.target.name]: event.target.value });
+	};
 
 	render() {
 		return (
@@ -101,6 +107,22 @@ export default class SelectBlockContainer extends React.Component {
 			        value={this.state.input}
 			        onChange={this.onChangeSelect}
 		        />
+
+		        <FormControl>
+			        <InputLabel htmlFor="day-simple">Days</InputLabel>
+			        <Select
+			            value={this.state.day}
+			            onChange={this.handleChangeDay}
+			            inputProps={{
+			              name: 'day',
+			              id: 'day-simple',
+			            }}
+			        >
+				        <MenuItem value={5}>five</MenuItem>
+				        <MenuItem value={7}>seven</MenuItem>
+				        <MenuItem value={10}>ten</MenuItem>
+			        </Select>
+			    </FormControl>
 
 			    <Button variant='contained' onClick={this.setUser}>
 			    	<Icon>add</Icon>

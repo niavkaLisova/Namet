@@ -3,9 +3,11 @@ const bcrypt = require('bcrypt')
 const jwt    = require('jsonwebtoken')
 const _ = require('lodash')
 const bson = require('bson')
+const nodemailer = require('nodemailer')
+
 const User = require('../models/user')
+const BlackList = require('../models/blackList')
 const config = require('../config/config')
-var nodemailer = require('nodemailer');
 
 const userRoutes = express.Router();
 
@@ -60,33 +62,44 @@ userRoutes.post('/register', function(req, res) {
     return throwFailed(res, 'Cannot register. Provide email or password.');
   }
 
-  User
-    .findOne({ email: email })
+  BlackList
+    .findOne(email)
     .exec()
-    .then(function(user) {
-      if (user) {
-        return throwFailed(res, 'There is already user with such email.');
+    .then(function(list) {
+      if (list) {
+        return throwFailed(res, 'Your email address is on blacklist.');
+      } else {
+        User
+          .findOne({ email: email })
+          .exec()
+          .then(function(user) {
+            if (user) {
+              return throwFailed(res, 'There is already user with such email.');
+            }
+
+            const saltRounds = 10;
+            bcrypt.hash(password, saltRounds, function(err, hash) {
+                var user = new User({
+                  name: email,
+                  nickname: email,
+                  email: email,
+                  password: hash,
+                  admin: false,
+                  online: [],
+                  confirm: false,
+                  activeRoom: 0
+                });
+
+                user.save(function(err, doc) {
+                  if (err) throw err;
+                  return res.json({ success: true, message: 'User registered successfully.', doc });
+                });
+            });
+        });
       }
+    })
 
-      const saltRounds = 10;
-      bcrypt.hash(password, saltRounds, function(err, hash) {
-          var user = new User({
-            name: email,
-            nickname: email,
-            email: email,
-            password: hash,
-            admin: false,
-            online: [],
-            confirm: false,
-            activeRoom: 0
-          });
-
-          user.save(function(err, doc) {
-            if (err) throw err;
-            return res.json({ success: true, message: 'User registered successfully.', doc });
-          });
-      });
-    });
+  
 });
 
 // const tokenVerifier = require('../auth/token-verifier')
@@ -104,16 +117,7 @@ userRoutes.get('/users/:id', function(req, res) {
     .exec()
     .then(function(user) {
       setTimeout(function() {
-        res.json({
-          name: user.name,
-          nickname: user.nickname,
-          email: user.email,
-          id: user._id,
-          online: user.online,
-          activeRoom: user.activeRoom,
-          admin: user.admin,
-          banned: user.banned
-        })
+        res.json(user)
       }, config.delay);
     });
 });

@@ -1,12 +1,11 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import appHistory from '../../../../utils/app-history'
+import appHistory from '../../../../../utils/app-history'
 import { withStyles } from '@material-ui/core/styles';
 
-import * as AdminActions from '../../actions/admin-actions'
-import Admin from '../admin-container'
-import ListUserContainer from './listUser-container'
+import * as AdminActions from '../../../actions/admin-actions'
+import BlackListContainer from './blackList-container'
 
 import Button from '@material-ui/core/Button'
 import Card from '@material-ui/core/Card'
@@ -17,7 +16,7 @@ import Typography from '@material-ui/core/Typography'
 import TextField from '@material-ui/core/TextField'
 import Paper from '@material-ui/core/Paper';
 
-import '../Admin.sass'
+import '../../Admin.sass'
 
 const styles = theme => ({
   root: {
@@ -32,7 +31,7 @@ const styles = theme => ({
   		listUser: store.adminN.listUser
   	};
 })
-class BoxContainer extends React.Component {
+class BoxBlackListContainer extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -43,7 +42,7 @@ class BoxContainer extends React.Component {
 			findUser: []
 		}
 
-		this.props.dispatch(AdminActions.listUser());
+		this.props.dispatch(AdminActions.listUserDelete());
 	}
 
 	onChangeSelect = (event) => {
@@ -51,7 +50,7 @@ class BoxContainer extends React.Component {
 	    let find = [];
 
 	    this.props.listUser.map(user => {
-	    	((user.nickname.includes(event.target.value))? (
+	    	((user.email.includes(event.target.value))? (
 	    		find.push(user)
 	    	): false)
 	    })
@@ -61,10 +60,6 @@ class BoxContainer extends React.Component {
 	      visible: visible,
 	      findUser: find
 	    });
-	}
-
-	goUserPage = (id) => {
-	    appHistory.push('/user/' + id);
 	}
 
 	handleToggle = value => () => {
@@ -89,7 +84,8 @@ class BoxContainer extends React.Component {
   		})
 
   		this.state.checked.map((item) => {
-  			this.props.dispatch(AdminActions.setUser(item, ''));
+  			console.log('try to remove from black list', item)
+  			this.props.dispatch(AdminActions.delFromBlackList(item));
   		})
   	}
 
@@ -99,32 +95,32 @@ class BoxContainer extends React.Component {
 		return (
 		  	<Paper className={classes.root} elevation={1}>
 			    <TextField
-		        	label="find banned user"
-		          	placeholder="user"
+		        	label="black list"
+		          	placeholder="email"
 			        margin="normal"
 			        value={this.state.input}
-			        onChange={this.onChangeSelect.bind(this)}
+			        onChange={this.onChangeSelect}
 		        />
 
 				{(this.state.input.length > 0)? (
-					<ListUserContainer 
+					<BlackListContainer
 						list={this.state.findUser}
 						checked={this.state.checked}
 						handleToggle={this.handleToggle}
-					>
-					</ListUserContainer> ): (
-					<ListUserContainer 
+					 /> ): (
+					<BlackListContainer
 						list={this.props.listUser}
 						checked={this.state.checked}
 						handleToggle={this.handleToggle}
-					>
-					</ListUserContainer>
+					 />
 				)}
 
-				<p onClick={this.checkedDelete}>Delete checked</p>
+				{((this.state.findUser.length > 0) || (this.props.listUser.length > 0))? (
+					<p onClick={this.checkedDelete}>Delete checked</p>
+				): ''}
 			</Paper>
 		)
 	}
 }
 
-export default (withStyles(styles)(BoxContainer))
+export default (withStyles(styles)(BoxBlackListContainer))

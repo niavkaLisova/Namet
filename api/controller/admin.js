@@ -15,7 +15,7 @@ adminRoutes.post('/junior/find', function(req, res) {
   	const regexp = new RegExp(search);
 
   	User
-    	.find({ 'nickname': regexp,'admin': false }, {name: 1, email: 1, nickname: 1, _id: 1, admin: 1})
+    	.find({ 'nickname': regexp,'admin': false, banned: '' }, {name: 1, email: 1, nickname: 1, _id: 1, admin: 1})
       	.where('_id').ne(id)
       	.exec()
       	.then(function(juniors) {
@@ -93,34 +93,43 @@ adminRoutes.post('/delete/user/find', function(req, res) {
 });
 
 adminRoutes.post('/delete/user/set', function(req, res) {
-    const { id, email } = req.body;
+  const { id, email } = req.body;
 
-    User
-      .findOne({ '_id': id})
-      .exec()
-      .then(function(user) {
-        user.remove();
+  User
+    .findOne({ '_id': id})
+    .exec()
+    .then(function(user) {
+      user.remove();
 
-        let list = new BlackList({
-          email
-        })
+      let list = new BlackList({
+        email
+      })
 
-        list.save(function(err, docs) {
-          console.log('del', user);
-          console.log('list', docs);
+      list.save(function(err, docs) {
+        console.log('del', user);
+        console.log('list', docs);
 
-          res.json(user);
-        })
-      });
+        res.json(user);
+      })
+    });
 });
 
 adminRoutes.post('/black/list', function(req, res) {
-    BlackList
-      .find()
-      .exec()
-      .then(function(users) {
-        res.json(users);
-      });
+  BlackList
+    .find()
+    .exec()
+    .then(function(users) {
+      res.json(users);
+    });
+});
+
+adminRoutes.post('/black/list/remove', function(req, res) {
+  const { id } = req.body;
+
+  BlackList.remove({'_id': id}, (err) => {
+    if(err) throw err;
+    res.json({ success: true, message: 'removed from black llist' });
+  });
 });
 
 module.exports = adminRoutes;

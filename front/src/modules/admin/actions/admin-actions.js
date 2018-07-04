@@ -80,7 +80,18 @@ export function setUser(user, state) {
           'state': state
         })
         .end((error, response) => {
-          dispatch(listUser());
+          // dispatch(listUser());
+        });
+  }
+}
+
+export function listUserDelete() {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'admin/black/list')
+        .set('x-access-token', localStorage.getItem('token'))
+        .end((error, response) => {
+          dispatch(setListUser(response.body));
         });
   }
 }
@@ -111,6 +122,20 @@ export function setUserDelete(user, email) {
         })
         .end((error, response) => {
           console.log('deleted', response.body)
+          // dispatch(listUser());
+        });
+  }
+}
+
+export function delFromBlackList(user) {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'admin/black/list/remove')
+        .set('x-access-token', localStorage.getItem('token'))
+        .send({
+          'id': user
+        })
+        .end((error, response) => {
           // dispatch(listUser());
         });
   }
