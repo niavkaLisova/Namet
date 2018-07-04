@@ -95,9 +95,14 @@ class BoxContainer extends React.Component {
   			input: ''
   		})
 
+  		let userList = this.props.listJunior;
+
   		this.state.checked.map((item) => {
+  			userList = userList.filter((user) => user._id != item);
   			this.props.dispatch(AdminActions.setJunior(item, false));
   		})
+
+  		this.props.dispatch(AdminActions.setListJunior(userList));
   	}
 
 	render() {

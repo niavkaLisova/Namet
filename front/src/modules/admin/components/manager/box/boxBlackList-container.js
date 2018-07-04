@@ -81,12 +81,16 @@ class BoxBlackListContainer extends React.Component {
   	checkedDelete = () => {
   		this.setState({
   			input: ''
-  		})
+  		});
+
+  		let userList = this.props.listUser;
 
   		this.state.checked.map((item) => {
-  			console.log('try to remove from black list', item)
+            userList = userList.filter((user) => user._id != item);
   			this.props.dispatch(AdminActions.delFromBlackList(item));
-  		})
+  		});
+
+  		this.props.dispatch(AdminActions.setListUser(userList));
   	}
 
 	render() {

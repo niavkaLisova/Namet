@@ -36,7 +36,7 @@ class ListUserContainer extends React.Component {
 	render() {
 		return (
 		  	<List class='listJunior'>
-			    {this.props.list.map(user => {
+			    {this.props.list.map((user) => {
 				return (
 					<ExpansionPanel key={user._id}>
 				        <ExpansionPanelSummary>

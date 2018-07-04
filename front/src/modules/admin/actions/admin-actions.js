@@ -19,16 +19,19 @@ export function findJunior(search) {
 }
 
 export function setJunior(junior, state) {
+  let juniorId = (typeof(junior) == 'object')? junior._id: junior
   return (dispatch) => {
       request
         .post(Config.API_DOMAIN + 'admin/junior/set')
         .set('x-access-token', localStorage.getItem('token'))
         .send({
-          'id': junior,
+          'id': juniorId,
           'state': state
         })
         .end((error, response) => {
-          dispatch(listJunior());
+          if (typeof(junior) == 'object') {
+            dispatch(pushFindJunior(junior));
+          }
         });
   }
 }
@@ -71,16 +74,20 @@ export function listUser() {
 }
 
 export function setUser(user, state) {
+  let userId = (typeof(user) == 'string')? user: user._id
   return (dispatch) => {
       request
         .post(Config.API_DOMAIN + 'admin/banned/set')
         .set('x-access-token', localStorage.getItem('token'))
         .send({
-          'id': user,
+          'id': userId,
           'state': state
         })
         .end((error, response) => {
-          // dispatch(listUser());
+          if (typeof(user) == 'object') {
+            user.banned = state;
+            dispatch(pushFindUser(user));
+          }
         });
   }
 }
@@ -121,8 +128,7 @@ export function setUserDelete(user, email) {
           email
         })
         .end((error, response) => {
-          console.log('deleted', response.body)
-          // dispatch(listUser());
+          dispatch(pushFindUser(response.body));
         });
   }
 }
@@ -155,4 +161,12 @@ export function setFindUser(data) {
 
 export function setListUser(data) {
   return {type: 'SET_LIST_USER', data};
+}
+
+export function pushFindUser(data) {
+  return {type: 'PUSH_FIND_USER', data};
+}
+
+export function pushFindJunior(data) {
+  return {type: 'PUSH_FIND_JUNIOR', data};
 }

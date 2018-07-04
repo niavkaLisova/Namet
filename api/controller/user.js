@@ -63,9 +63,10 @@ userRoutes.post('/register', function(req, res) {
   }
 
   BlackList
-    .findOne(email)
+    .findOne({email})
     .exec()
     .then(function(list) {
+      console.log('list', list)
       if (list) {
         return throwFailed(res, 'Your email address is on blacklist.');
       } else {

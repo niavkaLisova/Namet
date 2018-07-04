@@ -85,11 +85,16 @@ class BoxContainer extends React.Component {
   	checkedDelete = () => {
   		this.setState({
   			input: ''
-  		})
+  		});
+
+  		let userList = this.props.listUser;
 
   		this.state.checked.map((item) => {
+            userList = userList.filter((user) => user._id != item);
   			this.props.dispatch(AdminActions.setUser(item, ''));
-  		})
+  		});
+
+  		this.props.dispatch(AdminActions.setListUser(userList));
   	}
 
 	render() {

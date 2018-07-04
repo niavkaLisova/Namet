@@ -52,7 +52,7 @@ export default class SelectContainer extends React.Component {
 
 	setJunior = () => {
 		if(this.state.juniorObj._id && this.state.juniorObj.nickname == this.state.input) {
-			this.props.dispatch(AdminActions.setJunior(this.state.juniorObj._id, true));
+			this.props.dispatch(AdminActions.setJunior(this.state.juniorObj, true));
 		} else {
 			if(this.props.findJunior.length > 0 && this.state.input.length > 0) {
 				this.handleOpen();

@@ -59,7 +59,7 @@ export default class SelectBlockContainer extends React.Component {
 			let state = new Date();
   			state.setDate(state.getDate() + this.state.day);
 
-			this.props.dispatch(AdminActions.setUser(this.state.userObj._id, state.getTime()));
+			this.props.dispatch(AdminActions.setUser(this.state.userObj, state.getTime()));
 		} else {
 			if(this.props.findUser.length > 0 && this.state.input.length > 0) {
 				this.handleOpen();

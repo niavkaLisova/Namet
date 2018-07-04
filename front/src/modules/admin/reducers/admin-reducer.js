@@ -33,7 +33,20 @@ function adminReducer(state = init, action) {
 	        ...state,
 	        listUser: action.data
 	      }
-	      break; 
+	      break;
+	    case 'PUSH_FIND_JUNIOR':
+	      return {
+	        ...state,
+	        listJunior: state.listJunior.concat(action.data)
+	      } 
+	    case 'PUSH_FIND_USER':
+	      return {
+	        ...state,
+	        listUser: state.listUser.concat(action.data)
+	      }
+	      break;
+	    
+	      break;
 
 	    default: return state;
   	}

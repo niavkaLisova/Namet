@@ -106,10 +106,7 @@ adminRoutes.post('/delete/user/set', function(req, res) {
       })
 
       list.save(function(err, docs) {
-        console.log('del', user);
-        console.log('list', docs);
-
-        res.json(user);
+        res.json(list);
       })
     });
 });
