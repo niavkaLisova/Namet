@@ -1,6 +1,7 @@
 import React from 'react'
 import * as AdminActions from '../actions/admin-actions'
 import * as UserActions from '../../user/actions/user-actions'
+import * as DashboardActions from '../../dashboard/actions/dashboard-actions'
 import { connect } from 'react-redux'
 import { socketConnect } from 'socket.io-react'
 import appHistory from '../../../utils/app-history'
@@ -95,6 +96,14 @@ class AdminContainer extends React.Component {
 			value: 0,
 		};
 
+    this.props.socket.on('online', (id) => {
+      this.props.dispatch(DashboardActions.online(id));
+  
+      this.props.socket.emit('get info', localStorage.getItem('userId'))
+    });
+
+    this.props.socket.emit('join room', 'adminChat');
+    this.props.socket.emit('adminChat get messages b')
 		this.props.dispatch(UserActions.getUser(this.props.socket))
 	}
 

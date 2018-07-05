@@ -47,15 +47,18 @@ class ListroomsContainer extends React.Component {
 	    })
 
 		this.props.socket.on('message', (data) =>{
+			console.log('msg', data)
 			this.props.dispatch(ChatActions.messageRead(this.props.roomId, this));
 			data.read = true
 			this.props.dispatch(ChatActions.messageAdd(data));
 
-			let nodeList = window.document.getElementById('scroll')
-		    let node = window.document.getElementById('scrollContainer')
-			let style = window.getComputedStyle(nodeList, null);
-			let height = parseFloat(style.getPropertyValue("height"));
-			node.scrollTo(0, height); 
+			if(window.document.getElementById('scroll')) {
+				let nodeList = window.document.getElementById('scroll')
+			    let node = window.document.getElementById('scrollContainer')
+				let style = window.getComputedStyle(nodeList, null);
+				let height = parseFloat(style.getPropertyValue("height"));
+				node.scrollTo(0, height); 
+			}
 		})
 		setTimeout(function(){
 			if(window.document.getElementById('scroll')) {

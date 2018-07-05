@@ -1,5 +1,9 @@
+const ObjectID = require('mongodb').ObjectID;
 const User = require('./models/user')
 const Message = require('./models/message')
+
+let adminChat = [];
+let chatLength = 30;
 
 exports = module.exports = function(io) {
 	io.on('connection', function(socket){
@@ -18,8 +22,27 @@ exports = module.exports = function(io) {
 			socket.to(data.roomId).emit('message', data.msg);
 		});
 
+		socket.on('adminChat get messages b', function(){
+			socket.emit('adminChat get messages', adminChat);
+		});
+
+		socket.on('adminChat push messages b', function(message){
+			message._id = new ObjectID();
+			adminChat.push(message);
+			if(adminChat.length >= chatLength) {
+				adminChat.splice(0, 1)
+			}
+
+			socket.to('adminChat').emit('adminChat push message', message);
+			socket.emit('adminChat push message', message);
+		});
+
 		socket.on('type b', function(data){
 			socket.to(data.roomId).emit('type', data.user);
+		});
+
+		socket.on('type admin b', function(data){
+			socket.to('adminChat').emit('type admin', data);
 		});
 
 		socket.on('leave room', function(room) {
@@ -34,7 +57,7 @@ exports = module.exports = function(io) {
 	    	User.findById(user_id, function(err, user) {
 	    		if(err) return null
 
-	    		if(user.online.length && user.online.length > 0) {
+	    		if(user.online && user.online.length > 0) {
 		    		user.online.map( (id) => {
 		    				socket.to(id).emit('reload read message');
 		    			}

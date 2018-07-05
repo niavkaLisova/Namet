@@ -33,7 +33,7 @@ export default function CounterMessages(props) {
 	            		class="material-icons" 
 	            		onClick={(e) => props.seeOptions(e)}>
 	            		more_vert
-	            	</i> 	
+	            	</i> 
 	            </Col>
             </Row>   
         </Container>

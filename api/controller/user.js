@@ -117,9 +117,7 @@ userRoutes.get('/users/:id', function(req, res) {
     .findOne({ _id: userId })
     .exec()
     .then(function(user) {
-      setTimeout(function() {
-        res.json(user)
-      }, config.delay);
+      res.json(user)
     });
 });
 

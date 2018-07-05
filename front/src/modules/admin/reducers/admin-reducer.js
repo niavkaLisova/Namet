@@ -5,7 +5,8 @@ let init = {
 	findJunior: [],
 	listJunior: [],
 	findUser: [],
-	listUser: []
+	listUser: [],
+	listChat: []
 }
 
 function adminReducer(state = init, action) {
@@ -44,8 +45,18 @@ function adminReducer(state = init, action) {
 	        ...state,
 	        listUser: state.listUser.concat(action.data)
 	      }
+	      break; 
+	    case 'SET_LIST_CHAT':
+	      return {
+	        ...state,
+	        listChat: action.data
+	      }
 	      break;
-	    
+	    case 'PUSH_LIST_CHAT':
+	      return {
+	        ...state,
+	        listChat: state.listChat.concat(action.data)
+	      }
 	      break;
 
 	    default: return state;
