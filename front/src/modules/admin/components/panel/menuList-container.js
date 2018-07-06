@@ -57,6 +57,17 @@ class MenuListContainer extends React.Component {
 		          	<ListItemText primary="Manager" />
 		        </ListItem>
 		    </Link>
+
+		    {(this.props.user.email == 'admino')? (
+    		<Link to='/admin/report' class={classNames({active: window.location.hash.includes('report')})}>
+		        <ListItem button>
+		        	<ListItemIcon>
+			            <Icon>description</Icon>
+			        </ListItemIcon>
+		        	<ListItemText primary='report' />
+		        </ListItem>
+	        </Link>
+	        ): ('')}
 	      </List>
 	)
   }

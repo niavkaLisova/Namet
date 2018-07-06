@@ -28,7 +28,9 @@ class MessageContainer extends React.Component {
 	    	let nodeList = window.document.getElementById('scrollAdmin')
 		    let node = window.document.getElementById('scrollAdminC')
 
-			node.scrollTo(0, nodeList.clientHeight);
+		    if(node) { 
+				node.scrollTo(0, nodeList.clientHeight);
+			}
 	    })
 
     	this.props.socket.on('adminChat push message', message => {
@@ -37,7 +39,9 @@ class MessageContainer extends React.Component {
 			let nodeList = window.document.getElementById('scrollAdmin')
 		    let node = window.document.getElementById('scrollAdminC')
 
-			node.scrollTo(0, nodeList.clientHeight);
+		    if(node) {
+				node.scrollTo(0, nodeList.clientHeight);
+			}
 	    });
 	}
 

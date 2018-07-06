@@ -6,6 +6,7 @@ const Room = require('../models/room')
 const Message = require('../models/message')
 const User = require('../models/user')
 const BlackList = require('../models/blackList')
+const Report = require('../models/Report')
 const config = require('../config/config')
 
 const adminRoutes = express.Router();
@@ -128,5 +129,37 @@ adminRoutes.post('/black/list/remove', function(req, res) {
     res.json({ success: true, message: 'removed from black llist' });
   });
 });
+
+adminRoutes.post('/send/report', function(req, res) {
+  const { donor, report } = req.body;
+  const newReport = new Report({
+    donor,
+    type: report.type,
+    text: report.text
+  })
+
+  newReport.save(function(err, docs) {
+    res.json(docs);
+  });
+});
+
+adminRoutes.get('/get/report', function(req, res) {
+  Report
+    .find()
+    .exec()
+    .then(function(reports) {
+      res.json(reports);
+    });
+}); 
+
+adminRoutes.post('/delete/report', function(req, res) {
+  const { id } = req.body;
+
+  Report.remove({'_id': id}, (err) => {
+    if(err) throw err;
+    res.json({ success: true, message: 'removed from reports' });
+  });
+});
+
 
 module.exports = adminRoutes;

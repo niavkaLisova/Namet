@@ -26,7 +26,7 @@ const Message = props => (
 const MsgContainer = props => {
 	const { classes } = props;
 	return (
-		<div>
+		<div class='active'>
 			<SnackbarContent
 		        className={classes.snackbar}
 		        message={

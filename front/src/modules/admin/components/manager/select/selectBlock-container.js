@@ -23,7 +23,8 @@ import '../../Admin.sass'
 
 @connect((store, ownProps) => {
   	return {
-    	findUser: store.adminN.findUser
+    	findUser: store.adminN.findUser,
+    	user: store.user
   	};
 })
 export default class SelectBlockContainer extends React.Component {
@@ -35,7 +36,8 @@ export default class SelectBlockContainer extends React.Component {
 			userObj: {},
 			visible: false,
 			openModal: false,
-			day: 7
+			day: 7,
+			reason: ''
 		}
 	}
 
@@ -60,6 +62,9 @@ export default class SelectBlockContainer extends React.Component {
   			state.setDate(state.getDate() + this.state.day);
 
 			this.props.dispatch(AdminActions.setUser(this.state.userObj, state.getTime()));
+			if(this.props.user.admin) {
+				this.props.dispatch(AdminActions.sendReport({type: 'block', text: `Blocking user ${this.state.userObj.nickname}. ` + this.state.reason}))
+			}
 		} else {
 			if(this.props.findUser.length > 0 && this.state.input.length > 0) {
 				this.handleOpen();
@@ -69,11 +74,12 @@ export default class SelectBlockContainer extends React.Component {
 		this.setState({
 			userObj: '',
 			input: '',
-			visible: false
+			visible: false,
+			reason: ''
 		})
 	}
 
-	onChangeSelect = (event) => {
+	onChangeSelect = event => {
 		let visible = (event.target.value.length > 0)? true: false;
 	 
 	    this.setState({
@@ -82,6 +88,12 @@ export default class SelectBlockContainer extends React.Component {
 	    });
 
 	    this.props.dispatch(AdminActions.findUser(event.target.value));
+	}
+
+	onChangeReason = event => {
+	    this.setState({
+	      reason: event.target.value,
+	    });
 	}
 
 	handleChangeDay = event => {
@@ -123,6 +135,15 @@ export default class SelectBlockContainer extends React.Component {
 				        <MenuItem value={10}>ten</MenuItem>
 			        </Select>
 			    </FormControl>
+
+			    <TextField
+			    	required
+		        	label="Describe the reason"
+		          	placeholder="reason required"
+			        margin="normal"
+			        value={this.state.reason}
+			        onChange={this.onChangeReason}
+		        />
 
 			    <Button variant='contained' onClick={this.setUser}>
 			    	<Icon>add</Icon>

@@ -7,6 +7,7 @@ import AdminPanelContainer from '../modules/admin/components/adminPanel-containe
 import AdminJuniorContainer from '../modules/admin/components/adminJunior-container'
 import ManagerContainer from '../modules/admin/components/manager-container'
 import DashboardContainer from '../modules/dashboard/components/dashboard-container'
+import AdminReportContainer from '../modules/admin/components/adminReport-container'
 import Welcome from '../modules/register/components/welcome'
 import Error from '../modules/register/components/error'
 import Confirm from '../modules/login/components/confirm'
@@ -22,6 +23,7 @@ export default (
 		<Route path='/confirm/:email/:id' component={Confirm} />
 		<Route path='/admin/junior' component={AdminJuniorContainer} />
 		<Route path='/admin/manager' component={ManagerContainer} />
+		<Route path='/admin/report' component={AdminReportContainer} />
 		<Route path='/admin' component={AdminPanelContainer} />
 		<Route path='/error/:time' component={Error} />
 		<DashboardContainer>

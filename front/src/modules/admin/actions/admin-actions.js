@@ -147,6 +147,63 @@ export function delFromBlackList(user) {
   }
 }
 
+export function sendReport(report) {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'admin/send/report')
+        .set('x-access-token', localStorage.getItem('token'))
+        .send({
+          donor: localStorage.getItem('userId'),
+          report
+        })
+        .end((error, response) => {
+          console.log('send report junior', response.body);
+        });
+  }
+} 
+
+export function getReport(report) {
+  return (dispatch) => {
+      request
+        .get(Config.API_DOMAIN + 'admin/get/report')
+        .set('x-access-token', localStorage.getItem('token'))
+        .end((error, response) => {
+          let reportArray = [];
+          let counter = 1;
+          response.body.map(report => {
+            const date = (new Date(report.createdAt)).toDateString();
+            const reportObj = {
+              id: counter++,
+              type: report.type,
+              donor: report.donor,
+              date,
+              open: false,
+              clear: false,
+              done: false,
+              text: report.text,
+              realId: report._id
+            }
+            reportArray.push(reportObj);
+          })
+          
+          dispatch(setReport(reportArray));
+        });
+  }
+}
+
+export function deleteRepot(id) {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'admin/delete/report')
+        .set('x-access-token', localStorage.getItem('token'))
+        .send({
+          id
+        })
+        .end((error, response) => {
+        });
+  }
+}
+
 export function setFindJunior(data) {
   return {type: 'SET_FIND_JUNIOR', data};
 }
@@ -177,4 +234,8 @@ export function setListChat(data) {
 
 export function pushListChat(data) {
   return {type: 'PUSH_LIST_CHAT', data};
+}
+
+export function setReport(data) {
+  return {type: 'SET_REPORT', data};
 }
