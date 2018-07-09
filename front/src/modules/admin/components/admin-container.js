@@ -102,6 +102,11 @@ class AdminContainer extends React.Component {
       this.props.socket.emit('get info', localStorage.getItem('userId'))
     });
 
+    this.props.socket.on('reload report', () => {
+      console.log('reload');
+      this.props.dispatch(AdminActions.getReport());
+    })
+
     this.props.socket.emit('join room', 'adminChat');
     this.props.socket.emit('adminChat get messages b')
 		this.props.dispatch(UserActions.getUser(this.props.socket))

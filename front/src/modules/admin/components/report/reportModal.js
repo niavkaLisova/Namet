@@ -7,7 +7,6 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 class ReportModal extends React.Component {
-
   render() {
     return (
       <div>
@@ -26,9 +25,6 @@ class ReportModal extends React.Component {
           <DialogActions>
             <Button onClick={this.props.handleClose} color="primary">
               Cancel
-            </Button>
-            <Button onClick={this.props.handleClose} color="primary">
-              Subscribe
             </Button>
           </DialogActions>
         </Dialog>

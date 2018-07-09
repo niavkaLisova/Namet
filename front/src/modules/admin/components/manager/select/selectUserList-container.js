@@ -19,7 +19,7 @@ export default class SelectUserListContainer extends React.Component {
 	render() {
 		return (
 		  	<div>
-		  		{(this.props.findUser.map( (user) => {
+		  		{(this.props.findUser.slice(0, 2).map( (user) => {
 					return (
 						<Card key={user._id} >    
 					        <CardContent>

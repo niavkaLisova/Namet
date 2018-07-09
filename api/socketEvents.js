@@ -78,6 +78,14 @@ exports = module.exports = function(io) {
 		socket.on('message global', function(id_online, data){
 	    	socket.to(id_online).emit('message g', data);
 		});
+
+		//* Admin section *//
+
+		socket.on('send report', function(){
+	    	socket.broadcast.emit('reload report');
+		});
+
+		//* end Admin section *//
 		
 	    socket.on('disconnect', function(){
 	    	console.log('disconnect', id, socket.id);

@@ -5,6 +5,7 @@ const _ = require('lodash')
 const bson = require('bson')
 const nodemailer = require('nodemailer')
 
+const Room = require('../models/room')
 const User = require('../models/user')
 const BlackList = require('../models/blackList')
 const config = require('../config/config')
@@ -117,7 +118,20 @@ userRoutes.get('/users/:id', function(req, res) {
     .findOne({ _id: userId })
     .exec()
     .then(function(user) {
-      res.json(user)
+      if(user && (user.activeRoom != 0)) {
+      console.log(user.activeRoom, 'active', typeof(user.activeRoom));
+        Room
+          .find({_id: user.activeRoom}).exec().then(function(docs) {
+            // console.log('room', docs, docs.length);
+            if(docs.length == 0) {
+              user.activeRoom = 0;
+              user.save();
+            }
+            res.json(user);
+          })
+        } else { 
+          res.json(user)
+        }
     });
 });
 

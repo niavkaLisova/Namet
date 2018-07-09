@@ -147,7 +147,7 @@ export function delFromBlackList(user) {
   }
 }
 
-export function sendReport(report) {
+export function sendReport(report, socket) {
   return (dispatch) => {
       request
         .post(Config.API_DOMAIN + 'admin/send/report')
@@ -157,7 +157,8 @@ export function sendReport(report) {
           report
         })
         .end((error, response) => {
-          console.log('send report junior', response.body);
+          // console.log('send report junior', response.body);
+          socket.emit('send report');
         });
   }
 } 
@@ -177,9 +178,7 @@ export function getReport(report) {
               type: report.type,
               donor: report.donor,
               date,
-              open: false,
-              clear: false,
-              done: false,
+              discuss: report.discuss,
               text: report.text,
               realId: report._id
             }
@@ -191,7 +190,7 @@ export function getReport(report) {
   }
 }
 
-export function deleteRepot(id) {
+export function deleteRepot(id, reports) {
   return (dispatch) => {
       request
         .post(Config.API_DOMAIN + 'admin/delete/report')
@@ -200,6 +199,8 @@ export function deleteRepot(id) {
           id
         })
         .end((error, response) => {
+          let newReports = reports.filter(report => report.realId != id)
+          dispatch(setReport(newReports));
         });
   }
 }

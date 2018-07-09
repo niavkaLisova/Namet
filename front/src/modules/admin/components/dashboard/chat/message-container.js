@@ -15,7 +15,8 @@ import '../../Admin.sass';
 
 @connect((store, ownProps) => {
     return {
-    	listChat: store.adminN.listChat
+    	listChat: store.adminN.listChat,
+    	user: store.user
     };
 })
 class MessageContainer extends React.Component {
@@ -52,7 +53,7 @@ class MessageContainer extends React.Component {
 			    	{this.props.listChat.map(msg => {
 			    		return <div key={msg._id}>
 			    			<IntlProvider locale="en">
-								<MsgContainer msg={msg} />
+								<MsgContainer msg={msg} username={this.props.user.name} />
 							</IntlProvider>
 						</div>
 						}

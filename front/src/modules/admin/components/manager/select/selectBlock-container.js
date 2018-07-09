@@ -18,6 +18,9 @@ import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
 import Icon from '@material-ui/core/Icon'
 import { connect } from 'react-redux'
+import { socketConnect } from 'socket.io-react'
+
+import { Container, Row, Col } from 'react-grid-system'
 
 import '../../Admin.sass'
 
@@ -27,7 +30,7 @@ import '../../Admin.sass'
     	user: store.user
   	};
 })
-export default class SelectBlockContainer extends React.Component {
+class SelectBlockContainer extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -63,7 +66,9 @@ export default class SelectBlockContainer extends React.Component {
 
 			this.props.dispatch(AdminActions.setUser(this.state.userObj, state.getTime()));
 			if(this.props.user.admin) {
-				this.props.dispatch(AdminActions.sendReport({type: 'block', text: `Blocking user ${this.state.userObj.nickname}. ` + this.state.reason}))
+				this.props.dispatch(AdminActions.sendReport(
+					{type: 'block', discuss: this.state.userObj._id, text: `Blocking user ${this.state.userObj.nickname}. ` + this.state.reason},
+					this.props.socket))
 			}
 		} else {
 			if(this.props.findUser.length > 0 && this.state.input.length > 0) {
@@ -112,42 +117,56 @@ export default class SelectBlockContainer extends React.Component {
 			  		setUser={this.setUser}
 			  		>
 		  		</ModalUser>
-			    <TextField
-		        	label="select user"
-		          	placeholder="user"
-			        margin="normal"
-			        value={this.state.input}
-			        onChange={this.onChangeSelect}
-		        />
+		  		<Row>
+		  			<Col md={6}>
+					    <TextField
+				        	label="select user"
+				          	placeholder="user"
+					        margin="normal"
+					        class="textarea"
+					        value={this.state.input}
+					        onChange={this.onChangeSelect}
+				        />
+			        </Col>
+					
+					<Col md={4}>
+				        <FormControl class="textarea">
+					        <InputLabel htmlFor="day-simple">Days</InputLabel>
+					        <Select
+					            value={this.state.day}
+					            onChange={this.handleChangeDay}
+					            inputProps={{
+					              name: 'day',
+					              id: 'day-simple',
+					            }}
+					        >
+						        <MenuItem value={5}>five</MenuItem>
+						        <MenuItem value={7}>seven</MenuItem>
+						        <MenuItem value={10}>ten</MenuItem>
+					        </Select>
+					    </FormControl>
+				    </Col>
 
-		        <FormControl>
-			        <InputLabel htmlFor="day-simple">Days</InputLabel>
-			        <Select
-			            value={this.state.day}
-			            onChange={this.handleChangeDay}
-			            inputProps={{
-			              name: 'day',
-			              id: 'day-simple',
-			            }}
-			        >
-				        <MenuItem value={5}>five</MenuItem>
-				        <MenuItem value={7}>seven</MenuItem>
-				        <MenuItem value={10}>ten</MenuItem>
-			        </Select>
-			    </FormControl>
+				    <Col md={2}>
+					    <Button variant='contained' onClick={this.setUser}>
+					    	<Icon>add</Icon>
+					    </Button>
+				    </Col>
+				</Row>
 
-			    <TextField
-			    	required
-		        	label="Describe the reason"
-		          	placeholder="reason required"
-			        margin="normal"
-			        value={this.state.reason}
-			        onChange={this.onChangeReason}
-		        />
-
-			    <Button variant='contained' onClick={this.setUser}>
-			    	<Icon>add</Icon>
-			    </Button>
+			    <Row>
+				    <TextField
+				    	required
+				    	multiline
+				    	rowsMax='4'
+				    	class="textarea"
+			        	label="Describe the reason"
+			          	placeholder="reason required"
+				        margin="normal"
+				        value={this.state.reason}
+				        onChange={this.onChangeReason}
+			        />
+		        </Row>
 				
 				<div class='listJunior'>
 				{(this.state.visible) ? (
@@ -158,3 +177,5 @@ export default class SelectBlockContainer extends React.Component {
 		)
 	}
 }
+
+export default socketConnect(SelectBlockContainer)

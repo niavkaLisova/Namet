@@ -3,8 +3,8 @@ import React from 'react'
 import { Container, Row, Col } from 'react-grid-system'
 import Button from '@material-ui/core/Button'
 import { withStyles } from '@material-ui/core/styles'
+import classNames from 'classnames'; 
 import SnackbarContent from '@material-ui/core/SnackbarContent'
-
 import Icon from '@material-ui/core/Icon'
 
 import '../../Admin.sass'
@@ -19,18 +19,20 @@ const styles = theme => ({
 
 const Message = props => (
   	<Row>
-    	{props.msg.author}: {props.msg.text}
+    	<i class={classNames({'active': (props.username) == props.msg.author})}>{props.msg.author}</i>
+    	: {props.msg.text}
   	</Row>
 );
 
 const MsgContainer = props => {
 	const { classes } = props;
+
 	return (
-		<div class='active'>
+		<div>
 			<SnackbarContent
 		        className={classes.snackbar}
 		        message={
-		          <Message msg={props.msg} />
+		          <Message msg={props.msg} username={props.username} />
 		        }
 		        action={<FormattedRelative value={props.msg.time} />}
 		      />

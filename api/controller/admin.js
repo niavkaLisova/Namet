@@ -100,6 +100,16 @@ adminRoutes.post('/delete/user/set', function(req, res) {
     .findOne({ '_id': id})
     .exec()
     .then(function(user) {
+      Room
+        .find({ "between": { $elemMatch: {$in: [String(user._id)] }}}, function(err, docs) {
+          console.log('wsio', docs)
+          // Message
+          //   .remove({'roomID': id}, (err) => {
+          //     if(err) throw err;
+          //     res.json({ success: true, message: 'removed all messages' });
+          //   });
+        })
+
       user.remove();
 
       let list = new BlackList({
@@ -135,7 +145,8 @@ adminRoutes.post('/send/report', function(req, res) {
   const newReport = new Report({
     donor,
     type: report.type,
-    text: report.text
+    text: report.text,
+    discuss: report.discuss
   })
 
   newReport.save(function(err, docs) {

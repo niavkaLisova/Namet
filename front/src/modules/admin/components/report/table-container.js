@@ -147,7 +147,7 @@ let EnhancedTableToolbar = props => {
         {numSelected > 0 ? (
           <Tooltip title="Delete">
             <IconButton aria-label="Delete">
-              <Icon>delete</Icon>
+              <Icon onClick={props.handleDeleteAll}>delete</Icon>
             </IconButton>
           </Tooltip>
         ) : (
@@ -263,10 +263,26 @@ class EnhancedTable extends React.Component {
   }
 
   handleDelete = id => {
-  	let newReport = this.props.report.filter(report => report.realId != id)
-  	this.props.dispatch(AdminActions.setReport(newReport));
-	this.props.dispatch(AdminActions.deleteRepot(id));
-  } 
+	this.props.dispatch(AdminActions.deleteRepot(id, this.props.report));
+  }
+
+  handleDeleteAll = () => {
+  	let delArray = [];
+  	this.state.selected.map( report => 
+  		delArray.push(this.props.report.find(item => report == item.id))
+  	)
+
+  	console.log('delArray', delArray)
+  	delArray.map(item => this.props.dispatch(AdminActions.deleteRepot(item.realId, this.props.report)))
+  }
+
+  handleDone = report => {
+  	if(report.type == 'block') {
+  		this.handleDelete(report.realId);
+
+  		this.props.dispatch(AdminActions.setUser(report.discuss, ''));
+  	}
+  }
 
   isSelected = id => this.state.selected.indexOf(id) !== -1;
 
@@ -285,7 +301,7 @@ class EnhancedTable extends React.Component {
       	content={this.state.modalContent}
        />
       <Paper className={classes.root}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar numSelected={selected.length} handleDeleteAll={this.handleDeleteAll} />
         <div className={classes.tableWrapper}>
           <Table className={classes.table} aria-labelledby="tableTitle">
             <EnhancedTableHead
@@ -319,9 +335,9 @@ class EnhancedTable extends React.Component {
                       <TableCell numeric>{n.type}</TableCell>
                       <TableCell numeric>{n.donor}</TableCell>
                       <TableCell numeric>{n.date}</TableCell>
-                      <TableCell numeric >{(n.open)? <Icon>highlight_off</Icon>: <Icon onClick={() => this.openRepost(n)}>open_in_browser</Icon>}</TableCell>
-                      <TableCell numeric>{(n.clear)? 'true': <Icon onClick={() =>this.handleDelete(n.realId)}>delete</Icon>}</TableCell>
-                      <TableCell numeric>{(n.done)? 'true': <Icon>done</Icon>}</TableCell>
+                      <TableCell numeric ><Icon onClick={() => this.openRepost(n)}>open_in_browser</Icon></TableCell>
+                      <TableCell numeric><Icon onClick={() => this.handleDelete(n.realId)}>delete</Icon></TableCell>
+                      <TableCell numeric><Icon onClick={() => this.handleDone(n)}>done</Icon></TableCell>
                       <TableCell numeric>{(n.text).substring(0, 15)} {(n.text.length > 15)? '...': '' }</TableCell>
                     </TableRow>
                   );
