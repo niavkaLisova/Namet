@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 
 import * as AdminActions from '../../../actions/admin-actions'
 import TimeContainer from '../time-container'
-import BlockHelperContainer from '../blockHelper-container'
+import BlockHelperContainer from '../blockhelper-container'
 
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'

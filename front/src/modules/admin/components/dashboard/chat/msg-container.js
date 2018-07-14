@@ -3,7 +3,7 @@ import React from 'react'
 import { Container, Row, Col } from 'react-grid-system'
 import Button from '@material-ui/core/Button'
 import { withStyles } from '@material-ui/core/styles'
-import classNames from 'classnames'; 
+import classNames from 'classnames'
 import SnackbarContent from '@material-ui/core/SnackbarContent'
 import Icon from '@material-ui/core/Icon'
 

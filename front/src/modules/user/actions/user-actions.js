@@ -16,7 +16,7 @@ export function getUser(socket) {
             let n = d.getTime();
             
             if(!(n > response.body.banned)) {
-              appHistory.push('/error/'+ response.body.banned);
+              appHistory.push('/error/' + localStorage.getItem('userId') + '/' + response.body.banned);
             }
           } else {
             dispatch(userGet(response.body));
@@ -70,19 +70,37 @@ export function selectActiveRoom(activeRoom) {
   }
 }
 
-export function sendEmail() {
+export function sendReport(report, socket) {
   return (dispatch) => {
       request
-        .post(Config.API_DOMAIN + 'api/send/email')
+        .post(Config.API_DOMAIN + 'admin/send/report')
         .set('x-access-token', localStorage.getItem('token'))
         .send({
-          'joj': 'joj'
+          donor: report.discuss,
+          report
         })
         .end((error, response) => {
-          // dispatch(activeSave(activeRoom))
+          console.log('send report user', response.body);
+          socket.emit('send report');
         });
   }
-}
+} 
+
+// export function sendEmail() {
+//   return (dispatch) => {
+//       request
+//         .post(Config.API_DOMAIN + 'api/send/email')
+//         .set('x-access-token', localStorage.getItem('token'))
+//         .send({
+//           'joj': 'joj'
+//         })
+//         .end((error, response) => {
+//           // dispatch(activeSave(activeRoom))
+//         });
+//   }
+// }
+
+
 
 export function unreadUpdate(data) {
   return {type: 'UNREAD_UPDATE', data};

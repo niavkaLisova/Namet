@@ -32,6 +32,7 @@ export function setJunior(junior, state) {
           if (typeof(junior) == 'object') {
             dispatch(pushFindJunior(junior));
           }
+          console.log('set Juniot', junior)
         });
   }
 }
@@ -118,17 +119,16 @@ export function findUserDelete(search) {
   }
 }
 
-export function setUserDelete(user, email) {
+export function setUserDelete(user) {
   return (dispatch) => {
       request
         .post(Config.API_DOMAIN + 'admin/delete/user/set')
         .set('x-access-token', localStorage.getItem('token'))
         .send({
           'id': user,
-          email
         })
         .end((error, response) => {
-          dispatch(pushFindUser(response.body));
+          socket.emit('send report');
         });
   }
 }
@@ -157,7 +157,7 @@ export function sendReport(report, socket) {
           report
         })
         .end((error, response) => {
-          // console.log('send report junior', response.body);
+          console.log('send report junior', response.body);
           socket.emit('send report');
         });
   }
@@ -173,6 +173,7 @@ export function getReport(report) {
           let counter = 1;
           response.body.map(report => {
             const date = (new Date(report.createdAt)).toDateString();
+
             const reportObj = {
               id: counter++,
               type: report.type,
@@ -180,7 +181,7 @@ export function getReport(report) {
               date,
               discuss: report.discuss,
               text: report.text,
-              realId: report._id
+              realId: report._id,
             }
             reportArray.push(reportObj);
           })
@@ -199,8 +200,10 @@ export function deleteRepot(id, reports) {
           id
         })
         .end((error, response) => {
-          let newReports = reports.filter(report => report.realId != id)
-          dispatch(setReport(newReports));
+          if (reports) {
+            let newReports = reports.filter(report => report.realId != id)
+            dispatch(setReport(newReports));
+          }
         });
   }
 }

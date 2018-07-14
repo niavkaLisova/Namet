@@ -26,12 +26,6 @@ import { lighten } from '@material-ui/core/styles/colorManipulator'
 
 import '../Admin.sass'
 
-let counter = 0;
-function createData(type, donor, date, open, clear, done, text) {
-  counter += 1;
-  return { id: counter, type, donor, date, open, clear, done, text };
-}
-
 function getSorting(order, orderBy) {
   return order === 'desc'
     ? (a, b) => (b[orderBy] < a[orderBy] ? -1 : 1)
@@ -135,6 +129,7 @@ let EnhancedTableToolbar = props => {
         {numSelected > 0 ? (
           <Typography color="inherit" variant="subheading">
             {numSelected} selected
+            <p onClick={props.handleDeleteAll}>delete</p>
           </Typography>
         ) : (
           <Typography variant="title" id="tableTitle">
@@ -263,25 +258,47 @@ class EnhancedTable extends React.Component {
   }
 
   handleDelete = id => {
-	this.props.dispatch(AdminActions.deleteRepot(id, this.props.report));
+	  this.props.dispatch(AdminActions.deleteRepot(id, this.props.report));
   }
 
   handleDeleteAll = () => {
   	let delArray = [];
-  	this.state.selected.map( report => 
-  		delArray.push(this.props.report.find(item => report == item.id))
+
+  	this.state.selected.map( report => {
+  		  delArray.push(this.props.report.find(item => report == item.id))
+      }
   	)
 
-  	console.log('delArray', delArray)
-  	delArray.map(item => this.props.dispatch(AdminActions.deleteRepot(item.realId, this.props.report)))
+    let newReportsArr = this.props.report;
+  	delArray.map(item => {
+      this.props.dispatch(AdminActions.deleteRepot(item.realId))
+      newReportsArr = (newReportsArr.filter(report => report.realId != item.realId))
+    })
+
+    this.props.dispatch(AdminActions.setReport(newReportsArr));
   }
 
   handleDone = report => {
-  	if(report.type == 'block') {
-  		this.handleDelete(report.realId);
+    switch(report.type) {
+      case 'block':
+        this.handleDelete(report.realId);
 
-  		this.props.dispatch(AdminActions.setUser(report.discuss, ''));
-  	}
+        this.props.dispatch(AdminActions.setUser(report.discuss, ''));
+        break;
+      case 'delete':
+        this.handleDelete(report.realId);
+
+        this.props.dispatch(AdminActions.setUserDelete(report.discuss, this.props.socket));
+        break;
+      case 'complaint':
+        console.log('complaint', report.discuss, report.realId)
+        this.handleDelete(report.realId);
+
+        this.props.dispatch(AdminActions.setUser(report.discuss, ''));
+        break;
+      default:
+          console.log('nothing')
+    }
   }
 
   isSelected = id => this.state.selected.indexOf(id) !== -1;
@@ -329,7 +346,7 @@ class EnhancedTable extends React.Component {
                       selected={isSelected}
                     >
                       <TableCell padding="checkbox">
-                        <Checkbox checked={isSelected} onClick={() => this.handleClick(event, n.id)} />
+                        <Checkbox checked={isSelected} onClick={(event) => this.handleClick(event, n.id)} />
                       </TableCell>
                       <TableCell component="th" scope="row" padding="none">{n.id}</TableCell>
                       <TableCell numeric>{n.type}</TableCell>

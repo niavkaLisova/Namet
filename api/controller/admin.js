@@ -6,7 +6,7 @@ const Room = require('../models/room')
 const Message = require('../models/message')
 const User = require('../models/user')
 const BlackList = require('../models/blackList')
-const Report = require('../models/Report')
+const Report = require('../models/report')
 const config = require('../config/config')
 
 const adminRoutes = express.Router();
@@ -94,31 +94,40 @@ adminRoutes.post('/delete/user/find', function(req, res) {
 });
 
 adminRoutes.post('/delete/user/set', function(req, res) {
-  const { id, email } = req.body;
+  const { id } = req.body;
 
   User
     .findOne({ '_id': id})
     .exec()
     .then(function(user) {
       Room
-        .find({ "between": { $elemMatch: {$in: [String(user._id)] }}}, function(err, docs) {
-          console.log('wsio', docs)
-          // Message
-          //   .remove({'roomID': id}, (err) => {
-          //     if(err) throw err;
-          //     res.json({ success: true, message: 'removed all messages' });
-          //   });
+        .find({ "between": { $elemMatch: {$in: [String(user._id)] }}},  function(err, roomsRes) {
+          if(err) throw err;
+
+          const rooms = [];
+          roomsRes.map(room => {
+            rooms.push(room._id)
+            room.remove();
+          });
+
+          if(rooms.length > 0) {
+
+            let list = new BlackList({
+              email: user.email
+            })
+            list.save(function(err, docs) {
+              user.remove();
+              res.json(list);
+
+              rooms.map(room => {
+                Message
+                  .remove({'roomID': room}, (err) => {
+                  if(err) throw err;       
+                });
+              })
+            })
+          }
         })
-
-      user.remove();
-
-      let list = new BlackList({
-        email
-      })
-
-      list.save(function(err, docs) {
-        res.json(list);
-      })
     });
 });
 
@@ -142,16 +151,27 @@ adminRoutes.post('/black/list/remove', function(req, res) {
 
 adminRoutes.post('/send/report', function(req, res) {
   const { donor, report } = req.body;
-  const newReport = new Report({
-    donor,
-    type: report.type,
-    text: report.text,
-    discuss: report.discuss
-  })
 
-  newReport.save(function(err, docs) {
-    res.json(docs);
-  });
+  if (report.type == 'complaint') {
+    console.log('complaint ', report.time);
+    User
+      .findOne({'_id': report.discuss})
+      .exec()
+      .then(function(user) {
+        if(user.banned == report.time) {
+           const newReport = new Report({
+            donor,
+            type: report.type,
+            text: report.text,
+            discuss: report.discuss
+          })
+
+          newReport.save(function(err, docs) {
+            res.json(docs);
+          });
+        }
+      });
+  }
 });
 
 adminRoutes.get('/get/report', function(req, res) {

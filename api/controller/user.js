@@ -1,5 +1,5 @@
 const express = require('express')
-const bcrypt = require('bcrypt')
+const passwordHash = require('password-hash')
 const jwt    = require('jsonwebtoken')
 const _ = require('lodash')
 const bson = require('bson')
@@ -39,11 +39,8 @@ userRoutes.post('/authenticate', function(req, res) {
         return throwFailed(res, 'Authentication failed. User not found.');
       }
 
-      bcrypt.compare(password, user.password, function(errBcrypt, resBcrypt) {
-        if (resBcrypt == false) {
-          return throwFailed(res, 'Authentication failed. Wrong password.');
-        }
-
+      const psswordRes = passwordHash.verify(password, user.password);
+      if (psswordRes) {
         console.log('USER', user._id)
         setTimeout(function() {
           return res.json({
@@ -51,7 +48,9 @@ userRoutes.post('/authenticate', function(req, res) {
             userId: user._id
           });
         }, config.delay);
-      });
+      } else {
+        return throwFailed(res, 'Authentication failed. Wrong password.');
+      }
     });
 });
 
@@ -67,7 +66,6 @@ userRoutes.post('/register', function(req, res) {
     .findOne({email})
     .exec()
     .then(function(list) {
-      console.log('list', list)
       if (list) {
         return throwFailed(res, 'Your email address is on blacklist.');
       } else {
@@ -79,23 +77,21 @@ userRoutes.post('/register', function(req, res) {
               return throwFailed(res, 'There is already user with such email.');
             }
 
-            const saltRounds = 10;
-            bcrypt.hash(password, saltRounds, function(err, hash) {
-                var user = new User({
-                  name: email,
-                  nickname: email,
-                  email: email,
-                  password: hash,
-                  admin: false,
-                  online: [],
-                  confirm: false,
-                  activeRoom: 0
-                });
+            let hash = passwordHash.generate(password);
+            var user = new User({
+              name: email,
+              nickname: email,
+              email: email,
+              password: hash,
+              admin: false,
+              online: [],
+              confirm: false,
+              activeRoom: 0
+            });
 
-                user.save(function(err, doc) {
-                  if (err) throw err;
-                  return res.json({ success: true, message: 'User registered successfully.', doc });
-                });
+            user.save(function(err, doc) {
+              if (err) throw err;
+              return res.json({ success: true, message: 'User registered successfully.', doc });
             });
         });
       }
@@ -251,6 +247,14 @@ userRoutes.post('/email/confirm', function(req, res) {
 
 userRoutes.post('/confirm/email/:email/:id', function(req, res) {
   User.update({ _id: req.params.id }, { confirm: true }, function (err, user) {
+    if (err) throw err;
+    
+    res.json(user)
+  });
+});
+
+userRoutes.post('/users/send/complaint', function(req, res) {
+  User.update({ _id: req.params.id }, { activeRoom: req.body.active }, function (err, user) {
     if (err) throw err;
     
     res.json(user)

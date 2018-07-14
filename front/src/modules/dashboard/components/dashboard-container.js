@@ -45,8 +45,6 @@ class DashboardContainer extends React.Component {
         this.props.socket.emit('get info', localStorage.getItem('userId'))
       });
     }
-
-    this.props.socket.emit('connect', 'sina');
   }
 
   toggleDrawer = (side, open) => () => {

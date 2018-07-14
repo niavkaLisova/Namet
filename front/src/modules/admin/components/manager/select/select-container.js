@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 import * as AdminActions from '../../../actions/admin-actions'
-import ModalUser from '../ModalUser'
+import ModalUser from '../modalUser'
 import SelectBlockContainer from './selectBlock-container'
 import SelectDeleteContainer from './selectDelete-container'
 import BoxShowContainer from '../boxShow-container'

@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 import * as AdminActions from '../../../actions/admin-actions'
-import ModalUser from '../ModalUser'
+import ModalUser from '../modalUser'
 import SelectUserListContainer from './selectUserList-container'
 
 import Button from '@material-ui/core/Button'
@@ -154,19 +154,21 @@ class SelectBlockContainer extends React.Component {
 				    </Col>
 				</Row>
 
-			    <Row>
-				    <TextField
-				    	required
-				    	multiline
-				    	rowsMax='4'
-				    	class="textarea"
-			        	label="Describe the reason"
-			          	placeholder="reason required"
-				        margin="normal"
-				        value={this.state.reason}
-				        onChange={this.onChangeReason}
-			        />
-		        </Row>
+				{(this.props.user.email == 'admino')? '' :(
+				    <Row>
+					    <TextField
+					    	required
+					    	multiline
+					    	rowsMax='4'
+					    	class="textarea"
+				        	label="Describe the reason"
+				          	placeholder="reason required"
+					        margin="normal"
+					        value={this.state.reason}
+					        onChange={this.onChangeReason}
+				        />
+			        </Row>
+		        )}
 				
 				<div class='listJunior'>
 				{(this.state.visible) ? (

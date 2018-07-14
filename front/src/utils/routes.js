@@ -9,7 +9,7 @@ import ManagerContainer from '../modules/admin/components/manager-container'
 import DashboardContainer from '../modules/dashboard/components/dashboard-container'
 import AdminReportContainer from '../modules/admin/components/adminReport-container'
 import Welcome from '../modules/register/components/welcome'
-import Error from '../modules/register/components/error'
+import Error from '../modules/user/components/error'
 import Confirm from '../modules/login/components/confirm'
 import RegisterContainer from '../modules/register/components/register-container'
 import { RouteHandler } from 'react-router'
@@ -25,7 +25,7 @@ export default (
 		<Route path='/admin/manager' component={ManagerContainer} />
 		<Route path='/admin/report' component={AdminReportContainer} />
 		<Route path='/admin' component={AdminPanelContainer} />
-		<Route path='/error/:time' component={Error} />
+		<Route path='/error/:id/:time' component={Error} />
 		<DashboardContainer>
    			<Route path='/user/:id?' component={UserContainer} />
      	   	<Route path='/chat/' component={ChatContainer} />

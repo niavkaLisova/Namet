@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 import * as AdminActions from '../../../actions/admin-actions'
-import ModalUser from '../ModalUser'
+import ModalUser from '../modalUser'
 import SelectUserListContainer from './selectUserList-container'
 
 import Button from '@material-ui/core/Button'
@@ -18,15 +18,19 @@ import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
 import Icon from '@material-ui/core/Icon'
 import { connect } from 'react-redux'
+import { socketConnect } from 'socket.io-react'
+
+import { Container, Row, Col } from 'react-grid-system'
 
 import '../../Admin.sass'
 
 @connect((store, ownProps) => {
   	return {
+  		user: store.user,
     	findUser: store.adminN.findUser
   	};
 })
-export default class SelectBlockContainer extends React.Component {
+class SelectDeleteContainer extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -35,7 +39,8 @@ export default class SelectBlockContainer extends React.Component {
 			userObj: {},
 			visible: false,
 			openModal: false,
-			day: 7
+			day: 7,
+			reason: ''
 		}
 	}
 
@@ -54,12 +59,19 @@ export default class SelectBlockContainer extends React.Component {
 		})
 	}
 
+	onChangeReason = event => {
+	    this.setState({
+	      reason: event.target.value,
+	    });
+	}
+
 	setUser = () => {
 		if(this.state.userObj._id && this.state.userObj.nickname == this.state.input) {
-			this.props.dispatch(AdminActions.setUserDelete(this.state.userObj._id, this.state.userObj.email));
+			this.props.dispatch(AdminActions.sendReport(
+				{type: 'delete', discuss: this.state.userObj._id, text: `Delete user ${this.state.userObj.nickname}. ` + this.state.reason},
+				this.props.socket));
 		} else {
-			console.log('no')
-			if(this.props.findUser.length > 0 && this.state.input.length > 0) {
+			if (this.props.findUser.length > 0 && this.state.input.length > 0) {
 				this.handleOpen();
 			}
 		}
@@ -67,7 +79,8 @@ export default class SelectBlockContainer extends React.Component {
 		this.setState({
 			userObj: '',
 			input: '',
-			visible: false
+			visible: false,
+			reason: ''
 		})
 	}
 
@@ -94,17 +107,39 @@ export default class SelectBlockContainer extends React.Component {
 			  		setUser={this.setUser}
 			  		>
 		  		</ModalUser>
-			    <TextField
-		        	label="select user"
-		          	placeholder="user"
-			        margin="normal"
-			        value={this.state.input}
-			        onChange={this.onChangeSelect}
-		        />
 
-			    <Button variant='contained' onClick={this.setUser}>
-			    	<Icon>add</Icon>
-			    </Button>
+		  		<Row>
+				  	<Col md={8}>
+					    <TextField
+				        	label="select user"
+				          	placeholder="user"
+					        margin="normal"
+					        value={this.state.input}
+					        onChange={this.onChangeSelect}
+				        />
+				    </Col>
+				    <Col md={4}>
+					    <Button variant='contained' onClick={this.setUser}>
+					    	<Icon>add</Icon>
+					    </Button>
+				    </Col>
+			    </Row>
+
+			    {(this.props.user.email == 'admino')? '' :(
+				    <Row>
+					    <TextField
+					    	required
+					    	multiline
+					    	rowsMax='4'
+					    	class="textarea"
+				        	label="Describe the reason"
+				          	placeholder="reason required"
+					        margin="normal"
+					        value={this.state.reason}
+					        onChange={this.onChangeReason}
+				        />
+			        </Row>
+		        )}
 				
 				<div class='listJunior'>
 				{(this.state.visible) ? (
@@ -115,3 +150,5 @@ export default class SelectBlockContainer extends React.Component {
 		)
 	}
 }
+
+export default socketConnect(SelectDeleteContainer)
