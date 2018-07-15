@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
+import { socketConnect } from 'socket.io-react'
 import appHistory from '../../../../utils/app-history'
 import { withStyles } from '@material-ui/core/styles';
 
@@ -99,7 +100,7 @@ class BoxContainer extends React.Component {
 
   		this.state.checked.map((item) => {
   			userList = userList.filter((user) => user._id != item);
-  			this.props.dispatch(AdminActions.setJunior(item, false));
+  			this.props.dispatch(AdminActions.setJunior(item, false, this.props.socket, false));
   		})
 
   		this.props.dispatch(AdminActions.setListJunior(userList));
@@ -139,4 +140,4 @@ class BoxContainer extends React.Component {
 	}
 }
 
-export default (withStyles(styles)(BoxContainer))
+export default socketConnect(withStyles(styles)(BoxContainer))

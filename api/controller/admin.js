@@ -171,6 +171,17 @@ adminRoutes.post('/send/report', function(req, res) {
           });
         }
       });
+  } else { 
+    const newReport = new Report({
+      donor,
+      type: report.type,
+      text: report.text,
+      discuss: report.discuss
+    })
+
+    newReport.save(function(err, docs) {
+      res.json(docs);
+    })
   }
 });
 

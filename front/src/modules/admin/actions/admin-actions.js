@@ -18,7 +18,7 @@ export function findJunior(search) {
   }
 }
 
-export function setJunior(junior, state) {
+export function setJunior(junior, state, socket, set) {
   let juniorId = (typeof(junior) == 'object')? junior._id: junior
   return (dispatch) => {
       request
@@ -32,7 +32,9 @@ export function setJunior(junior, state) {
           if (typeof(junior) == 'object') {
             dispatch(pushFindJunior(junior));
           }
-          console.log('set Juniot', junior)
+          if (socket) {
+            socket.emit('reload junior b', juniorId, set)
+          }
         });
   }
 }
@@ -74,7 +76,7 @@ export function listUser() {
   }
 }
 
-export function setUser(user, state) {
+export function setUser(user, state, socket) {
   let userId = (typeof(user) == 'string')? user: user._id
   return (dispatch) => {
       request
@@ -89,6 +91,12 @@ export function setUser(user, state) {
             user.banned = state;
             dispatch(pushFindUser(user));
           }
+
+          if (socket) {
+            socket.emit('reload block user list b');
+          }
+          
+          socket.emit('reload junior b', userId, true);
         });
   }
 }
@@ -119,7 +127,7 @@ export function findUserDelete(search) {
   }
 }
 
-export function setUserDelete(user) {
+export function setUserDelete(user, socket, admin) {
   return (dispatch) => {
       request
         .post(Config.API_DOMAIN + 'admin/delete/user/set')
@@ -128,7 +136,10 @@ export function setUserDelete(user) {
           'id': user,
         })
         .end((error, response) => {
-          socket.emit('send report');
+          if (admin != 'admin') {
+            socket.emit('send report');
+          }
+          socket.emit('reload delete user list b');
         });
   }
 }
@@ -157,7 +168,7 @@ export function sendReport(report, socket) {
           report
         })
         .end((error, response) => {
-          console.log('send report junior', response.body);
+          // console.log('send report junior', response.body);
           socket.emit('send report');
         });
   }

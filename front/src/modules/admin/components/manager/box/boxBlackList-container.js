@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
+import { socketConnect } from 'socket.io-react'
 import appHistory from '../../../../../utils/app-history'
 import { withStyles } from '@material-ui/core/styles';
 
@@ -43,6 +44,9 @@ class BoxBlackListContainer extends React.Component {
 		}
 
 		this.props.dispatch(AdminActions.listUserDelete());
+		this.props.socket.on('reload delete user list', () => {
+			this.props.dispatch(AdminActions.listUserDelete());
+		})
 	}
 
 	onChangeSelect = (event) => {
@@ -127,4 +131,4 @@ class BoxBlackListContainer extends React.Component {
 	}
 }
 
-export default (withStyles(styles)(BoxBlackListContainer))
+export default socketConnect(withStyles(styles)(BoxBlackListContainer))

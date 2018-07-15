@@ -67,9 +67,13 @@ class SelectDeleteContainer extends React.Component {
 
 	setUser = () => {
 		if(this.state.userObj._id && this.state.userObj.nickname == this.state.input) {
-			this.props.dispatch(AdminActions.sendReport(
-				{type: 'delete', discuss: this.state.userObj._id, text: `Delete user ${this.state.userObj.nickname}. ` + this.state.reason},
-				this.props.socket));
+			if (this.props.user.admin) {
+				this.props.dispatch(AdminActions.sendReport(
+					{type: 'delete', discuss: this.state.userObj._id, text: `Delete user ${this.state.userObj.nickname}. ` + this.state.reason},
+					this.props.socket));
+			} else {
+				this.props.dispatch(AdminActions.setUserDelete(this.state.userObj._id, this.props.socket , 'admin'))
+			}
 		} else {
 			if (this.props.findUser.length > 0 && this.state.input.length > 0) {
 				this.handleOpen();

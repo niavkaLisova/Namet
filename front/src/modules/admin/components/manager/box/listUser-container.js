@@ -16,6 +16,7 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel'
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
 import Typography from '@material-ui/core/Typography'
+import { socketConnect } from 'socket.io-react'
 
 import '../../Admin.sass'
 
@@ -30,7 +31,7 @@ class ListUserContainer extends React.Component {
 
 	endBanned = id => {
 		console.log('end bann', id)
-		this.props.dispatch(AdminActions.setUser(id, ''));
+		this.props.dispatch(AdminActions.setUser(id, '', this.props.socket));
 	}
 
 	render() {
@@ -67,4 +68,4 @@ class ListUserContainer extends React.Component {
 	}
 }
 
-export default ListUserContainer
+export default socketConnect(ListUserContainer)

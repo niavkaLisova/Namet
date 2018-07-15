@@ -17,6 +17,7 @@ import './User.sass'
 
 @connect((store, ownProps) => {
     return {
+      user: store.user,
       id: ownProps.match.params.id,
       time: ownProps.match.params.time
     };
@@ -24,6 +25,10 @@ import './User.sass'
 class Error extends React.Component {
   constructor(props) {
     super(props);
+
+    this.props.socket.on('reload junior', () => {
+      appHistory.push('/user/' + localStorage.getItem('userId'))
+    })
 
     this.state = {
       complaint: '',
@@ -38,7 +43,7 @@ class Error extends React.Component {
   }
 
   handleSend = () => {
-    console.log('send to admin', this.props.id, this.state.complaint);
+    // console.log('send to admin', this.props.id, this.state.complaint);
     const report = {
       type: 'complaint',
       text: this.state.complaint,
@@ -63,7 +68,7 @@ class Error extends React.Component {
             <h2>Your account is not available until the date { d }</h2>
           </Col>
           <Col md={4} class={classNames({'displayNo': !this.state.visible})}>
-            <p>IYou can send complaint letter to Admin</p>
+            <p>You can send complaint letter to Admin</p>
             <TextField
               label="Multiline"
               multiline

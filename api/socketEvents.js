@@ -67,23 +67,44 @@ exports = module.exports = function(io) {
 		});
 	    
 	    socket.on('new room', function(data, user_id){
-	    	User.findById(user_id, function(err, user) {
-	    		user.online.map( (id) => {
-	    				socket.to(id).emit('room created', data);
-	    			}
-	    		)
-	    	})
+	    	if (user_id) {
+		    	User.findById(user_id, function(err, user) {
+		    		user.online.map( (id) => {
+		    				socket.to(id).emit('room created', data);
+		    			}
+		    		)
+		    	})
+	    	}
 		});
 		
 		socket.on('message global', function(id_online, data){
 	    	socket.to(id_online).emit('message g', data);
 		});
 
-		//* Admin section *//
+		//* Admin section *// 
+
+		socket.on('reload junior b', function(id, state){
+			if (id) {
+				User.findById(id, function(err, user) {
+		    		user.online.map( (id) => {
+		    				socket.to(id).emit('reload junior', state);
+		    			}
+		    		)
+		    	})
+			}
+		});
 
 		socket.on('send report', function(){
-	    	socket.broadcast.emit('reload report');
+	    	socket.to('adminChat').emit('reload report');
 		});
+		
+		socket.on('reload block user list b', function(){
+	    	socket.to('adminChat').emit('reload block user list');
+		});
+
+		socket.on('reload delete user list b', function(){
+	    	socket.to('adminChat').emit('reload delete user list');
+		}); 
 
 		//* end Admin section *//
 		

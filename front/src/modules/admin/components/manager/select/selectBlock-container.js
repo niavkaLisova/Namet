@@ -64,11 +64,12 @@ class SelectBlockContainer extends React.Component {
 			let state = new Date();
   			state.setDate(state.getDate() + this.state.day);
 
-			this.props.dispatch(AdminActions.setUser(this.state.userObj, state.getTime()));
 			if(this.props.user.admin) {
 				this.props.dispatch(AdminActions.sendReport(
 					{type: 'block', discuss: this.state.userObj._id, text: `Blocking user ${this.state.userObj.nickname}. ` + this.state.reason},
 					this.props.socket))
+			} else {
+				this.props.dispatch(AdminActions.setUser(this.state.userObj, state.getTime(), this.props.socket));
 			}
 		} else {
 			if(this.props.findUser.length > 0 && this.state.input.length > 0) {

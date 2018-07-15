@@ -15,6 +15,7 @@ import CardMedia from '@material-ui/core/CardMedia'
 import Typography from '@material-ui/core/Typography'
 import TextField from '@material-ui/core/TextField'
 import { connect } from 'react-redux'
+import { socketConnect } from 'socket.io-react'
 
 import '../Admin.sass'
 
@@ -23,7 +24,7 @@ import '../Admin.sass'
     	findJunior: store.adminN.findJunior
   	};
 })
-export default class SelectContainer extends React.Component {
+class SelectContainer extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -52,7 +53,7 @@ export default class SelectContainer extends React.Component {
 
 	setJunior = () => {
 		if(this.state.juniorObj._id && this.state.juniorObj.nickname == this.state.input) {
-			this.props.dispatch(AdminActions.setJunior(this.state.juniorObj, true));
+			this.props.dispatch(AdminActions.setJunior(this.state.juniorObj, true, this.props.socket, true));
 		} else {
 			if(this.props.findJunior.length > 0 && this.state.input.length > 0) {
 				this.handleOpen();
@@ -101,7 +102,7 @@ export default class SelectContainer extends React.Component {
 			    </Button>
 
 				<div class='listJunior'>
-				{(this.state.visible) ? (this.props.findJunior.map( (user) => {
+				{(this.state.visible) ? (this.props.findJunior.slice(0, 5).map( (user) => {
 					return (
 						<Card key={user._id} >    
 					        <CardContent>
@@ -132,3 +133,5 @@ export default class SelectContainer extends React.Component {
 		)
 	}
 }
+
+export default socketConnect(SelectContainer)

@@ -1,26 +1,26 @@
 import React from 'react';
 
-import FlatButton from 'material-ui/FlatButton';
-import Drawer from 'material-ui/Drawer';
-import AppBar from 'material-ui/AppBar';
-import RaisedButton from 'material-ui/RaisedButton';
+import FlatButton from 'material-ui/FlatButton'
+import Drawer from 'material-ui/Drawer'
+import AppBar from 'material-ui/AppBar'
+import RaisedButton from 'material-ui/RaisedButton'
 
-import * as UserActions from '../actions/user-actions';
-import appHistory from '../../../utils/app-history';
+import * as UserActions from '../actions/user-actions'
+import appHistory from '../../../utils/app-history'
 
-import {List, ListItem} from 'material-ui/List';
-import ActionGrade from 'material-ui/svg-icons/action/grade';
-import ContentInbox from 'material-ui/svg-icons/content/inbox';
-import ContentDrafts from 'material-ui/svg-icons/content/drafts';
-import ContentSend from 'material-ui/svg-icons/content/send';
-import Subheader from 'material-ui/Subheader';
-import PropTypes from 'prop-types';
+import {List, ListItem} from 'material-ui/List'
+import ActionGrade from 'material-ui/svg-icons/action/grade'
+import ContentInbox from 'material-ui/svg-icons/content/inbox'
+import ContentDrafts from 'material-ui/svg-icons/content/drafts'
+import ContentSend from 'material-ui/svg-icons/content/send'
+import Subheader from 'material-ui/Subheader'
+import PropTypes from 'prop-types'
 
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import UserFormContainer from './user-form-container';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import UserFormContainer from './user-form-container'
 
 import { connect } from "react-redux"
-import { setActiveLanguage } from 'react-localize-redux';
+import { setActiveLanguage } from 'react-localize-redux'
 
 @connect((store, ownProps) => {
   return {

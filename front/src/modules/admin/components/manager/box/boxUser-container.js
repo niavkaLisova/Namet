@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
+import { socketConnect } from 'socket.io-react'
 import appHistory from '../../../../../utils/app-history'
 import { withStyles } from '@material-ui/core/styles';
 
@@ -43,6 +44,10 @@ class BoxContainer extends React.Component {
 		}
 
 		this.props.dispatch(AdminActions.listUser());
+
+		this.props.socket.on('reload block user list', () => {
+			this.props.dispatch(AdminActions.listUser());
+		})
 	}
 
 	onChangeSelect = (event) => {
@@ -91,7 +96,7 @@ class BoxContainer extends React.Component {
 
   		this.state.checked.map((item) => {
             userList = userList.filter((user) => user._id != item);
-  			this.props.dispatch(AdminActions.setUser(item, ''));
+  			this.props.dispatch(AdminActions.setUser(item, '', this.props.socket));
   		});
 
   		this.props.dispatch(AdminActions.setListUser(userList));
@@ -133,4 +138,4 @@ class BoxContainer extends React.Component {
 	}
 }
 
-export default (withStyles(styles)(BoxContainer))
+export default socketConnect(withStyles(styles)(BoxContainer))

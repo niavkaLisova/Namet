@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
+import { socketConnect } from 'socket.io-react'
 
 import * as AdminActions from '../../actions/admin-actions'
 import Admin from '../admin-container'
@@ -279,11 +280,12 @@ class EnhancedTable extends React.Component {
   }
 
   handleDone = report => {
+    console.log('done', this.props.socket)
     switch(report.type) {
       case 'block':
         this.handleDelete(report.realId);
 
-        this.props.dispatch(AdminActions.setUser(report.discuss, ''));
+        this.props.dispatch(AdminActions.setUser(report.discuss, '', this.props.socket));
         break;
       case 'delete':
         this.handleDelete(report.realId);
@@ -294,7 +296,7 @@ class EnhancedTable extends React.Component {
         console.log('complaint', report.discuss, report.realId)
         this.handleDelete(report.realId);
 
-        this.props.dispatch(AdminActions.setUser(report.discuss, ''));
+        this.props.dispatch(AdminActions.setUser(report.discuss, '', this.props.socket));
         break;
       default:
           console.log('nothing')
@@ -387,4 +389,4 @@ class EnhancedTable extends React.Component {
   }
 }
 
-export default withStyles(styles)(EnhancedTable);
+export default socketConnect(withStyles(styles)(EnhancedTable));

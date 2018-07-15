@@ -44,6 +44,10 @@ class DashboardContainer extends React.Component {
     
         this.props.socket.emit('get info', localStorage.getItem('userId'))
       });
+
+      this.props.socket.on('reload junior', () => {
+        this.props.dispatch(UserActions.getUser(this.props.socket));
+      })
     }
   }
 
