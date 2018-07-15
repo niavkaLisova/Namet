@@ -53,7 +53,7 @@ export default class UserContainer extends React.Component {
 
     return (
       <MuiThemeProvider>
-        <h2>User {this.props.id}</h2>
+        <h2>Conatiner {this.props.id}</h2>
 
       </MuiThemeProvider>
     )

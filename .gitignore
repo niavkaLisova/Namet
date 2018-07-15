@@ -6,3 +6,4 @@ front/dist/*.js
 .idea
 .DS_Store
 npm-debug.log
+api/upload

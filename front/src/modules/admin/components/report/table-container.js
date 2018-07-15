@@ -280,7 +280,6 @@ class EnhancedTable extends React.Component {
   }
 
   handleDone = report => {
-    console.log('done', this.props.socket)
     switch(report.type) {
       case 'block':
         this.handleDelete(report.realId);

@@ -52,7 +52,7 @@ class MenuListContainer extends React.Component {
 	        <Link to='/admin/manager' class={classNames({active: window.location.hash.includes('manager')})}>
 		        <ListItem button>
 		        	<ListItemIcon>
-		            	<Icon>build </Icon>
+		            	<Icon>settings </Icon>
 		          	</ListItemIcon>
 		          	<ListItemText primary="Manager" />
 		        </ListItem>
@@ -64,7 +64,29 @@ class MenuListContainer extends React.Component {
 		        	<ListItemIcon>
 			            <Icon>description</Icon>
 			        </ListItemIcon>
-		        	<ListItemText primary='report' />
+		        	<ListItemText primary='Report' />
+		        </ListItem>
+	        </Link>
+	        ): ('')}
+
+	        {(this.props.user.email == 'admino')? (
+    		<Link to='/admin/team' class={classNames({active: window.location.hash.includes('team')})}>
+		        <ListItem button>
+		        	<ListItemIcon>
+			            <Icon>group_work</Icon>
+			        </ListItemIcon>
+		        	<ListItemText primary='Team' />
+		        </ListItem>
+	        </Link>
+	        ): ('')}
+
+	        {(this.props.user.email != 'admino')? (
+    		<Link to='/admin/offer' class={classNames({active: window.location.hash.includes('offer')})}>
+		        <ListItem button>
+		        	<ListItemIcon>
+			            <Icon>local_offer</Icon>
+			        </ListItemIcon>
+		        	<ListItemText primary='Offer Post' />
 		        </ListItem>
 	        </Link>
 	        ): ('')}

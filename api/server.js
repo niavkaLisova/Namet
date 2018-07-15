@@ -1,7 +1,10 @@
 const express = require('express')
+const fileUpload = require('express-fileupload')
 const app = express()
 const bodyParser = require('body-parser')
-var path = require('path');
+const path = require('path')
+
+app.use(fileUpload())
 
 const config = require('./config/config.js')
 const allowCrossDomain = require('./headers/cross-domain')

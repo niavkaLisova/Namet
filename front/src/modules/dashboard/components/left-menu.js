@@ -1,28 +1,42 @@
-import React from 'react';
-import FlatButton from 'material-ui/FlatButton';
-import Drawer from 'material-ui/Drawer';
-import AppBar from 'material-ui/AppBar';
-import RaisedButton from 'material-ui/RaisedButton';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import {List, ListItem} from 'material-ui/List';
-import ActionGrade from 'material-ui/svg-icons/action/grade';
-import ContentInbox from 'material-ui/svg-icons/content/inbox';
-import ContentDrafts from 'material-ui/svg-icons/content/drafts';
-import ContentSend from 'material-ui/svg-icons/content/send';
-import Subheader from 'material-ui/Subheader';
+import React from 'react'
+
+import { withStyles } from '@material-ui/core/styles'
+import ListSubheader from '@material-ui/core/ListSubheader'
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemIcon from '@material-ui/core/ListItemIcon'
+import ListItemText from '@material-ui/core/ListItemText'
+import Collapse from '@material-ui/core/Collapse'
+import Icon from '@material-ui/core/Icon'
+
 import appHistory from '../../../utils/app-history'
-import IconMenu from 'material-ui/IconMenu';
-import IconButton from 'material-ui/IconButton';
-import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
-import MenuItem from 'material-ui/MenuItem';
 import { connect } from "react-redux"
+
+const styles = theme => ({
+  root: {
+    width: '100%',
+    maxWidth: 360,
+    backgroundColor: theme.palette.background.paper,
+  },
+  nested: {
+    paddingLeft: theme.spacing.unit * 4,
+  },
+});
 
 @connect((store, ownProps) => {
     return {
       user: store.user
     };
 })
-export default class LeftMenu extends React.Component {
+class LeftMenu extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      open: true
+    }
+  }
+
   goToAdmin() {
     appHistory.push('/admin');
   }
@@ -35,18 +49,57 @@ export default class LeftMenu extends React.Component {
     appHistory.push('/chat');
   }
 
-  render() {
-    return (
-      <MuiThemeProvider>
-        <List>        
-          <Subheader>Main Menu</Subheader>
-          <ListItem primaryText="User" leftIcon={<ContentSend />} onClick={this.goToUser.bind(this)}/>
-          {(this.props.user.admin || this.props.user.email == 'admino')?(
-            <ListItem primaryText="Admin" leftIcon={<ContentDrafts />} onClick={this.goToAdmin}/>
-          ): ('')}
-          <ListItem primaryText="Chat" leftIcon={<ContentDrafts />} onClick={this.goToChat}/>
-        </List>
-      </MuiThemeProvider>
-    )
+  goToSettings() {
+    appHistory.push('/settings');
   }
-};
+
+  handleClick = () => {
+    this.setState(state => ({ open: !state.open }));
+  };
+
+  render() {
+    const { classes } = this.props;
+
+    return (
+      <div className={classes.root}>
+        <List
+          component="nav"
+          subheader={<ListSubheader component="div">Menu List</ListSubheader>}
+        >
+          <ListItem button onClick={this.goToUser}>
+            <ListItemIcon>
+              <Icon>home</Icon>
+            </ListItemIcon>
+            <ListItemText inset primary="Home" />
+          </ListItem>
+
+          {(this.props.user.admin || this.props.user.email == 'admino')?(
+            <ListItem button onClick={this.goToAdmin}>
+              <ListItemIcon>
+                <Icon>event_seat</Icon>
+              </ListItemIcon>
+              <ListItemText inset primary="Admin" />
+            </ListItem>
+          ): ('')}
+
+          <ListItem button onClick={this.goToChat}>
+            <ListItemIcon>
+              <Icon>chat</Icon>
+            </ListItemIcon>
+            <ListItemText inset primary="Chat" />
+          </ListItem>
+
+          <ListItem button onClick={this.goToSettings}>
+            <ListItemIcon>
+              <Icon>settings_applications</Icon>
+            </ListItemIcon>
+            <ListItemText inset primary="Settings" />
+          </ListItem>
+       
+        </List>
+      </div>
+    );
+  }
+}
+
+export default withStyles(styles)(LeftMenu);
