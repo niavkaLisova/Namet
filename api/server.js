@@ -1,10 +1,10 @@
 const express = require('express')
 const fileUpload = require('express-fileupload')
-const app = express()
+let app = express()
 const bodyParser = require('body-parser')
 const path = require('path')
 
-app.use(fileUpload())
+app.use(fileUpload());
 
 const config = require('./config/config.js')
 const allowCrossDomain = require('./headers/cross-domain')
@@ -16,11 +16,11 @@ app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
 app.use(allowCrossDomain);
 
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 mongoose.Promise = require('bluebird')
 mongoose.connect(config.database);
 
-var server = app.listen(process.env.PORT || 3000, () => {
+const server = app.listen(process.env.PORT || 3000, () => {
   console.log('listening on 3000')
 })
 

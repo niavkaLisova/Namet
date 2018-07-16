@@ -9,7 +9,8 @@ const Room = require('../models/room')
 const User = require('../models/user')
 const BlackList = require('../models/blackList')
 const config = require('../config/config')
-
+const { ObjectId } = require('mongodb');
+ 
 const userRoutes = express.Router();
 
 var throwFailed = function (res, message) {
@@ -264,19 +265,19 @@ userRoutes.post('/users/send/complaint', function(req, res) {
 /** settings **/
 
 userRoutes.post('/upload', function(req, res) {
-  console.log('up', req.files)
-  if (!req.files)
+  const files = req.files;
+  const file = files.file;
+
+  const name = ObjectId();
+
+  if (!files)
     return res.status(400).send('No files were uploaded.');
- 
-  // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
-  let sampleFile = req.files.sampleFile;
- 
-  // Use the mv() method to place the file somewhere on your server
-  sampleFile.mv('upload/filename.jpg', function(err) {
+
+  file.mv(`../front/dist/upload/${name}.jpg`, function(err) {
     if (err)
       return res.status(500).send(err);
  
-    res.send('File uploaded!');
+    res.send(name);
   });
 });
 

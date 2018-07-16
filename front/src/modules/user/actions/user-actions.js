@@ -101,7 +101,6 @@ export function sendReport(report, socket) {
 // }
 
 
-
 export function unreadUpdate(data) {
   return {type: 'UNREAD_UPDATE', data};
 }

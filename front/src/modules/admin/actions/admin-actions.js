@@ -204,20 +204,49 @@ export function getReport(report) {
 
 export function deleteRepot(id, reports) {
   return (dispatch) => {
-      request
-        .post(Config.API_DOMAIN + 'admin/delete/report')
-        .set('x-access-token', localStorage.getItem('token'))
-        .send({
-          id
-        })
-        .end((error, response) => {
-          if (reports) {
-            let newReports = reports.filter(report => report.realId != id)
-            dispatch(setReport(newReports));
-          }
-        });
+    request
+      .post(Config.API_DOMAIN + 'admin/delete/report')
+      .set('x-access-token', localStorage.getItem('token'))
+      .send({
+        id
+      })
+      .end((error, response) => {
+        if (reports) {
+          let newReports = reports.filter(report => report.realId != id)
+          dispatch(setReport(newReports));
+        }
+      });
   }
 }
+
+export function createTeam(emblem, name, color) {
+  return (dispatch) => {
+    request
+      .post(Config.API_DOMAIN + 'admin/create/team')
+      .set('x-access-token', localStorage.getItem('token'))
+      .send({
+        name,
+        emblem,
+        color
+      })
+      .end((error, response) => {
+        // console.log('create after', response);
+      });
+  }
+}
+
+export function getAllTeam() {
+  return (dispatch) => {
+    request
+      .get(Config.API_DOMAIN + 'admin/get/team')
+      .set('x-access-token', localStorage.getItem('token'))
+      .end((error, response) => {
+        console.log('get after', response.body);
+        dispatch(setTeam(response.body));
+      });
+  }
+}
+
 
 export function setFindJunior(data) {
   return {type: 'SET_FIND_JUNIOR', data};
@@ -253,4 +282,8 @@ export function pushListChat(data) {
 
 export function setReport(data) {
   return {type: 'SET_REPORT', data};
+}
+
+export function setTeam(data) {
+  return {type: 'SET_TEAM', data};
 }

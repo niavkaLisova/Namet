@@ -22,7 +22,15 @@ class TeamContainer extends React.Component {
 	constructor(props) {
     	super(props);
 
+    	this.state = {
+    		active: ''
+    	}
+
 		this.props.dispatch(UserActions.getUser(this.props.socket))
+	}
+
+	activeItem = team => {
+		this.setState({ active: team });
 	}
 	
 	render() {
@@ -34,7 +42,7 @@ class TeamContainer extends React.Component {
 				    <div>
 				      <Row>
 				      	<Col md={8}>
-				      		<ListTeamContainer />
+				      		<ListTeamContainer activeItem={this.activeItem} active={this.state.active} />
 				      	</Col>
 				      	<Col md={4}>
 				      		<CreateTeamContainer />

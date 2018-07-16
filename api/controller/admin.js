@@ -7,6 +7,7 @@ const Message = require('../models/message')
 const User = require('../models/user')
 const BlackList = require('../models/blackList')
 const Report = require('../models/report')
+const Team = require('../models/team')
 const config = require('../config/config')
 
 const adminRoutes = express.Router();
@@ -202,6 +203,29 @@ adminRoutes.post('/delete/report', function(req, res) {
     res.json({ success: true, message: 'removed from reports' });
   });
 });
+
+adminRoutes.post('/create/team', function(req, res) {
+    const { name, emblem, color } = req.body;
+
+    let team = new Team({
+      name,
+      emblem,
+      color
+    })
+
+    team.save(function(err, docs) {
+      res.json(docs);
+    });
+});
+
+adminRoutes.get('/get/team', function(req, res) {
+  Team
+    .find()
+    .exec()
+    .then(function(reports) {
+      res.json(reports);
+    });
+}); 
 
 
 module.exports = adminRoutes;

@@ -7,7 +7,8 @@ let init = {
 	findUser: [],
 	listUser: [],
 	listChat: [],
-	report: []
+	report: [],
+	team: []
 }
 
 function adminReducer(state = init, action) {
@@ -65,6 +66,12 @@ function adminReducer(state = init, action) {
 	        report: action.data
 	      }
 	      break;
+	    case 'SET_TEAM':
+	    	return {
+	    		...state,
+	    		team: action.data
+	    	}
+	    	break;
 
 	    default: return state;
   	}
