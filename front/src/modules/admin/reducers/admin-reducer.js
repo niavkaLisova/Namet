@@ -72,6 +72,12 @@ function adminReducer(state = init, action) {
 	    		team: action.data
 	    	}
 	    	break;
+	    case 'PUSH_TEAM':
+	    	return {
+	    		...state,
+	    		team: state.team.concat(action.data)
+	    	}
+	    	break;
 
 	    default: return state;
   	}

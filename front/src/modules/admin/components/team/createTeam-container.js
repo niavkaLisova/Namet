@@ -15,6 +15,7 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import ListItemText from '@material-ui/core/ListItemText'
 import Avatar from '@material-ui/core/Avatar'
 import { SketchPicker } from 'react-color'
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator'
 
 import '../Admin.sass'
 
@@ -74,35 +75,54 @@ export default class CreateTeamContainer extends React.Component {
     	this.fileUpload(this.state.file).then((response)=>{
     		const color = `rgba(${this.state.r}, ${this.state.g}, ${this.state.b}, ${this.state.a})`;
     		this.props.dispatch(AdminActions.createTeam(response.data, this.state.name, color));
+
+    		this.setState({ 
+    			name: '',
+    			file: null
+    		})
     	})
 
   	}
-
 
 	render() {
 		
 		return (
 		  	<div>
-		  		<Input
-			        placeholder="Name"
-			        inputProps={{
-			          'aria-label': 'Name',
-			        }}
-			        value={this.state.name}
-			        onChange={event => this.handleChangeName(event)}
-			      />
-			    <SketchPicker />
+		  		<ValidatorForm
+            		ref="form"
+            		onSubmit={this.handleCreate}
+        		>
 
-			    <input
-				  accept="image/*"
-				  id="upload-file"
-				  type="file"
-				  onChange={this.handleChangeImage}
-				/>
+				    <TextValidator
+	                	label="Name"
+	                	onChange={event => this.handleChangeName(event)}
+	                	name="name"
+	                	value={this.state.name}
+	                	validators={['required']}
+	                	errorMessages={['this field is required']}
+	            	/>
 
-			    <Button variant="contained" color="primary" onClick={this.handleCreate}>
-			    	Create
-			    </Button>
+				     <SketchPicker />
+
+				    <input
+					    accept="image/*"
+					    id="upload-file"
+					    type="file"
+						onChange={this.handleChangeImage}
+					 />
+
+				    <Button
+				    	variant="contained"
+				    	color="primary"
+					    type="submit"
+	                	disabled={this.props.submitted}
+	            	>
+	                {
+	                    (this.props.submitted && 'Your form is submitted!')
+	                    || (!this.props.submitted && 'Create')
+	                }
+					</Button>
+			    </ValidatorForm>
 			</div>
 		)
 	}

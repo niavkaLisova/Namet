@@ -230,7 +230,7 @@ export function createTeam(emblem, name, color) {
         color
       })
       .end((error, response) => {
-        // console.log('create after', response);
+        dispatch(pushTeam(response.body));
       });
   }
 }
@@ -256,7 +256,7 @@ export function removeImage(emblem) {
         emblem
       })
       .end((error, response) => {
-        console.log('action', response.body);
+        console.log('action image remover', response.body);
       });
   }
 }
@@ -271,8 +271,19 @@ export function editTeam(img, team) {
         team
       })
       .end((error, response) => {
-        console.log('action edit', response.body);
       });
+  }
+}
+
+export function deleteTeam(team) {
+  return (dispatch) => {
+    request
+      .post(Config.API_DOMAIN + 'admin/delete/team')
+      .set('x-access-token', localStorage.getItem('token'))
+      .send({
+        team
+      })
+      .end((error, response) => {});
   }
 }
 
@@ -314,4 +325,8 @@ export function setReport(data) {
 
 export function setTeam(data) {
   return {type: 'SET_TEAM', data};
+}
+
+export function pushTeam(data) {
+  return {type: 'PUSH_TEAM', data};
 }

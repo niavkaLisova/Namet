@@ -9,6 +9,7 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator'
 import Grid from '@material-ui/core/Grid'
 import Input from '@material-ui/core/Input'
+import Icon from '@material-ui/core/Icon'
 
 import { Container, Row, Col } from 'react-grid-system'
 
@@ -22,7 +23,12 @@ class ModalTeam extends React.Component {
           scroll='paper'
           aria-labelledby="scroll-dialog-title"
         >
-        	<DialogTitle id="scroll-dialog-title" class='modalEdit'>Edit Team</DialogTitle>
+        	<DialogTitle id="scroll-dialog-title" class='modalEdit'>Edit Team
+
+        		<Button  variant='fab' onClick={this.props.handleClose} color="default"  style={{float: 'right'}}>
+          			<Icon>clear</Icon>
+        		</Button>
+        	</DialogTitle>
           		<DialogContent>
 
 	          		<Grid container spacing={8}>
@@ -51,7 +57,6 @@ class ModalTeam extends React.Component {
 					                    	validators={['required']}
 					                    	errorMessages={['this field is required']}
 					                	/>
-					                	<br />
 				                	</Grid>
 				                	<Grid item>
 				                		<input
@@ -65,6 +70,12 @@ class ModalTeam extends React.Component {
               					</Grid>
 
               					<Grid container justify="center" spacing={8}>
+              						<br /><br />
+              						<Button
+				                		onClick={this.props.handleDeleteTeam}
+				                	>
+				                    Delete
+				                	</Button>
 	              					<Button
 				                    	type="submit"
 				                    	disabled={this.props.submitted}
@@ -82,11 +93,6 @@ class ModalTeam extends React.Component {
 	       			</Grid>
 	            	
           		</DialogContent>
-          		<DialogActions>
-            		<Button onClick={this.props.handleClose} color="primary">
-              			Cancel
-            		</Button>
-          <		/DialogActions>
         	</Dialog>
     );
   }

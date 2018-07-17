@@ -266,4 +266,22 @@ adminRoutes.post('/edit/team', function(req, res) {
     }
 });
 
+adminRoutes.post('/delete/team', function(req, res) {
+  const { team } = req.body;
+  const emblem = team.emblem;
+
+  Team.remove({'_id': team._id}, (err) => {
+    if(err) throw err;
+
+    const link = '../front/dist/upload/' + emblem;
+
+    fs.unlink(link,function(err){
+      if(err) return console.log(err);
+      console.log('file deleted successfully');
+      res.json({ success: true, message: 'team removed successfully' });
+    });
+
+  });
+});
+
 module.exports = adminRoutes;

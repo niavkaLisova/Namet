@@ -65,13 +65,14 @@ export default class ListTeamContainer extends React.Component {
             setTimeout(() => this.setState({ submitted: false }), 5000);
         });
 
-        console.log(this.state.file)
-
         if (this.state.file == null) {
 	        this.props.dispatch(AdminActions.editTeam(false, this.state.team));
         } else {
 	     	this.fileUpload(this.state.file).then((response)=>{	
 	    		this.props.dispatch(AdminActions.editTeam(response.data, this.state.team));
+	    		const { team } = this.state;
+	    		team.emblem = response.data;
+	    		this.setState({ team });
 	    	})
         }
 
@@ -83,6 +84,13 @@ export default class ListTeamContainer extends React.Component {
 		this.setState({
 			file: file
 		});
+	}
+
+	handleDeleteTeam = () => {
+		this.handleClose();
+		let newTeams = this.props.teams.filter(item => item._id != this.state.team._id);
+		this.props.dispatch(AdminActions.setTeam(newTeams));
+		this.props.dispatch(AdminActions.deleteTeam(this.state.team))
 	}
 
 	fileUpload = file =>{
@@ -109,6 +117,7 @@ export default class ListTeamContainer extends React.Component {
 		  			handleSubmit={this.handleSubmit}
 		  			submitted={this.state.submitted}
 		  			handleChangeImage={this.handleChangeImage}
+		  			handleDeleteTeam={this.handleDeleteTeam}
 		  		 />
 		  		{this.props.teams.map(team => (
 	            	<ListItem 
@@ -126,7 +135,7 @@ export default class ListTeamContainer extends React.Component {
 	              		<ListItemText primary={team.name} onClick={() => this.props.activeItem(team._id)} />
 	              		<ListItemSecondaryAction onClick={() => this.editItem(team)}>
 	              			{(this.props.active == team._id)? (
-	              				<Button variant='fab' size='small' aria-label='Edit'>
+	              				<Button variant="contained" size='small' aria-label='Edit'>
 							    	<Icon>edit_icon</Icon>
 							    </Button>
 	              				): (
