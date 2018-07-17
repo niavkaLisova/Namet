@@ -241,12 +241,40 @@ export function getAllTeam() {
       .get(Config.API_DOMAIN + 'admin/get/team')
       .set('x-access-token', localStorage.getItem('token'))
       .end((error, response) => {
-        console.log('get after', response.body);
         dispatch(setTeam(response.body));
       });
   }
 }
 
+
+export function removeImage(emblem) {
+  return (dispatch) => {
+    request
+      .post(Config.API_DOMAIN + 'api/remove/image')
+      .set('x-access-token', localStorage.getItem('token'))
+      .send({
+        emblem
+      })
+      .end((error, response) => {
+        console.log('action', response.body);
+      });
+  }
+}
+
+export function editTeam(img, team) {
+  return (dispatch) => {
+    request
+      .post(Config.API_DOMAIN + 'admin/edit/team')
+      .set('x-access-token', localStorage.getItem('token'))
+      .send({
+        img,
+        team
+      })
+      .end((error, response) => {
+        console.log('action edit', response.body);
+      });
+  }
+}
 
 export function setFindJunior(data) {
   return {type: 'SET_FIND_JUNIOR', data};

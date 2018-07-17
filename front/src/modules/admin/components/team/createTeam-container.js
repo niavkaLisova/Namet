@@ -73,7 +73,6 @@ export default class CreateTeamContainer extends React.Component {
 
     	this.fileUpload(this.state.file).then((response)=>{
     		const color = `rgba(${this.state.r}, ${this.state.g}, ${this.state.b}, ${this.state.a})`;
-
     		this.props.dispatch(AdminActions.createTeam(response.data, this.state.name, color));
     	})
 

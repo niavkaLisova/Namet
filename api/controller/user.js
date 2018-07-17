@@ -4,6 +4,7 @@ const jwt    = require('jsonwebtoken')
 const _ = require('lodash')
 const bson = require('bson')
 const nodemailer = require('nodemailer')
+const fs = require('fs')
 
 const Room = require('../models/room')
 const User = require('../models/user')
@@ -264,6 +265,10 @@ userRoutes.post('/users/send/complaint', function(req, res) {
 
 /** settings **/
 
+/** end settings **/
+
+/** upload */
+
 userRoutes.post('/upload', function(req, res) {
   const files = req.files;
   const file = files.file;
@@ -273,14 +278,31 @@ userRoutes.post('/upload', function(req, res) {
   if (!files)
     return res.status(400).send('No files were uploaded.');
 
-  file.mv(`../front/dist/upload/${name}.jpg`, function(err) {
+  let type = file.mimetype.split('/');
+  type = type[1];
+
+  if (type == 'jpeg') type = 'jpg';
+
+  file.mv(`../front/dist/upload/${name}.${type}`, function(err) {
     if (err)
       return res.status(500).send(err);
  
-    res.send(name);
+    const result = name + '.' +  type;
+    res.send(result);
   });
 });
 
-/** end settings **/
+userRoutes.post('/remove/image', function(req, res) {
+  const { emblem } = req.body;
+
+  const link = '../front/dist/upload/' + emblem;
+
+  fs.unlink(link,function(err){
+    if(err) return console.log(err);
+    console.log('file deleted successfully');
+  }); 
+});
+
+/** end upload **/
 
 module.exports = userRoutes;

@@ -1,6 +1,7 @@
 const express = require('express')
 const _ = require('lodash')
 const bson = require('bson')
+const fs = require('fs')
 
 const Room = require('../models/room')
 const Message = require('../models/message')
@@ -227,5 +228,42 @@ adminRoutes.get('/get/team', function(req, res) {
     });
 }); 
 
+adminRoutes.post('/edit/team', function(req, res) {
+    const { img, team } = req.body;
+    const oldEmblem = team.emblem;
+
+    console.log(team, 'team', img);
+
+    if (!img) {
+      Team
+        .update({ '_id': team._id}, 
+          { 
+            color: team.color,
+            name: team.name
+          })
+        .exec()
+        .then(function(team) {
+          res.json(team);
+        });
+    } else {
+      Team
+        .update({ '_id': team._id}, 
+          { 
+            color: team.color,
+            name: team.name,
+            emblem: img
+          })
+        .exec()
+        .then(function(team) {
+          const link = '../front/dist/upload/' + oldEmblem;
+
+          fs.unlink(link,function(err){
+            if(err) return console.log(err);
+            console.log('file deleted successfully');
+            res.json(team);
+          }); 
+        });
+    }
+});
 
 module.exports = adminRoutes;

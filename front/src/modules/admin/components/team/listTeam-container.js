@@ -2,6 +2,7 @@ import React from 'react'
 import appHistory from '../../../../utils/app-history'
 import { connect } from 'react-redux'
 import classNames from 'classnames'
+import axios, { post } from 'axios'
 
 import * as AdminActions from '../../actions/admin-actions'
 import Admin from '../admin-container'
@@ -32,6 +33,7 @@ export default class ListTeamContainer extends React.Component {
 			open: false,
 			team: '',
             submitted: false,
+            file: null
 		}
 	}
 
@@ -52,10 +54,6 @@ export default class ListTeamContainer extends React.Component {
 
   	handleChange = event => {
     	const { team } = this.state;
-    	console.log('change')
-    	if(event.target.name == 'color') {
-    		console.log('COLLOR', team.color)
-    	}
         team[event.target.name] = event.target.value;
         this.setState({ team });
     }
@@ -66,8 +64,39 @@ export default class ListTeamContainer extends React.Component {
         this.setState({ submitted: true }, () => {
             setTimeout(() => this.setState({ submitted: false }), 5000);
         });
-        console.log('state after submit', this.state);
+
+        console.log(this.state.file)
+
+        if (this.state.file == null) {
+	        this.props.dispatch(AdminActions.editTeam(false, this.state.team));
+        } else {
+	     	this.fileUpload(this.state.file).then((response)=>{	
+	    		this.props.dispatch(AdminActions.editTeam(response.data, this.state.team));
+	    	})
+        }
+
+       
     }
+
+    handleChangeImage = event => {
+		const file = event.target.files[0];;
+		this.setState({
+			file: file
+		});
+	}
+
+	fileUpload = file =>{
+	    const url = 'http://127.0.0.1:3000/api/upload';
+	    const formData = new FormData(this);
+    	formData.append('file', file);
+    	const config = {
+        	headers: {
+            	'content-type': 'multipart/form-data'
+        	}
+    	}
+
+    	return  post(url, formData, config)
+	}
 
 	render() {
 		return (
@@ -79,6 +108,7 @@ export default class ListTeamContainer extends React.Component {
 		  			handleChange={this.handleChange}
 		  			handleSubmit={this.handleSubmit}
 		  			submitted={this.state.submitted}
+		  			handleChangeImage={this.handleChangeImage}
 		  		 />
 		  		{this.props.teams.map(team => (
 	            	<ListItem 
@@ -90,7 +120,7 @@ export default class ListTeamContainer extends React.Component {
 	            		>
 	              		<Avatar 
 	              			alt='team' 
-	              			src={'/upload/'+ team.emblem + '.jpg'}
+	              			src={'/upload/'+ team.emblem}
 	              			onClick={() => this.props.activeItem(team._id)}
 	              		/>
 	              		<ListItemText primary={team.name} onClick={() => this.props.activeItem(team._id)} />
