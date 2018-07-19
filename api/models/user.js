@@ -18,6 +18,11 @@ module.exports = mongoose.model('User', new Schema({
     team: String,
     coin: [],
     status: String,
+    sticky0: String,
     sticky1: String,
-    sticky2: String
+    birthday: String,
+    gender: String,
+    country: String,
+    city: String,
+    avatar: String
 }));

@@ -7,7 +7,9 @@ let init = {
   email: '',
   online: [],
   activeRoom: '',
-  admin: ''
+  admin: '',
+  country: '',
+  city: ''
 }
 
 function userReducer(state = init, action) {
@@ -20,7 +22,10 @@ function userReducer(state = init, action) {
         nickname: action.data.nickname,
         email: action.data.email,
         activeRoom: action.data.activeRoom,
-        admin: action.data.admin
+        admin: action.data.admin,
+        avatar: action.data.avatar,
+        country: action.data.country,
+        city: action.data.city
       }
       break;
     case 'ONLINE_SAVE':
@@ -28,9 +33,6 @@ function userReducer(state = init, action) {
         ...state,
         online: state.online.concat(action.data)
       }
-      break;
-    case 'USER_DATA_UPDATED': 
-      return actionUserDataUpdated(state, action); 
       break;
     case 'ACTIVE_SAVE':
       return {

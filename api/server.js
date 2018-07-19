@@ -12,9 +12,10 @@ const userRoutes = require('./controller/user')
 const chatRoutes = require('./controller/chat')
 const adminRoutes = require('./controller/admin')
 
-app.use(bodyParser.urlencoded({extended: true}))
-app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
 app.use(allowCrossDomain);
+app.use('/public', express.static('public'));
 
 const mongoose = require('mongoose');
 mongoose.Promise = require('bluebird')

@@ -2,7 +2,8 @@ import React from 'react'
 import appHistory from '../../../../utils/app-history'
 import { connect } from 'react-redux'
 import classNames from 'classnames'
-import axios, { post } from 'axios'
+import axios, { post } from 'axios';
+import { API_DOMAIN } from '../../../../utils/config.js'
 
 import * as AdminActions from '../../actions/admin-actions'
 import Admin from '../admin-container'
@@ -94,7 +95,7 @@ export default class ListTeamContainer extends React.Component {
 	}
 
 	fileUpload = file =>{
-	    const url = 'http://127.0.0.1:3000/api/upload';
+	    const url = API_DOMAIN +'api/upload/team';
 	    const formData = new FormData(this);
     	formData.append('file', file);
     	const config = {
@@ -128,8 +129,8 @@ export default class ListTeamContainer extends React.Component {
 	            		style={(team._id == this.props.active) ? { borderLeft: `5px solid ${team.color}`, borderRightColor:  team.color } : {}}
 	            		>
 	              		<Avatar 
-	              			alt='team' 
-	              			src={'/upload/'+ team.emblem}
+	              			alt='team'
+	              			src = {API_DOMAIN + 'public/upload/team/' + team.emblem}
 	              			onClick={() => this.props.activeItem(team._id)}
 	              		/>
 	              		<ListItemText primary={team.name} onClick={() => this.props.activeItem(team._id)} />

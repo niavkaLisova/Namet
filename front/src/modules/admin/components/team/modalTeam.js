@@ -37,7 +37,7 @@ class ModalTeam extends React.Component {
 		              		<ValidatorForm
 		                		ref="form"
 		                		onSubmit={this.props.handleSubmit}
-		            		>
+		            		 >
 		          				<Grid container justify="center" spacing={8}>
 	              					<Grid item>
 		              					<TextValidator
@@ -47,8 +47,7 @@ class ModalTeam extends React.Component {
 					                    	value={this.props.team.name}
 					                    	validators={['required']}
 					                    	errorMessages={['this field is required']}
-					                	/>
-					                	<br />
+					                	/><br />
 					                	<TextValidator
 					                    	label="Color"
 					                    	onChange={this.props.handleChange}

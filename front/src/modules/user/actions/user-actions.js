@@ -30,46 +30,6 @@ export function getUser(socket) {
   }
 }
 
-export function updateUser(user) {
-  return (dispatch) => {
-      request
-        .post(Config.API_DOMAIN + 'api/users/' + localStorage.getItem('userId'))
-        .set('x-access-token', localStorage.getItem('token'))
-        .send({
-          name: user.name,
-          email: user.email,
-          surname: user.surname
-        })
-        .end((error, response) => {
-          dispatch(userUpdated(response.body));
-          return NotificationActions.show('User updated successfully')(dispatch);
-        });
-  }
-}
-
-export function userDataUpdated(user) {
-  return (dispatch) => {
-    dispatch({
-      type: 'USER_DATA_UPDATED',
-      user: user
-    });
-  }
-}
-
-export function selectActiveRoom(activeRoom) {
-  return (dispatch) => {
-      request
-        .post(Config.API_DOMAIN + 'api/users/room/active/' + localStorage.getItem('userId'))
-        .set('x-access-token', localStorage.getItem('token'))
-        .send({
-          'active': activeRoom
-        })
-        .end((error, response) => {
-          dispatch(activeSave(activeRoom))
-        });
-  }
-}
-
 export function sendReport(report, socket) {
   return (dispatch) => {
       request
@@ -85,6 +45,115 @@ export function sendReport(report, socket) {
         });
   }
 } 
+
+export function selectActiveRoom(activeRoom) {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'api/users/room/active/' + localStorage.getItem('userId'))
+        .set('x-access-token', localStorage.getItem('token'))
+        .send({
+          'active': activeRoom
+        })
+        .end((error, response) => {
+          dispatch(activeSave(activeRoom))
+        });
+  }
+}
+
+/** settings **/
+
+export function settingsUpdate(settings) {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'api/users/settings/update/')
+        .set('x-access-token', localStorage.getItem('token'))
+        .send({
+          settings,
+          id: localStorage.getItem('userId')
+        })
+        .end((error, response) => {
+          console.log('after update', response)
+        });
+  }
+}
+
+export function changePassword(password, newPassword) {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'api/users/update/password')
+        .set('x-access-token', localStorage.getItem('token'))
+        .send({
+          id: localStorage.getItem('userId'),
+          password,
+          newPassword
+        })
+        .end((error, response) => {
+          console.log('change password', response.body);
+         
+        });
+  }
+} 
+
+export function changeEmail(password, email) {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'api/users/update/email')
+        .set('x-access-token', localStorage.getItem('token'))
+        .send({
+          id: localStorage.getItem('userId'),
+          password,
+          email
+        })
+        .end((error, response) => {
+          console.log('change email', response.body);
+         
+        });
+  }
+}
+
+export function changeName(name, that) {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'api/users/update/name')
+        .set('x-access-token', localStorage.getItem('token'))
+        .send({
+          id: localStorage.getItem('userId'),
+          name
+        })
+        .end((error, response) => {
+          console.log('change name', response.body);
+          if (response.body.success) {
+            that.setState({
+              name
+            })
+          } else {
+            that.setState({
+              name: that.props.user.name
+            })
+          }
+        });
+  }
+}
+
+export function changeAvatar(avatar, currentlyAvatar) {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'api/users/update/avatar')
+        .set('x-access-token', localStorage.getItem('token'))
+        .send({
+          id: localStorage.getItem('userId'),
+          avatar,
+          currentlyAvatar
+        })
+        .end((error, response) => {
+          console.log('change acatar', response.body);
+         
+        });
+  }
+} 
+
+
+/** end settings **/
 
 // export function sendEmail() {
 //   return (dispatch) => {

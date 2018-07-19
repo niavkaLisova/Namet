@@ -26,9 +26,9 @@ userRoutes.post('/authenticate', function(req, res) {
   const email = req.body.email
   const password = req.body.password
 
-  if (_.isUndefined(email) || _.isUndefined(password)) {
-    return throwFailed(res, 'Authentication failed. User not found.');
-  }
+  // if (_.isUndefined(email) || _.isUndefined(password)) {
+  //   return throwFailed(res, 'Authentication failed. User not found.');
+  // }
 
   User
     .findOne({ '$or': [ 
@@ -131,20 +131,6 @@ userRoutes.get('/users/:id', function(req, res) {
           res.json(user)
         }
     });
-});
-
-userRoutes.post('/users/:id', function(req, res) {
-  const userInfo = {
-      name: req.body.name,
-      surname: req.body.surname,
-      email: req.body.email
-  };
-
-  User.update({ _id: req.params.id }, { $set: userInfo}, function (err, user) {
-    if (err) throw err;
-
-    res.json(user)
-  });
 });
 
 userRoutes.post('/users/online/:id', function(req, res) {
@@ -263,13 +249,146 @@ userRoutes.post('/users/send/complaint', function(req, res) {
   });
 });
 
-/** settings **/
+/** settings **/ 
+
+userRoutes.post('/users/settings/update', function(req, res) {
+  const { settings, id } = req.body;
+  console.log('back', settings)
+
+  User.update({ _id: id }, { 
+    nickname: settings.nickname,
+    country: settings.country,
+    city: settings.city,
+    gender: settings.gender,
+    birthday: settings.date
+  }, function (err, user) {
+    if (err) throw err;
+    
+    res.json(user)
+  });
+});
+
+userRoutes.post('/users/update/password', function(req, res) {
+  const { newPassword, password, id} = req.body;
+
+  User
+    .findOne({'_id': id})
+    .exec()
+    .then(function(user) {
+       if (!user) {
+        return throwFailed(res, 'User not found.');
+      }
+
+      const psswordRes = passwordHash.verify(password, user.password);
+      if (psswordRes) {
+        user.password = passwordHash.generate(newPassword);
+        user.save(function(result) {
+          res.json({success: true, message: 'Successfully updated'});
+        })
+      } else {
+        return throwFailed(res, 'Password is not correct')
+      }
+    })
+});
+
+userRoutes.post('/users/update/email', function(req, res) {
+  const { email, password, id} = req.body;
+
+  User
+    .findOne({'_id': id})
+    .exec()
+    .then(function(user) {
+       if (!user) {
+        return throwFailed(res, 'User not found.');
+      }
+
+      const psswordRes = passwordHash.verify(password, user.password);
+      if (psswordRes) {
+        console.log('password right');
+        User
+          .findOne({ '$or': [ 
+              { email: email },
+              { name: email }
+           ]}  )
+          .exec()
+          .then(function(docs){
+            console.log('docs', docs);
+            if (!docs) {
+              user.email = email;
+              user.save(function(result) {
+                res.json({success: true, message: 'Successfully updated'});
+              })
+            } else {
+              return throwFailed(res, 'Email already exists')
+            }
+          })
+      } else {
+        console.log('not right');
+        return throwFailed(res, 'Password is not correct')
+      }
+    })
+
+});
+
+userRoutes.post('/users/update/name', function(req, res) {
+  const { name, id} = req.body;
+
+  User
+    .findOne({'_id': id})
+    .exec()
+    .then(function(user) {
+       if (!user) {
+        return throwFailed(res, 'User not found.');
+      }
+
+      User
+          .findOne({ name })
+          .exec()
+          .then(function(docs){
+            if (!docs) {
+              user.name = name;
+              user.save(function(result) {
+                res.json({success: true, message: 'Successfully updated'});
+              })
+            } else {
+              return throwFailed(res, 'Name already exist');
+            }
+          });
+
+    })
+});
+
+
+userRoutes.post('/users/update/avatar', function(req, res) {
+  const { avatar, currentlyAvatar, id} = req.body;
+
+  User
+    .findOne({'_id': id})
+    .exec()
+    .then(function(user) {
+       if (!user) {
+        return throwFailed(res, 'User not found.');
+      }
+
+      user.avatar = avatar;
+      user.save(function(result) {
+        if(currentlyAvatar.length) {
+          const link = 'public/upload/user/' + currentlyAvatar;
+          fs.unlink(link,function(err){
+            if(err) return console.log(err);
+            res.json({success: true, message: 'Successfully updated'});
+          }); 
+        }
+      })
+      
+    })
+});
 
 /** end settings **/
 
 /** upload */
 
-userRoutes.post('/upload', function(req, res) {
+userRoutes.post('/upload/user', function(req, res) {
   const files = req.files;
   const file = files.file;
 
@@ -283,7 +402,30 @@ userRoutes.post('/upload', function(req, res) {
 
   if (type == 'jpeg') type = 'jpg';
 
-  file.mv(`../front/dist/upload/${name}.${type}`, function(err) {
+  file.mv(`public/upload/user/${name}.${type}`, function(err) {
+    if (err)
+      return res.status(500).send(err);
+ 
+    const result = name + '.' +  type;
+    res.send(result);
+  });
+});
+
+userRoutes.post('/upload/team', function(req, res) {
+  const files = req.files;
+  const file = files.file;
+
+  const name = ObjectId();
+
+  if (!files)
+    return res.status(400).send('No files were uploaded.');
+
+  let type = file.mimetype.split('/');
+  type = type[1];
+
+  if (type == 'jpeg') type = 'jpg';
+
+  file.mv(`public/upload/team/${name}.${type}`, function(err) {
     if (err)
       return res.status(500).send(err);
  

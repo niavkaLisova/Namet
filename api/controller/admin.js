@@ -255,7 +255,7 @@ adminRoutes.post('/edit/team', function(req, res) {
           })
         .exec()
         .then(function(team) {
-          const link = '../front/dist/upload/' + oldEmblem;
+          const link = 'public/upload/team/' + oldEmblem;
 
           fs.unlink(link,function(err){
             if(err) return console.log(err);
@@ -273,7 +273,7 @@ adminRoutes.post('/delete/team', function(req, res) {
   Team.remove({'_id': team._id}, (err) => {
     if(err) throw err;
 
-    const link = '../front/dist/upload/' + emblem;
+    const link = 'public/upload/team/' + emblem;
 
     fs.unlink(link,function(err){
       if(err) return console.log(err);

@@ -1,17 +1,11 @@
 import React from 'react';
-
-import FlatButton from 'material-ui/FlatButton'
-import Drawer from 'material-ui/Drawer'
-import AppBar from 'material-ui/AppBar'
-import RaisedButton from 'material-ui/RaisedButton'
+import { API_DOMAIN } from '../../../utils/config.js'
 
 import * as UserActions from '../actions/user-actions'
 import appHistory from '../../../utils/app-history'
 
-import {List, ListItem} from 'material-ui/List'
-import ActionGrade from 'material-ui/svg-icons/action/grade'
-import ContentInbox from 'material-ui/svg-icons/content/inbox'
-import ContentDrafts from 'material-ui/svg-icons/content/drafts'
+import { List, ListItem } from 'material-ui/List'
+import Avatar from '@material-ui/core/Avatar'
 import ContentSend from 'material-ui/svg-icons/content/send'
 import Subheader from 'material-ui/Subheader'
 import PropTypes from 'prop-types'
@@ -36,26 +30,19 @@ export default class UserContainer extends React.Component {
 
   }
 
-  updateUser() {
-    this.props.dispatch(UserActions.updateUser(this.props.user));
-  }
-
-  onChangeEmail(event) {
-    this.props.dispatch(UserActions.userDataUpdated({email: event.target.value}));
-  }
-
-  onChangeSurname(event) {
-    this.props.dispatch(UserActions.userDataUpdated({surname: event.target.value}));
-  }
-
   render() {
     const { user } = this.props;
 
     return (
-      <MuiThemeProvider>
+      <div>
         <h2>Conatiner {this.props.id}</h2>
-
-      </MuiThemeProvider>
+         {(this.props.user.avatar != undefined)?(
+           <Avatar
+            alt={this.props.user.nickname}
+            src={API_DOMAIN + 'public/upload/user/' + this.props.user.avatar}
+          />
+        ): ''}
+      </div>
     )
   }
 };

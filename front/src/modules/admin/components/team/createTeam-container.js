@@ -2,6 +2,7 @@ import React from 'react'
 import appHistory from '../../../../utils/app-history'
 import { connect } from 'react-redux'
 import axios, { post } from 'axios'
+import { API_DOMAIN } from '../../../../utils/config.js'
 
 import * as AdminActions from '../../actions/admin-actions'
 import * as UserActions from '../../../user/actions/user-actions'
@@ -49,7 +50,7 @@ export default class CreateTeamContainer extends React.Component {
 	}
 
 	fileUpload = file =>{
-	    const url = 'http://127.0.0.1:3000/api/upload';
+	    const url = API_DOMAIN + 'api/upload/team';
 	    const formData = new FormData(this);
     	formData.append('file', file);
     	const config = {
