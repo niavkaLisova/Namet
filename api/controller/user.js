@@ -117,7 +117,7 @@ userRoutes.get('/users/:id', function(req, res) {
     .exec()
     .then(function(user) {
       if(user && (user.activeRoom != 0)) {
-      console.log(user.activeRoom, 'active', typeof(user.activeRoom));
+      console.log('user', user);
         Room
           .find({_id: user.activeRoom}).exec().then(function(docs) {
             // console.log('room', docs, docs.length);
@@ -260,7 +260,7 @@ userRoutes.post('/users/settings/update', function(req, res) {
     country: settings.country,
     city: settings.city,
     gender: settings.gender,
-    birthday: settings.date
+    birthday: settings.birthday
   }, function (err, user) {
     if (err) throw err;
     
@@ -323,7 +323,6 @@ userRoutes.post('/users/update/email', function(req, res) {
             }
           })
       } else {
-        console.log('not right');
         return throwFailed(res, 'Password is not correct')
       }
     })

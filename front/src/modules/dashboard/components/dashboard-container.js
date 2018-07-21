@@ -15,6 +15,7 @@ import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
 import { List, ListItem } from 'material-ui/List'
 import Icon from '@material-ui/core/Icon'
 import { Redirect } from 'react-router-dom'
+import { ToastContainer, ToastStore } from 'react-toasts'
 
 import './Style.sass'
 
@@ -76,6 +77,7 @@ class DashboardContainer extends React.Component {
     return (
       <MuiThemeProvider>
         <div>
+        <ToastContainer store={ToastStore}/>
           {(localStorage.getItem('userId'))? (
             <div>
               <AppBar

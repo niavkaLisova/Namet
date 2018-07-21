@@ -8,9 +8,12 @@ module.exports = mongoose.model('Record', new Schema({
 	authorName: String,
 	wall: Boolean,
 	work: Boolean,
-	review: Boolean,
+	chat: String,
+	review: String,
 	gift: String,
 	coin: [],
-	state: String
-
+	state: String,
+	describe: String,
+	img: String,
+	language: String
 }, { timestamps: true }));

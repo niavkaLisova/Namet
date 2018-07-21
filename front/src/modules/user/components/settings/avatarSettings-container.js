@@ -2,6 +2,8 @@ import React from 'react'
 import { connect } from 'react-redux'
 import axios, { post } from 'axios'
 import { API_DOMAIN } from '../../../../utils/config.js'
+import { ToastStore } from 'react-toasts'
+
 
 import * as UserActions from '../../actions/user-actions'
 
@@ -43,13 +45,17 @@ export default class AvatarSettingsContainer extends React.Component {
 
 
 	handleCreate = () => {
-    	this.fileUpload(this.state.file).then((response)=>{
-    		this.props.dispatch(UserActions.changeAvatar(response.data, this.props.avatar));
+		if (this.state.file) {
+	    	this.fileUpload(this.state.file).then((response)=>{
+	    		this.props.dispatch(UserActions.changeAvatar(response.data, this.props.avatar));
 
-    		this.setState({
-    			file: null
-    		})
-    	})
+	    		this.setState({
+	    			file: null
+	    		})
+	    	})
+    	} else {
+    		ToastStore.warning('Select photo');
+    	}
 
   	}
 

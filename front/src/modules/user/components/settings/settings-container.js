@@ -33,6 +33,8 @@ export default class SettingsContainer extends React.Component {
         formData.nickname = this.props.user.nickname;
         formData.country = (this.props.user.country)? this.props.user.country: '';
         formData.city = (this.props.user.city)? this.props.user.city: '';
+        formData.birthday = this.props.user.birthday;
+        formData.gender = (this.props.user.gender)? this.props.user.gender: '';
 
         this.setState({
           formData,
@@ -61,7 +63,7 @@ export default class SettingsContainer extends React.Component {
         country: '',
         city: '',
         gender: 'none',
-        date: '1991-08-24'
+        birthday: ''
       },
       currentlyPassword: '',
       confirmPassword: '',
@@ -84,17 +86,15 @@ export default class SettingsContainer extends React.Component {
   }
 
   handleSubmit = () => {
-    console.log('state', this.state.formData)
     this.setState({ submitted: true }, () => {
-        setTimeout(() => this.setState({ submitted: false }), 5000);
+      setTimeout(() => this.setState({ submitted: false }), 5000);
     });
     this.props.dispatch(UserActions.settingsUpdate(this.state.formData))
   }
 
   handleSubmitPassword = () => {
-    console.log('submit password', this.state.currentlyPassword, this.state.newPassword, this.state.confirmPassword)
     this.setState({ submittedPassword: true }, () => {
-        setTimeout(() => this.setState({ submittedPassword: false }), 5000);
+      setTimeout(() => this.setState({ submittedPassword: false }), 5000);
     });
     this.props.dispatch(UserActions.changePassword(this.state.currentlyPassword, this.state.newPassword));
 
@@ -106,9 +106,8 @@ export default class SettingsContainer extends React.Component {
   }
 
   handleSubmitEmail = () => {
-    console.log('submit email', this.state.currentlyPassword, this.state.newEmail)
     this.setState({ submittedEmail: true }, () => {
-        setTimeout(() => this.setState({ submittedEmail: false }), 5000);
+      setTimeout(() => this.setState({ submittedEmail: false }), 5000);
     });
     this.props.dispatch(UserActions.changeEmail(this.state.currentlyPassword, this.state.newEmail));
 
@@ -119,12 +118,10 @@ export default class SettingsContainer extends React.Component {
   }
 
   handleSubmitName = () => {
-    console.log('submit name', this.state.name)
     this.setState({ submittedName: true }, () => {
-        setTimeout(() => this.setState({ submittedName: false }), 5000);
+      setTimeout(() => this.setState({ submittedName: false }), 5000);
     });
     this.props.dispatch(UserActions.changeName(this.state.name, this));
-
   }
 
   handlePassword = event => {
@@ -168,6 +165,7 @@ export default class SettingsContainer extends React.Component {
 
     return (
       <div>
+      
         <Grid container spacing={8}>
           <Grid item xs={12}>
             <ValidatorForm
@@ -218,7 +216,7 @@ export default class SettingsContainer extends React.Component {
                         <InputLabel htmlFor="age-native-simple">Gender</InputLabel>
                         <Select
                           native
-                          value={this.state.gender}
+                          value={formData.gender}
                           onChange={this.handleChange}
                           inputProps={{
                             name: 'gender',
@@ -231,18 +229,21 @@ export default class SettingsContainer extends React.Component {
                         </Select>
                       </FormControl>
                     </Grid>
+                    
                     <Grid item>
+                    {(this.props.user.email.length > 0)? (
                       <TextField
-                        id="date"
+                        id="birthday"
                         label="Birthday"
                         type="date"
-                        name="date"
-                        defaultValue={formData.date}
+                        name="birthday"
+                        defaultValue={this.props.user.birthday}
                         onChange={this.handleChange}
                         InputLabelProps={{
                           shrink: true,
                         }}
                       />
+                      ): 'na joj'}
                     </Grid>
                   </Grid>
                   

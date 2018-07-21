@@ -9,7 +9,8 @@ let init = {
   activeRoom: '',
   admin: '',
   country: '',
-  city: ''
+  city: '',
+  birthday: ''
 }
 
 function userReducer(state = init, action) {
@@ -25,7 +26,37 @@ function userReducer(state = init, action) {
         admin: action.data.admin,
         avatar: action.data.avatar,
         country: action.data.country,
-        city: action.data.city
+        city: action.data.city,
+        gender: action.data.gender,
+        birthday: action.data.birthday
+      }
+      break;
+    case 'AVATAR_UPDATE':
+      return {
+        ...state,
+        avatar: action.data    
+      }
+      break;
+    case 'SETTINGS_UPDATE':
+      return {
+        ...state,
+        city: action.data.city,
+        country: action.data.country,
+        nickname: action.data.nickname,
+        gender: action.data.gender,
+        birthday: action.data.data
+      }
+      break; 
+    case 'EMAIL_UPDATE':
+      return {
+        ...state,
+        email: action.data    
+      }
+      break;
+    case 'NAME_UPDATE':
+      return {
+        ...state,
+        name: action.data    
       }
       break;
     case 'ONLINE_SAVE':

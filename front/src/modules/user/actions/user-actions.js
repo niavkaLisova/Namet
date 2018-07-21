@@ -4,6 +4,7 @@ import appHistory from '../../../utils/app-history'
 import * as Config from '../../../utils/config';
 import * as ChatActions from '../../chat/actions/chat-actions'
 import * as NotificationActions from '../../notification/actions/notification-actions'
+import {ToastContainer, ToastStore} from 'react-toasts'
 
 export function getUser(socket) {
   return (dispatch) => {
@@ -72,7 +73,8 @@ export function settingsUpdate(settings) {
           id: localStorage.getItem('userId')
         })
         .end((error, response) => {
-          console.log('after update', response)
+          dispatch(settingsUpdated(settings))
+          ToastStore.success('Successfully updated');
         });
   }
 }
@@ -88,8 +90,8 @@ export function changePassword(password, newPassword) {
           newPassword
         })
         .end((error, response) => {
-          console.log('change password', response.body);
-         
+          // console.log('change password', response.body);
+          ToastStore.success('Successfully updated');
         });
   }
 } 
@@ -106,7 +108,12 @@ export function changeEmail(password, email) {
         })
         .end((error, response) => {
           console.log('change email', response.body);
-         
+         if(response.body.success) {
+          dispatch(emailUpdate(email));
+          ToastStore.success(response.body.message);
+         } else {
+          ToastStore.error(response.body.message);
+         }
         });
   }
 }
@@ -123,10 +130,13 @@ export function changeName(name, that) {
         .end((error, response) => {
           console.log('change name', response.body);
           if (response.body.success) {
+            dispatch(nameUpdate(name));
+            ToastStore.success(response.body.message);
             that.setState({
               name
             })
           } else {
+            ToastStore.error(response.body.message)
             that.setState({
               name: that.props.user.name
             })
@@ -146,8 +156,13 @@ export function changeAvatar(avatar, currentlyAvatar) {
           currentlyAvatar
         })
         .end((error, response) => {
-          console.log('change acatar', response.body);
-         
+          // console.log('change acatar', response.body);
+          if(response.body.success) {
+            dispatch(avatarUpdate(avatar))
+            ToastStore.success(response.body.message);
+          } else {
+            ToastStore.error(response.body.message);
+          }
         });
   }
 } 
@@ -169,13 +184,20 @@ export function changeAvatar(avatar, currentlyAvatar) {
 //   }
 // }
 
-
 export function unreadUpdate(data) {
   return {type: 'UNREAD_UPDATE', data};
 }
 
-export function userUpdated(data) {
-  return {type: 'USER_UPDATED', data};
+export function settingsUpdated(data) {
+  return {type: 'SETTINGS_UPDATE', data};
+}
+
+export function emailUpdate(data) {
+  return {type: 'EMAIL_UPDATE', data};
+}
+
+export function nameUpdate(data) {
+  return {type: 'NAME_UPDATE', data};
 }
 
 export function userGet(data) {
@@ -185,3 +207,8 @@ export function userGet(data) {
 export function activeSave(data) {
   return {type: 'ACTIVE_SAVE', data};
 }
+
+export function avatarUpdate(data) {
+  return {type: 'AVATAR_UPDATE', data};
+}
+

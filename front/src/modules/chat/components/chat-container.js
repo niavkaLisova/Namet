@@ -12,7 +12,7 @@ import * as NotificationActions from '../../notification/actions/notification-ac
 export default class ChatContainer extends React.Component {
 	render() {
 		return (
-			<Container>
+			<Container fluid>
 			  	<Row>
 				    <Col sm={4}>
 						<ListContainer />

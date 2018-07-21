@@ -20,7 +20,7 @@ import '../User.sass'
 })
 export default class NameSettingsContainer extends React.Component {
   render() {
-    const { submittedName, user } = this.props;
+    const { submittedName, user } = this.props; 
 
     return (
       <ExpansionPanel>
