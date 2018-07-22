@@ -117,7 +117,6 @@ userRoutes.get('/users/:id', function(req, res) {
     .exec()
     .then(function(user) {
       if(user && (user.activeRoom != 0)) {
-      console.log('user', user);
         Room
           .find({_id: user.activeRoom}).exec().then(function(docs) {
             // console.log('room', docs, docs.length);
@@ -253,7 +252,6 @@ userRoutes.post('/users/send/complaint', function(req, res) {
 
 userRoutes.post('/users/settings/update', function(req, res) {
   const { settings, id } = req.body;
-  console.log('back', settings)
 
   User.update({ _id: id }, { 
     nickname: settings.nickname,
@@ -304,7 +302,6 @@ userRoutes.post('/users/update/email', function(req, res) {
 
       const psswordRes = passwordHash.verify(password, user.password);
       if (psswordRes) {
-        console.log('password right');
         User
           .findOne({ '$or': [ 
               { email: email },
@@ -312,7 +309,6 @@ userRoutes.post('/users/update/email', function(req, res) {
            ]}  )
           .exec()
           .then(function(docs){
-            console.log('docs', docs);
             if (!docs) {
               user.email = email;
               user.save(function(result) {
@@ -384,6 +380,28 @@ userRoutes.post('/users/update/avatar', function(req, res) {
 });
 
 /** end settings **/
+
+/** create work **/
+
+userRoutes.post('/find/gift', function(req, res) {
+  const { id, gift } = req.body;
+
+  const regexp = new RegExp(gift);
+  User
+    .find({ '$or': [ 
+        { 'nickname': regexp },
+        { 'name': regexp }
+     ]}, {name: 1, email: 1, nickname: 1, _id: 1})
+    .where('_id').ne(id)
+    .where('email').ne('admino')
+    .limit(3)
+    .exec()
+    .then(function(users) {
+      res.json(users);
+    });
+});
+
+/** end create work **/
 
 /** upload */
 

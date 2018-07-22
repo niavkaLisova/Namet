@@ -2,7 +2,7 @@ import React from 'react';
 
 import * as UserActions from '../../actions/user-actions'
 
-import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator'
 import { connect } from "react-redux"
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'

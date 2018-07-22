@@ -23,6 +23,13 @@ module.exports = {
         }
       },
       {
+        test: /\.css$/,
+        loaders: [
+          'style-loader',
+          'css-loader?modules'
+        ]
+      },
+      {
         test: /\.sass$/,
         loader: 'style-loader!css-loader!autoprefixer-loader!sass-loader',
         exclude: /node_modules/
@@ -34,7 +41,7 @@ module.exports = {
         {
           loader: 'image-webpack-loader',
           options: {
-            disable: true, // webpack@2.x and newer
+            disable: true,
           },
         },
       ],

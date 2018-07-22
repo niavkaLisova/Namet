@@ -31,6 +31,17 @@ export function getUser(socket) {
   }
 }
 
+export function findInfoUser(id) {
+  return (dispatch) => {
+      request
+        .get(Config.API_DOMAIN + 'api/users/' + id)
+        .set('x-access-token', localStorage.getItem('token'))
+        .end((error, response) => { 
+          dispatch(userInfo(response.body))
+        });
+  }
+}
+
 export function sendReport(report, socket) {
   return (dispatch) => {
       request
@@ -167,6 +178,20 @@ export function changeAvatar(avatar, currentlyAvatar) {
   }
 } 
 
+export function findGift(gift) {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'api/find/gift')
+        .set('x-access-token', localStorage.getItem('token'))
+        .send({
+          id: localStorage.getItem('userId'),
+          gift
+        })
+        .end((error, response) => {
+          dispatch(setGift(response.body))
+        });
+  }
+} 
 
 /** end settings **/
 
@@ -210,5 +235,17 @@ export function activeSave(data) {
 
 export function avatarUpdate(data) {
   return {type: 'AVATAR_UPDATE', data};
+}
+
+export function textSave(data) {
+  return {type: 'TEXT_SAVE', data};
+}
+
+export function setGift(data) {
+  return {type: 'SET_GIFT', data};
+}
+
+export function userInfo(data) {
+  return {type: 'USER_INFO', data};
 }
 

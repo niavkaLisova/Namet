@@ -10,7 +10,10 @@ let init = {
   admin: '',
   country: '',
   city: '',
-  birthday: ''
+  birthday: '',
+  text: '',
+  giftList: [],
+  info: []
 }
 
 function userReducer(state = init, action) {
@@ -71,6 +74,25 @@ function userReducer(state = init, action) {
         activeRoom: action.data    
       }
       break;
+    case 'TEXT_SAVE':
+      return {
+        ...state,
+        text: action.data    
+      }
+      break;
+    case 'SET_GIFT':
+      return {
+        ...state,
+        giftList: action.data    
+      }
+      break;
+    case 'USER_INFO':
+      return {
+        ...state,
+        info: state.info.concat(action.data)  
+      }
+      break;
+
     default: return state;
   }
 }
