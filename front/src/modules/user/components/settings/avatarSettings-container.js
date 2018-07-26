@@ -30,7 +30,6 @@ export default class AvatarSettingsContainer extends React.Component {
 	}
 
 	fileUpload = file => {
-		console.log(API_DOMAIN + 'api/upload/user/');
 	    const url = API_DOMAIN + 'api/upload/user/';
 	    const formData = new FormData(this);
     	formData.append('file', file);
@@ -52,6 +51,8 @@ export default class AvatarSettingsContainer extends React.Component {
 	    		this.setState({
 	    			file: null
 	    		})
+
+	    		ToastStore.success('Avatar uploaded');
 	    	})
     	} else {
     		ToastStore.warning('Select photo');

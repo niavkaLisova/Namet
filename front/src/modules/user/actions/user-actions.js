@@ -194,6 +194,14 @@ export function findGift(gift) {
 } 
 
 /** end settings **/
+/** record **/
+
+export function setFile(data) {
+  return {type: 'SET_FILE', data};
+}
+
+
+/** end record **/
 
 // export function sendEmail() {
 //   return (dispatch) => {

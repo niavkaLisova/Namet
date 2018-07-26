@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from "react-redux"
+import axios, { post } from 'axios'
 
 import * as UserActions from '../../actions/user-actions'
 import Avatar from '@material-ui/core/Avatar'
@@ -20,6 +21,8 @@ import Typography from '@material-ui/core/Typography'
 import Slide from '@material-ui/core/Slide'
 import Icon from '@material-ui/core/Icon'
 
+import { ToastStore } from 'react-toasts'
+import { API_DOMAIN } from '../../../../utils/config.js'
 import { withStyles } from '@material-ui/core/styles'
 import LeftPartRecordContainer from './leftPartRecord-container'
 import RightPartRecordContainer from './rightPartRecord-container'
@@ -42,7 +45,10 @@ function Transition(props) {
 
 @connect((store, ownProps) => {
   return {
-    text: store.user.text
+    text: store.user.text,
+    list: store.user.giftList,
+    thumbnail: store.user.thumbnail,
+    file: store.user.file,
   };
 })
 class CreateModal extends React.Component {
@@ -71,6 +77,15 @@ class CreateModal extends React.Component {
     record.gift = item.name;
 
     this.setState({ userGift: item._id, record: record })
+    this.props.dispatch(UserActions.setGift([]));
+  }
+
+  handlelistGift = e => {
+    let { record } = this.state;
+    record.gift = e.target.value;
+
+    this.setState({ record });
+    this.props.dispatch(UserActions.findGift(e.target.value));
   }
 
   handleSave = () => {
@@ -80,7 +95,8 @@ class CreateModal extends React.Component {
       this.setState({ typeError: 'The field is rerauired' })
     } else {
       this.props.handleCloseModal();
-      console.log('save', this.state, this.props.text)
+      this.handleCreate();
+      ToastStore.success('Done');
     }
   }
 
@@ -97,18 +113,41 @@ class CreateModal extends React.Component {
   handleChangeRecord = e => {
     let { record } = this.state;
     record[e.target.name] = e.target.value;
-    
+      
     this.setState({
       record
     })
   }
 
-  handleChangeGift = e => {
-    this.props.dispatch(UserActions.findGift(e.target.value))
+  fileUpload = file => {
+    const url = API_DOMAIN + 'api/upload/record';
+    const formData = new FormData(this);
+    formData.append('file', file);
+    const config = {
+        headers: {
+            'content-type': 'multipart/form-data'
+        }
+    }
+
+    return  post(url, formData, config)
   }
 
-  handleChangeText = e  => {
-    this.setState({ text: e.target.value })
+
+  handleCreate = () => {
+    if (this.props.file) {
+      this.fileUpload(this.props.file).then((response)=>{
+        
+        console.log('save', this.state, this.props.text, response.data)
+
+        this.props.dispatch(UserActions.setFile(null));
+      })
+    } else {
+      console.log('save without image', this.state, this.props.text)
+    }
+  }
+
+  handleChangeGift = e => {
+    this.props.dispatch(UserActions.findGift(e.target.value))
   }
 
   render() {
@@ -140,8 +179,7 @@ class CreateModal extends React.Component {
               title={this.state.title}
               titleError={this.state.titleError}
               text={this.state.text}
-              handleChangeTitle={this.handleChangeTitle}
-              handleChangeText={this.handleChangeText}
+              handleChangeTitle={this.handleChangeTitle}             
              />
              <EditorContainer />
           </div>
@@ -153,6 +191,8 @@ class CreateModal extends React.Component {
               handleUserGift={this.handleUserGift}
               handleChangeGift={this.handleChangeGift}
               handleChangeRecord={this.handleChangeRecord}
+              handlelistGift={this.handlelistGift}
+              list={this.props.list}
              />
           </div>
         </div>

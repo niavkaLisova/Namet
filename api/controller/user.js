@@ -451,6 +451,29 @@ userRoutes.post('/upload/team', function(req, res) {
   });
 });
 
+userRoutes.post('/upload/record', function(req, res) {
+  const files = req.files;
+  const file = files.file;
+
+  const name = ObjectId();
+
+  if (!files)
+    return res.status(400).send('No files were uploaded.');
+
+  let type = file.mimetype.split('/');
+  type = type[1];
+
+  if (type == 'jpeg') type = 'jpg';
+
+  file.mv(`public/upload/record/${name}.${type}`, function(err) {
+    if (err)
+      return res.status(500).send(err);
+ 
+    const result = name + '.' +  type;
+    res.send(result);
+  });
+});
+
 userRoutes.post('/remove/image', function(req, res) {
   const { emblem } = req.body;
 

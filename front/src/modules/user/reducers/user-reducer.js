@@ -13,7 +13,9 @@ let init = {
   birthday: '',
   text: '',
   giftList: [],
-  info: []
+  info: [],
+  thumbnail: '',
+  file: null
 }
 
 function userReducer(state = init, action) {
@@ -90,6 +92,12 @@ function userReducer(state = init, action) {
       return {
         ...state,
         info: state.info.concat(action.data)  
+      }
+      break;
+    case 'SET_FILE':
+      return {
+        ...state,
+        file: action.data  
       }
       break;
 

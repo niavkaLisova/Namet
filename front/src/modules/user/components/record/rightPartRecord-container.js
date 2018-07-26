@@ -1,6 +1,7 @@
 import React from 'react'
 
 import * as UserActions from '../../actions/user-actions'
+import ImgRecordContainer from './imgRecord-container'
 
 import { connect } from "react-redux"
 import { withStyles } from '@material-ui/core/styles'
@@ -35,18 +36,7 @@ const styles = theme => ({
   },
 });
 
-@connect((store, ownProps) => {
-  return {
-    giftList: store.user.giftList
-  };
-})
 class RightPartRecordContainer extends React.Component {
-
-  handleGift = item => {
-    this.props.dispatch(UserActions.setGift([]));
-    this.props.handleUserGift(item);
-  }
-
   render() {
     const { record } = this.props;
     const { classes, theme } = this.props;
@@ -133,16 +123,19 @@ class RightPartRecordContainer extends React.Component {
           />
         </FormControl>
 
+        <ImgRecordContainer />
+
         <FormControl>
           <TextField
             label="Gift"
-            onChange={this.props.handleChangeGift}
+            onChange={this.props.handlelistGift}
             name="gift"
             value={record.gift}
           />
+          
           {(record.gift.length > 0)? (
-          this.props.giftList.map(item => {
-            return <MenuItem key={item._id} button onClick={() => this.handleGift(item)}>
+          this.props.list.map(item => {
+            return <MenuItem key={item._id} button onClick={() => this.props.handleUserGift(item)}>
               <ListItemText>{item.nickname}({item.name})</ListItemText>
             </MenuItem>
           })
