@@ -9,6 +9,8 @@ const fs = require('fs')
 const Room = require('../models/room')
 const User = require('../models/user')
 const BlackList = require('../models/blackList')
+const Sections = require('../models/sections')
+const Record = require('../models/record')
 const config = require('../config/config')
 const { ObjectId } = require('mongodb');
  
@@ -389,9 +391,9 @@ userRoutes.post('/find/gift', function(req, res) {
   const regexp = new RegExp(gift);
   User
     .find({ '$or': [ 
-        { 'nickname': regexp },
-        { 'name': regexp }
-     ]}, {name: 1, email: 1, nickname: 1, _id: 1})
+      { 'nickname': regexp },
+      { 'name': regexp }
+    ]}, {name: 1, email: 1, nickname: 1, _id: 1})
     .where('_id').ne(id)
     .where('email').ne('admino')
     .limit(3)
@@ -399,6 +401,72 @@ userRoutes.post('/find/gift', function(req, res) {
     .then(function(users) {
       res.json(users);
     });
+});
+
+userRoutes.post('/find/collection', function(req, res) {
+  const { userId, search } = req.body;
+
+  const regexp = new RegExp(search);
+  Sections
+    .find({ '$and': [ 
+        { userId },
+        { title: regexp }
+     ]})
+    .limit(3)
+    .exec()
+    .then(function(collections) {
+      res.json(collections);
+    });
+});
+
+userRoutes.post('/create/collection', function(req, res) {
+  const { userId, title, describe } = req.body;
+
+  Sections
+    .find({ '$and': [ 
+        { userId },
+        { title }
+     ]})
+    .exec()
+    .then(function(sections) {
+      if (sections.length > 0) return throwFailed(res, 'Such Collection already exist');
+
+      let newSections = new Sections({
+        title,
+        describe,
+        userId
+      })
+
+      newSections.save(function(err, doc) {
+        if (err) throw err;
+        return res.json({ success: true, message: 'Collection created successfully.', doc });
+      });
+    });
+});
+
+userRoutes.post('/save/record', function(req, res) {
+  const { record, author } = req.body;
+
+  let newRecord = new Record({
+    author: author,
+    title: record.title,
+    text: record.text,
+    authorName: record.authorName,
+    type: record.type,
+    review: '0',
+    gift: record.gift,
+    language: record.language,
+    describe: record.describe,
+    genre: record.genre,
+    img: record.img,
+    state: record.state,
+    section: record.collection
+  });
+
+  newRecord.save(function(err, doc) {
+    console.log('doc', doc);
+  });
+ 
 });
 
 /** end create work **/

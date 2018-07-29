@@ -6,14 +6,14 @@ module.exports = mongoose.model('Record', new Schema({
 	text: String,
 	author: String,
 	authorName: String,
-	wall: Boolean,
-	work: Boolean,
-	chat: String,
+	type: [],
 	review: String,
 	gift: String,
 	coin: [],
 	state: String,
 	describe: String,
 	img: String,
-	language: String
+	genre: String,
+	language: String,
+	section: String
 }, { timestamps: true }));

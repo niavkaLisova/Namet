@@ -45,10 +45,13 @@ function Transition(props) {
 
 @connect((store, ownProps) => {
   return {
+    user: store.user.nickname,
     text: store.user.text,
     list: store.user.giftList,
     thumbnail: store.user.thumbnail,
     file: store.user.file,
+    listColl: store.user.listColl,
+    listCollId: store.user.listCollId
   };
 })
 class CreateModal extends React.Component {
@@ -60,12 +63,13 @@ class CreateModal extends React.Component {
       titleError: '',
       typeError: '',
       userGift: '',
+      collection: '',
       record: {
         describe: '',
         type: [],
         state: 'draft',
         language: '',
-        collection: '',
+        genre: '',
         img: '',
         gift: ''
       }
@@ -94,6 +98,8 @@ class CreateModal extends React.Component {
     } else if (this.state.record.type.length == 0) {
       this.setState({ typeError: 'The field is rerauired' })
     } else {
+      // 
+      // console.log('save colle', this.state.collection);
       this.props.handleCloseModal();
       this.handleCreate();
       ToastStore.success('Done');
@@ -119,6 +125,15 @@ class CreateModal extends React.Component {
     })
   }
 
+  handleChangeRecordGenre = listGenre => {
+    let { record } = this.state;
+    record['genre'] = listGenre;
+      
+    this.setState({
+      record
+    })
+  }
+
   fileUpload = file => {
     const url = API_DOMAIN + 'api/upload/record';
     const formData = new FormData(this);
@@ -134,16 +149,61 @@ class CreateModal extends React.Component {
 
 
   handleCreate = () => {
-    if (this.props.file) {
-      this.fileUpload(this.props.file).then((response)=>{
-        
-        console.log('save', this.state, this.props.text, response.data)
+    let { record } = this.state;
+    record.title = this.state.title;
+    record.text = this.props.text;
+    record.collection = this.props.listCollId;
+    record.authorName = this.props.nickname;
 
+    if (!record.collection && this.props.listColl.length > 0 ) {
+      record.collection = this.props.listColl[0]._id;
+    }
+
+    if (this.props.file) {
+      this.fileUpload(this.props.file).then((response)=>{     
+        // console.log('save', this.state, this.props.text, response.data, this.props.listColl)
+        record.img = response.data;
+
+        this.props.dispatch(UserActions.saveRecord(record));
         this.props.dispatch(UserActions.setFile(null));
       })
     } else {
-      console.log('save without image', this.state, this.props.text)
+      // console.log('save without image', this.state, this.props.text, this.props.listColl)
+      record.img = null;
+      
+      this.props.dispatch(UserActions.saveRecord(record));
     }
+
+    this.setState({
+      title: '',
+      titleError: '',
+      typeError: '',
+      userGift: '',
+      collection: '',
+      record: {
+        describe: '',
+        type: [],
+        state: 'draft',
+        language: '',
+        genre: '',
+        img: '',
+        gift: ''
+      }
+    })
+  }
+
+  handleChangeCollection = e => {
+    this.setState({ collection: e.target.value });
+
+    if (e.target.value.length > 0) {
+      this.props.dispatch(UserActions.findCollections(e.target.value));
+    }
+  }
+
+  selectCollections = coll => {
+    this.setState({ collection: coll.title });
+    this.props.dispatch(UserActions.listCollectionsId(coll._id));
+    this.props.dispatch(UserActions.listCollections([]));
   }
 
   handleChangeGift = e => {
@@ -157,6 +217,7 @@ class CreateModal extends React.Component {
       <Dialog
         fullScreen
         open={this.props.open}
+        scroll={'paper'}
         onClose={this.props.handleCloseModal}
         TransitionComponent={Transition}
       >
@@ -193,6 +254,11 @@ class CreateModal extends React.Component {
               handleChangeRecord={this.handleChangeRecord}
               handlelistGift={this.handlelistGift}
               list={this.props.list}
+              collection={this.state.collection}
+              handleChangeCollection={this.handleChangeCollection}
+              listColl={this.props.listColl}
+              selectCollections={this.selectCollections}
+              handleChangeRecordGenre={this.handleChangeRecordGenre}
              />
           </div>
         </div>

@@ -15,7 +15,9 @@ let init = {
   giftList: [],
   info: [],
   thumbnail: '',
-  file: null
+  file: null,
+  listColl: [],
+  listCollId:'',
 }
 
 function userReducer(state = init, action) {
@@ -98,6 +100,18 @@ function userReducer(state = init, action) {
       return {
         ...state,
         file: action.data  
+      }
+      break;
+    case 'LIST_COLLECTIONS':
+      return {
+        ...state,
+        listColl: action.data  
+      }
+      break;
+    case 'LIST_COLLECTIONS_ID':
+      return {
+        ...state,
+        listCollId: action.data  
       }
       break;
 

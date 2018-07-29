@@ -15,6 +15,7 @@ class EditorContainer extends React.Component {
     value: RichTextEditor.createEmptyValue()
   }
 
+
   onChange = (value) => {
     this.setState({value});
     this.props.dispatch(UserActions.textSave(this.state.value.toString('html')))
@@ -32,6 +33,7 @@ class EditorContainer extends React.Component {
         <RichTextEditor
           value={this.state.value}
           onChange={this.onChange}
+          class='editorRecord'
         />
       </div>
     );

@@ -17,6 +17,9 @@ import ListItemText from '@material-ui/core/ListItemText'
 import Checkbox from '@material-ui/core/Checkbox'
 import Chip from '@material-ui/core/Chip'
 
+import CollectionContainer from './collection-container'
+import GenreModal from './genreModal'
+
 const styles = theme => ({
   root: {
     display: 'flex',
@@ -37,6 +40,37 @@ const styles = theme => ({
 });
 
 class RightPartRecordContainer extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      open: false,
+    };
+
+  }
+
+  handleClickOpenGenre = () => {
+    this.setState({ open: true });
+  };
+
+  handleCloseGenre = () => {
+    this.setState({ open: false });
+  };
+
+  setCheckInput = checked => {
+    let checkList = '';
+
+    checked.map(item => {
+      if (checkList.length > 0) {
+        checkList = checkList + ', '+ item;
+      } else {
+        checkList = item;
+      }
+    })
+
+    this.props.handleChangeRecordGenre(checkList)
+  }
+
   render() {
     const { record } = this.props;
     const { classes, theme } = this.props;
@@ -120,6 +154,31 @@ class RightPartRecordContainer extends React.Component {
             onChange={this.props.handleChangeRecord}
             name="language"
             value={record.language}
+          />
+        </FormControl>
+
+        <CollectionContainer 
+          collection={this.props.collection}
+          handleChangeCollection={this.props.handleChangeCollection}
+         />
+        { this.props.listColl.map(collection => {
+          return <div key={collection._id}>
+            <p onClick={() => this.props.selectCollections(collection)}>{collection.title}</p>
+          </div>
+        })}
+
+        <FormControl>
+          <TextField
+            label="Genre"
+            onChange={this.props.handleChangeRecord}
+            name="genre"
+            value={record.genre}
+          />
+          <Button onClick={this.handleClickOpenGenre}>Open list</Button>
+          <GenreModal
+            open={this.state.open}
+            handleCloseGenre={this.handleCloseGenre}
+            setCheckInput={this.setCheckInput}
           />
         </FormControl>
 

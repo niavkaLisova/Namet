@@ -196,10 +196,67 @@ export function findGift(gift) {
 /** end settings **/
 /** record **/
 
+export function createCollection(state) {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'api/create/collection')
+        .set('x-access-token', localStorage.getItem('token'))
+        .send({
+          userId: localStorage.getItem('userId'),
+          title: state.title,
+          describe: state.describe
+        })
+        .end((error, response) => {
+          if (response.body.success) {
+            ToastStore.success(response.body.message);
+          } else {
+            ToastStore.error(response.body.message);
+          }
+        });
+  }
+} 
+
+export function findCollections(search) {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'api/find/collection')
+        .set('x-access-token', localStorage.getItem('token'))
+        .send({
+          userId: localStorage.getItem('userId'),
+          search
+        })
+        .end((error, response) => {
+          dispatch(listCollections(response.body));
+        });
+  }
+}
+
+export function saveRecord(record) {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'api/save/record')
+        .set('x-access-token', localStorage.getItem('token'))
+        .send({
+          author: localStorage.getItem('userId'),
+          record
+        })
+        .end((error, response) => {
+          console.log('save', response.body);
+        });
+  }
+} 
+
 export function setFile(data) {
   return {type: 'SET_FILE', data};
 }
 
+export function listCollections(data) {
+  return {type: 'LIST_COLLECTIONS', data};
+}
+
+export function listCollectionsId(data) {
+  return {type: 'LIST_COLLECTIONS_ID', data};
+}
 
 /** end record **/
 
