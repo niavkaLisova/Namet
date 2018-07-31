@@ -6,7 +6,7 @@ import { connect } from "react-redux"
 
 @connect((store, ownProps) => {
   return {
-    topRecords: store.record.topRecords
+    topRecords: store.record.topRecords,
   };
 })
 class RecentlyContainer extends React.Component {

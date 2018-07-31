@@ -18,6 +18,20 @@ export function findRecordsByCollId(id) {
   }
 }
 
+export function findRecordsByCollIdGuest(id) {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'record/find/records/collId/guest')
+        .set('x-access-token', localStorage.getItem('token'))
+        .send({
+          id
+        })
+        .end((error, response) => {
+          dispatch(setRecordsList(response.body));
+        });
+  }
+}
+
 export function findCollectionsById(id) {
   return (dispatch) => {
       request
@@ -33,13 +47,13 @@ export function findCollectionsById(id) {
   }
 }
 
-export function findRecoordswithoutCollections() {
+export function findRecoordswithoutCollections(author) {
   return (dispatch) => {
       request
         .post(Config.API_DOMAIN + 'record/find/collections/none')
         .set('x-access-token', localStorage.getItem('token'))
         .send({
-          myId: localStorage.getItem('userId')
+          myId: author
         })
         .end((error, response) => {
           dispatch(setRecordsListNC(response.body));
@@ -47,7 +61,21 @@ export function findRecoordswithoutCollections() {
   }
 }
 
-export function updateRecordCreatedAt(id) {
+export function findRecoordswithoutCollectionsGuest(author) {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'record/find/collections/none/guest')
+        .set('x-access-token', localStorage.getItem('token'))
+        .send({
+          myId: author
+        })
+        .end((error, response) => {
+          dispatch(setRecordsListNC(response.body));
+        });
+  }
+}
+
+export function updateRecordCreatedAt(id, author) {
   return (dispatch) => {
       request
         .post(Config.API_DOMAIN + 'record/update/record/at')
@@ -56,18 +84,18 @@ export function updateRecordCreatedAt(id) {
           id
         })
         .end((error, response) => {
-          dispatch(findRecordTop());
+          dispatch(findRecordTop(author));
         });
   }
 }
 
-export function findRecordTop() {
+export function findRecordTop(author) {
   return (dispatch) => {
       request
         .post(Config.API_DOMAIN + 'record/find/records/top')
         .set('x-access-token', localStorage.getItem('token'))
         .send({
-          author: localStorage.getItem('userId')
+          author
         })
         .end((error, response) => {
           dispatch(setTopRecords(response.body));
@@ -75,14 +103,43 @@ export function findRecordTop() {
   }
 }
 
-export function searchRecord(search) {
+export function findRecordTopGuest(author) {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'record/find/records/top/guest')
+        .set('x-access-token', localStorage.getItem('token'))
+        .send({
+          author
+        })
+        .end((error, response) => {
+          dispatch(setTopRecords(response.body));
+        });
+  }
+}
+
+export function searchRecord(search, author) {
   return (dispatch) => {
       request
         .post(Config.API_DOMAIN + 'record/search')
         .set('x-access-token', localStorage.getItem('token'))
         .send({
           search,
-          author: localStorage.getItem('userId')
+          author,
+        })
+        .end((error, response) => {
+          dispatch(setSearch(response.body))
+        });
+  }
+}
+
+export function searchRecordGuest(search, author) {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'record/search/guest')
+        .set('x-access-token', localStorage.getItem('token'))
+        .send({
+          search,
+          author,
         })
         .end((error, response) => {
           dispatch(setSearch(response.body))

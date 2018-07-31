@@ -25,11 +25,35 @@ recordRoutes.post('/find/records/collId', function(req, res) {
       });
 });
 
+recordRoutes.post('/find/records/collId/guest', function(req, res) {
+  const { id } = req.body;
+
+  Record
+      .find({ section: id, state: 'public' })
+      .exec()
+      .then(function(records) {
+        res.json(records);
+      });
+});
+
 recordRoutes.post('/find/records/top', function(req, res) {
   const { author } = req.body;
 
   Record
       .find({ author })
+      .sort({updatedAt: '-1'})
+      .limit(3)
+      .exec()
+      .then(function(records) {
+        res.json(records);
+      });
+});
+
+recordRoutes.post('/find/records/top/guest', function(req, res) {
+  const { author } = req.body;
+
+  Record
+      .find({ author, state: 'public' })
       .sort({updatedAt: '-1'})
       .limit(3)
       .exec()
@@ -60,6 +84,17 @@ recordRoutes.post('/find/collections/none', function(req, res) {
       });
 });
 
+recordRoutes.post('/find/collections/none/guest', function(req, res) {
+  const { myId } = req.body;
+
+  Record
+      .find({ author: myId, section: '', state: 'public' })
+      .exec()
+      .then(function(records) {
+        res.json(records);
+      });
+});
+
 recordRoutes.post('/update/record/at', function(req, res) {
   const { id } = req.body;
   let date = new Date();
@@ -78,6 +113,18 @@ recordRoutes.post('/search', function(req, res) {
 
   Record
       .find({ author, title: regexp })
+      .exec()
+      .then(function(records) {
+        res.json(records);
+      });
+});
+
+recordRoutes.post('/search/guest', function(req, res) {
+  const { search, author } = req.body;
+  const regexp = new RegExp(search);
+
+  Record
+      .find({ author, title: regexp, state: 'public' })
       .exec()
       .then(function(records) {
         res.json(records);

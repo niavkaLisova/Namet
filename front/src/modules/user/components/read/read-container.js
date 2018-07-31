@@ -1,6 +1,7 @@
 import React from 'react'
 
 import Grid from '@material-ui/core/Grid'
+import * as RecordActions from '../../actions/record-actions'
 
 import Parser from 'html-react-parser'
 import { API_DOMAIN } from '../../../../utils/config.js'
@@ -8,7 +9,8 @@ import { connect } from "react-redux"
 
 @connect((store, ownProps) => {
   return {
-    recordActive: store.record.recordActive
+    recordActive: store.record.recordActive,
+    topRecords: store.record.topRecords,
   };
 })
 class ReadContainer extends React.Component {
@@ -55,7 +57,6 @@ class ReadContainer extends React.Component {
 					): ''}
 				</Grid>
 			</Grid>
-    		
     	</Grid>
     </div>
     )

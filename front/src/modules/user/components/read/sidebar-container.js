@@ -20,11 +20,11 @@ class SidebarContainer extends React.Component {
     
     return (
       <div>
-      	<SearchContainer />
+      	<SearchContainer id={this.props.id} />
       	{(this.props.searchList.length > 0)? '': (
       		<div>
 		      	<RecentlyContainer />
-		      	<ListContainer />
+		      	<ListContainer id={this.props.id} />
 	      	</div>
       	)}
       </div>

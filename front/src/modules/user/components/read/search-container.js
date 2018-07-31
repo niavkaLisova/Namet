@@ -23,7 +23,11 @@ class SearchContainer extends React.Component {
   		this.setState({ search: e.target.value });
 
   		if (e.target.value.length > 0) {
-  			this.props.dispatch(RecordActions.searchRecord(e.target.value));
+        if (localStorage.getItem('userId') == this.props.id) {
+          this.props.dispatch(RecordActions.searchRecord(e.target.value, this.props.id));
+        } else {
+          this.props.dispatch(RecordActions.searchRecordGuest(e.target.value, this.props.id));
+        }
   		} else {
   			this.props.dispatch(RecordActions.setSearch([]));
   		}
@@ -38,6 +42,7 @@ class SearchContainer extends React.Component {
 		          type="search"
 		          margin="normal"
 		          value={this.state.search}
+              fullWidth
 		          onChange={this.handleChangeSearch}
 		        />
 

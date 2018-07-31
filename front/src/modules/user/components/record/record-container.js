@@ -22,8 +22,14 @@ class RecordContainer extends React.Component {
     super(props);
 
     this.props.dispatch(RecordActions.findCollectionsById(this.props.id));
-    this.props.dispatch(RecordActions.findRecoordswithoutCollections());
-    this.props.dispatch(RecordActions.findRecordTop());
+  
+    if (localStorage.getItem('userId') == this.props.id) {
+      this.props.dispatch(RecordActions.findRecordTop(this.props.id));
+      this.props.dispatch(RecordActions.findRecoordswithoutCollections(this.props.id));
+    } else {
+      this.props.dispatch(RecordActions.findRecordTopGuest(this.props.id));
+      this.props.dispatch(RecordActions.findRecoordswithoutCollectionsGuest(this.props.id));
+    }
   }
 
   render() {
@@ -32,7 +38,7 @@ class RecordContainer extends React.Component {
       <Container fluid>
         <Row>
           <Col md={4}>
-            <SidebarContainer />
+            <SidebarContainer id={this.props.id} />
           </Col>
           <Col md={8}>
             <ReadContainer />
