@@ -50,6 +50,10 @@ export default class UserContainer extends React.Component {
     this.setState({ open: false });
   };
 
+  handleOpenRead = () => {
+    appHistory.push('/record/' + this.props.id)
+  }
+
   render() {
     const { user } = this.props;
     const info = (this.props.info[0])? this.props.info[0]: {};
@@ -92,6 +96,9 @@ export default class UserContainer extends React.Component {
           </List>
           <Button variant="outlined" color="primary" onClick={this.handleClickOpen}>
             create post
+          </Button>
+          <Button variant="outlined" color="primary" onClick={this.handleOpenRead}>
+            read records
           </Button>
           </Col>
           <Col md={4}>

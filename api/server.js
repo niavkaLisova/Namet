@@ -11,6 +11,7 @@ const allowCrossDomain = require('./headers/cross-domain')
 const userRoutes = require('./controller/user')
 const chatRoutes = require('./controller/chat')
 const adminRoutes = require('./controller/admin')
+const recordRoutes = require('./controller/record')
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
@@ -32,3 +33,4 @@ const socketEvents = require('./socketEvents')(io);
 app.use('/api', userRoutes);
 app.use('/chat', chatRoutes);
 app.use('/admin', adminRoutes);
+app.use('/record', recordRoutes);

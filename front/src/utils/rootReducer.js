@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 import loginReducer from '../modules/login/reducers/login-reducer';
 import userReducer from '../modules/user/reducers/user-reducer';
 import chatReducer from '../modules/chat/reducers/chat-reducer';
+import recordReducer from '../modules/user/reducers/record-reducer';
 import dashboardReducer from '../modules/dashboard/reducers/dashboard-reducer';
 import adminReducer from '../modules/admin/reducers/admin-reducer';
 import { localeReducer as locale, initialize  } from 'react-localize-redux';
@@ -14,7 +15,8 @@ const rootReducer = combineReducers({
   locale: locale,
   chat: chatReducer,
   dashboard: dashboardReducer,
-  adminN: adminReducer
+  adminN: adminReducer,
+  record: recordReducer
 });
 
 export default rootReducer;
