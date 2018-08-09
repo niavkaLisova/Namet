@@ -6,6 +6,8 @@ import * as RecordActions from '../../actions/record-actions'
 import Parser from 'html-react-parser'
 import { API_DOMAIN } from '../../../../utils/config.js'
 import { connect } from "react-redux"
+import appHistory from '../../../../utils/app-history'
+import EditModal from '../edit/editModal'
 
 @connect((store, ownProps) => {
   return {
@@ -14,12 +16,34 @@ import { connect } from "react-redux"
   };
 })
 class ReadContainer extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      open: false
+    }
+  }
+
+  handleClickOpen = () => {
+    this.setState({ open: true });
+  };
+
+  handleCloseModal = () => {
+    this.setState({ open: false });
+  };
+
   render() {
     return (
-    <div>{(this.props.recordActive.title)? (
+    <div>
+      <EditModal
+        open={this.state.open}
+        handleCloseModal={this.handleCloseModal}
+       />
+      {(this.props.recordActive.title)? (
       	<div>
 	        <h2>{this.props.recordActive.title} <span>{this.props.recordActive.review}</span></h2>
-	        {(this.props.recordActive.img)? (
+          <p onClick={this.handleClickOpen}>To Edit</p>
+          {(this.props.recordActive.img)? (
 	        <img
 	          class='recordThumbnail'
               alt={this.props.recordActive.title}

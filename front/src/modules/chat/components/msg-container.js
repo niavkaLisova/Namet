@@ -8,6 +8,8 @@ import IconMenu from 'material-ui/IconMenu'
 import IconButton from 'material-ui/IconButton'
 import MenuItem2 from 'material-ui/MenuItem'
 import Icon from '@material-ui/core/Icon'
+import Emoji from 'react-emoji-render'
+import { Twemoji } from 'react-emoji-render'
 
 import './Message.sass';
 const ReactIntl = require('react-intl');
@@ -32,7 +34,7 @@ class MsgContainer extends React.Component {
 
 	handleDelete(msg) {
 		if(!msg.delUser.includes(msg._id)) {
-			this.props.dispatch(ChatActions.deleteUserFromChatM(msg, this.props.betweenName.length));
+			this.props.dispatch(ChatActonEmojiClickions.deleteUserFromChatM(msg, this.props.betweenName.length));
 		}
 		this.setState({
 	    	visible: false
@@ -60,8 +62,8 @@ class MsgContainer extends React.Component {
 			            <Container class='msgContainer' style={{height: 'auto'}}>
 			            	<Row>
 			            		<Col sm={12} class='msgText'>
-			          				{this.props.msg.text}
-			          			</Col>
+			            			<Twemoji text={this.props.msg.text} />
+								</Col>
 			          		</Row>
 			          		<Row>
 				          		<Col sm={8}>

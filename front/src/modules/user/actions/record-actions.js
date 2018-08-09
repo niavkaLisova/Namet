@@ -147,6 +147,20 @@ export function searchRecordGuest(search, author) {
   }
 }
 
+export function setReview(recordId) {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'record/set/review')
+        .set('x-access-token', localStorage.getItem('token'))
+        .send({
+          recordId
+        })
+        .end((error, response) => {
+          console.log('review', response.body)
+        });
+  }
+}
+
 export function setcollectionsList(data) {
   return {type: 'SET_COLLECTIONS', data};
 }

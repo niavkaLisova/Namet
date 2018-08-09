@@ -182,7 +182,7 @@ class RightPartRecordContainer extends React.Component {
           />
         </FormControl>
 
-        <ImgRecordContainer />
+        <ImgRecordContainer img={this.props.record.img} />
 
         <FormControl>
           <TextField

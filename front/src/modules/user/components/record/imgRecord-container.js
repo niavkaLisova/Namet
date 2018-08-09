@@ -3,6 +3,7 @@ import * as UserActions from '../../actions/user-actions'
 
 import { connect } from "react-redux"
 import { ToastStore } from 'react-toasts'
+import { API_DOMAIN } from '../../../../utils/config.js'
 
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
@@ -45,8 +46,14 @@ class ImgRecordContainer extends React.Component {
           type="file"
           onChange={this.handleChangeImage}
         />
-        <img class='preload' src={this.state.preload}/>
-      </div>
+        {(this.state.preload)? 
+          (<img class='preload' src={this.state.preload}/>):
+          (
+            (this.props.img)? (
+            <img class='smallPreload' src={API_DOMAIN + 'public/upload/record/' + this.props.img}/>
+            ): ('')
+        )}
+        </div>
     )
   }
 };

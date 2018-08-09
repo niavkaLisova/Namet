@@ -39,7 +39,7 @@ export default (
    			<Route path='/user/:id?' component={UserContainer} />
      	   	<Route path='/chat/' component={ChatContainer} />
      	   	<Route path='/record/:id' component={RecordContainer} />
-     	</DashboardContainer>
+		</DashboardContainer>
 	</Switch>
 );
 

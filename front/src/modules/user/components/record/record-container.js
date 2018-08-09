@@ -8,7 +8,7 @@ import InputLabel from '@material-ui/core/InputLabel'
 import { Container, Row, Col } from 'react-grid-system'
 import { connect } from "react-redux"
 
-import  ReadContainer from '../read/read-container'
+import ReadContainer from '../read/read-container'
 import SidebarContainer from '../read/sidebar-container'
 
 @connect((store, ownProps) => {
@@ -41,7 +41,7 @@ class RecordContainer extends React.Component {
             <SidebarContainer id={this.props.id} />
           </Col>
           <Col md={8}>
-            <ReadContainer />
+            <ReadContainer id={this.props.id} />
           </Col>
         </Row>
       </Container>

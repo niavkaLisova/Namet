@@ -5,6 +5,7 @@ import TextField from 'material-ui/TextField'
 import { socketConnect } from 'socket.io-react'
 import * as ChatActions from '../actions/chat-actions'
 import { connect } from "react-redux"
+import EmojiPicker from 'emoji-picker-react'
 
 @connect((store, ownProps) => {
     return {
@@ -34,7 +35,7 @@ class TextareaContainer extends React.Component {
 		    		type: false
 		    	});
 			}, 2000)
-	    })
+	    });
 	}
 
 	onChangeMessage(event) {
@@ -67,10 +68,16 @@ class TextareaContainer extends React.Component {
 
 	}
 
+	onChange = (emoji) => {
+		this.setState({
+			message: this.state.message + String.fromCodePoint(parseInt (emoji , 16))
+		})
+	}
+
 	render() {
 		return (
 			<div style={this.props.activeRoom != '0' ? {} : { display: 'none' }}>
-		    	<TextField
+			<TextField
 			     	hintText="text"
 			     	name={'message'}
 			     	fullWidth={true}
@@ -79,6 +86,8 @@ class TextareaContainer extends React.Component {
 		            floatingLabelText="Message"
 		            multiLine={true}
 		    	/>
+		    	<EmojiPicker onEmojiClick={this.onChange} />
+		    	
 		    	<p>{(this.state.type)? 'type...' : ''}</p>
 		    	<RaisedButton 
 		    		primary={true}
