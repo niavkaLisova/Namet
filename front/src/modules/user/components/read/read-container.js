@@ -25,8 +25,12 @@ class ReadContainer extends React.Component {
     }
   }
 
-  handleClickOpen = () => {
+  handleClickOpenModal = () => {
     this.setState({ open: true });
+  };
+
+  handleClickOpen = () => {
+    appHistory.push('/edit/' + this.props.recordActive._id)
   };
 
   handleCloseModal = () => {
@@ -48,6 +52,7 @@ class ReadContainer extends React.Component {
       {(this.props.recordActive.title)? (
       	<div>
 	        <h2>{this.props.recordActive.title} <span>{this.props.recordActive.review}</span></h2>
+          <p onClick={this.handleClickOpenModal}>To Edit Modal</p>
           <p onClick={this.handleClickOpen}>To Edit</p>
           <p onClick={this.handleOpenFull} >open</p>
           {(this.props.recordActive.img)? (

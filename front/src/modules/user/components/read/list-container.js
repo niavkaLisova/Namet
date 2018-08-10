@@ -38,6 +38,7 @@ class ListContainer extends React.Component {
 
 	recordActive= record => {
 		this.props.dispatch(RecordActions.setRecordActive(record));
+		
 		if (localStorage.getItem('userId') == this.props.id) {
 			this.props.dispatch(RecordActions.updateRecordCreatedAt(record._id, this.props.id));
 		} else {

@@ -170,7 +170,7 @@ export function findRecordById(recordId) {
           recordId
         })
         .end((error, response) => {
-          dispatch(setFull(response.body))
+          dispatch(setFull(response.body));
         });
   }
 }
