@@ -216,6 +216,21 @@ export function createCollection(state) {
   }
 } 
 
+export function removeRecordImg(img) {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'api/remove/record/img')
+        .set('x-access-token', localStorage.getItem('token'))
+        .send({
+          img
+        })
+        .end((error, response) => {
+          console.log('img removed');
+          // dispatch(listCollections(response.body));
+        });
+  }
+}
+
 export function findCollections(search) {
   return (dispatch) => {
       request
@@ -242,6 +257,22 @@ export function saveRecord(record) {
         })
         .end((error, response) => {
           console.log('save', response.body);
+        });
+  }
+} 
+
+export function saveEditRecord(record) {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'api/save/edit/record')
+        .set('x-access-token', localStorage.getItem('token'))
+        .send({
+          author: localStorage.getItem('userId'),
+          record
+        })
+        .end((error, response) => {
+          // console.log('save edit', response.body);
+          
         });
   }
 } 

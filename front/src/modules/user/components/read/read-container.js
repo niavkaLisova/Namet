@@ -2,6 +2,7 @@ import React from 'react'
 
 import Grid from '@material-ui/core/Grid'
 import * as RecordActions from '../../actions/record-actions'
+import * as RecordEditActions from '../../actions/recordEdit-actions'
 
 import Parser from 'html-react-parser'
 import { API_DOMAIN } from '../../../../utils/config.js'
@@ -12,7 +13,7 @@ import EditModal from '../edit/editModal'
 @connect((store, ownProps) => {
   return {
     recordActive: store.record.recordActive,
-    topRecords: store.record.topRecords,
+    topRecords: store.record.topRecords
   };
 })
 class ReadContainer extends React.Component {
@@ -32,17 +33,23 @@ class ReadContainer extends React.Component {
     this.setState({ open: false });
   };
 
+  handleOpenFull = () => {
+    appHistory.push('/read/' + this.props.recordActive._id);
+  }
+
   render() {
     return (
     <div>
       <EditModal
         open={this.state.open}
+        id={this.props.id}
         handleCloseModal={this.handleCloseModal}
        />
       {(this.props.recordActive.title)? (
       	<div>
 	        <h2>{this.props.recordActive.title} <span>{this.props.recordActive.review}</span></h2>
           <p onClick={this.handleClickOpen}>To Edit</p>
+          <p onClick={this.handleOpenFull} >open</p>
           {(this.props.recordActive.img)? (
 	        <img
 	          class='recordThumbnail'

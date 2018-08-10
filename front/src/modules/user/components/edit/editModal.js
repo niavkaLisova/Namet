@@ -2,8 +2,11 @@ import React from 'react'
 import { connect } from "react-redux"
 import axios, { post } from 'axios'
 
+import appHistory from '../../../../utils/app-history'
 import * as UserActions from '../../actions/user-actions'
 import * as RecordEditActions from '../../actions/recordEdit-actions'
+import * as RecordActions from '../../actions/record-actions'
+
 import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
 import ContentSend from 'material-ui/svg-icons/content/send'
@@ -54,15 +57,16 @@ function Transition(props) {
     listColl: store.user.listColl,
     listCollId: store.user.listCollId,
     recordActive: store.record.recordActive,
-    collName: store.recordEdit.collName
+    editList: store.record.editList
   };
 })
 class EditModal extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (this.props.recordActive !== nextProps.recordActive) {
       this.props.dispatch(UserActions.textSave(nextProps.recordActive.text))
- 
+    
       this.props.dispatch(RecordEditActions.findCollectionByCollId(nextProps.recordActive.section))
+
       let record = {
         state: nextProps.recordActive.state,
         gift: nextProps.recordActive.gift,
@@ -123,9 +127,7 @@ class EditModal extends React.Component {
     } else if (this.state.record.type.length == 0) {
       this.setState({ typeError: 'The field is rerauired' })
     } else {
-      // 
-      // console.log('save colle', this.state.collection);
-      // this.props.handleCloseModal();
+      this.props.handleCloseModal();
       this.handleCreate();
       ToastStore.success('Done');
     }
@@ -179,48 +181,44 @@ class EditModal extends React.Component {
     record.text = this.props.text;
     record.collection = this.props.listCollId;
     record.authorName = this.props.nickname;
+    record.id= this.props.recordActive._id;
 
     if (!record.collection && this.props.listColl.length > 0 ) {
       record.collection = this.props.listColl[0]._id;
     }
 
     if (this.props.file) {
+      if (this.state.record.img) {
+        this.props.dispatch(UserActions.removeRecordImg(this.state.record.img))
+      }
+       
       this.fileUpload(this.props.file).then((response)=>{     
-        console.log('save', this.state, this.props.text, response.data, this.props.listColl)
+        // console.log('save', this.state, this.props.text, response.data, this.props.listColl)
         record.img = response.data;
 
-        // this.props.dispatch(UserActions.saveRecord(record));
-        // this.props.dispatch(UserActions.setFile(null));
+        this.props.dispatch(UserActions.saveEditRecord(record));
+        this.props.dispatch(UserActions.setFile(null));
       })
     } else {
-      console.log('save without image', this.state, this.props.text, this.props.listColl)
-      // record.img = null;
+      // console.log('save without image', this.state, this.props.text, this.props.listColl)
+      record.img = record.img;
       
-      // this.props.dispatch(UserActions.saveRecord(record));
+      this.props.dispatch(UserActions.saveEditRecord(record));
     }
 
-    // this.setState({
-    //   title: '',
-    //   titleError: '',
-    //   typeError: '',
-    //   userGift: '',
-    //   collection: '',
-    //   record: {
-    //     describe: '',
-    //     type: [],
-    //     state: 'draft',
-    //     language: '',
-    //     genre: '',
-    //     img: '',
-    //     gift: ''
-    //   }
-    // })
+    if (localStorage.getItem('userId') == this.props.id) {
+      this.props.dispatch(RecordActions.findRecordTop(this.props.id));
+      this.props.dispatch(RecordActions.findRecoordswithoutCollections(this.props.id));
+    } else {
+      this.props.dispatch(RecordActions.findRecordTopGuest(this.props.id));
+      this.props.dispatch(RecordActions.findRecoordswithoutCollectionsGuest(this.props.id));
+    }
   }
 
   handleChangeCollection = e => {
     this.setState({ collection: e.target.value });
 
-    if (e.target.value.lerecordActivength > 0) {
+    if (e.target.value.length > 0) {
       this.props.dispatch(UserActions.findCollections(e.target.value));
     }
   }
@@ -233,6 +231,15 @@ class EditModal extends React.Component {
 
   handleChangeGift = e => {
     this.props.dispatch(UserActions.findGift(e.target.value))
+  }
+
+  handleDeleteRecord = () => {
+    console.log('delete',this.props.recordActive._id);
+    if (this.props.recordActive.img) {
+      this.props.dispatch(UserActions.removeRecordImg(this.props.recordActive.img))
+    }
+    this.props.dispatch(RecordActions.removeRecordById(this.props.recordActive._id));
+    appHistory.push('/user');
   }
 
   render() {
@@ -261,15 +268,16 @@ class EditModal extends React.Component {
         </AppBar>
         <div class='container'>
           <div class='left' > 
+            <p onClick={this.handleDeleteRecord}>delete</p>
             <LeftPartRecordContainer
               title={this.state.title}
               titleError={this.state.titleError}
               text={this.state.text}
               handleChangeTitle={this.handleChangeTitle}             
              />
-             <EditorContainer />
-             {console.log('test edit', this.props)}
-             <p>collName: {this.props.collName.title}</p>
+            <EditorContainer />
+            
+            <p>collection Name: {this.props.editList.title}</p>
           </div>
           <div class='right'> 
             <RightPartRecordContainer

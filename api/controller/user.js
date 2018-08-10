@@ -469,6 +469,28 @@ userRoutes.post('/save/record', function(req, res) {
  
 });
 
+userRoutes.post('/save/edit/record', function(req, res) {
+  const { record, author } = req.body;
+
+  Record.update({ _id: record.id }, { $set: {
+    title: record.title,
+    text: record.text,
+    type: record.type,
+    gift: record.gift,
+    genre: record.genre,
+    img: record.img,
+    state: record.state,
+    section: record.collection,
+    describe: record.describe,
+    language: record.language
+  }}, function (err, user) {
+    if (err) throw err;
+
+    res.json(user)
+  });
+ 
+});
+
 /** end create work **/
 
 /** upload */
@@ -553,6 +575,16 @@ userRoutes.post('/remove/image', function(req, res) {
   }); 
 });
 
+userRoutes.post('/remove/record/img', function(req, res) {
+  const { img } = req.body;
+
+  const link = 'public/upload/record/' + img;
+
+  fs.unlink(link,function(err){
+    if(err) return console.log(err);
+    // console.log('file deleted successfully');
+  }); 
+});
 /** end upload **/
 
 module.exports = userRoutes;

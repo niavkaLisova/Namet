@@ -55,7 +55,6 @@ class GenreContainer extends React.Component {
     return (
       <div>
         <Dialog
-          fullScreen={fullScreen}
           open={this.props.open}
           scroll={'paper'}
           onClose={this.handleCloseGenre}

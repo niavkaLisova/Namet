@@ -161,6 +161,33 @@ export function setReview(recordId) {
   }
 }
 
+export function findRecordById(recordId) {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'record/full/id')
+        .set('x-access-token', localStorage.getItem('token'))
+        .send({
+          recordId
+        })
+        .end((error, response) => {
+          dispatch(setFull(response.body))
+        });
+  }
+}
+
+export function removeRecordById(recordId) {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'record/remove/record/id')
+        .set('x-access-token', localStorage.getItem('token'))
+        .send({
+          recordId
+        })
+        .end((error, response) => {
+        });
+  }
+}
+
 export function setcollectionsList(data) {
   return {type: 'SET_COLLECTIONS', data};
 }
@@ -185,3 +212,6 @@ export function setSearch(data) {
   return {type: 'SET_SEARCH', data};
 }
 
+export function setFull(data) {
+  return {type: 'SET_FULL', data};
+}

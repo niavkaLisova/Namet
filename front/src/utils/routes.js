@@ -6,6 +6,7 @@ import ChatContainer from '../modules/chat/components/chat-container'
 import UserContainer from '../modules/user/components/user-container'
 import RecordContainer from '../modules/user/components/record/record-container'
 import SettingsContainer from '../modules/user/components/settings/settings-container'
+import FullScreenContainer from '../modules/user/components/read/fullScreen-container'
 
 import AdminPanelContainer from '../modules/admin/components/adminPanel-container'
 import AdminJuniorContainer from '../modules/admin/components/adminJunior-container'
@@ -39,6 +40,7 @@ export default (
    			<Route path='/user/:id?' component={UserContainer} />
      	   	<Route path='/chat/' component={ChatContainer} />
      	   	<Route path='/record/:id' component={RecordContainer} />
+			<Route path='/read/:idRecord' component={FullScreenContainer} />
 		</DashboardContainer>
 	</Switch>
 );

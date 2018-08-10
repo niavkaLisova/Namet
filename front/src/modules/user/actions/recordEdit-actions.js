@@ -14,12 +14,11 @@ export function findCollectionByCollId(id) {
         myId: localStorage.getItem('userId')
       })
       .end((error, response) => {
-        setCollectionName(response.body)
+        dispatch(setEditColl(response.body))
       });
   }
 }
 
-export function setCollectionName(data) {
-  return {type: 'SET_COLL_NAME', data};
+export function setEditColl(data) {
+  return {type: 'SET_EDIT_LIST', data};
 }
-

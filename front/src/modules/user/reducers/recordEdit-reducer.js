@@ -5,9 +5,10 @@ let init = {
   collName: ''
 }
 
-function recordReducer(state = init, action) {
+function recordEditReducer(state = init, action) {
   switch (action.type) {
     case 'SET_COLL_NAME':
+      console.log('record edit reducer', action.data)
       return {
         ...state,
         collName: action.data    
@@ -18,4 +19,4 @@ function recordReducer(state = init, action) {
   }
 }
 
-export default recordReducer;
+export default recordEditReducer;

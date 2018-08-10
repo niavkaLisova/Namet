@@ -7,7 +7,9 @@ let init = {
   recordsList:[],
   recordActive: [],
   topRecords: [],
-  searchList: []
+  searchList: [],
+  editList: [],
+  full: []
 }
 
 function recordReducer(state = init, action) {
@@ -47,7 +49,19 @@ function recordReducer(state = init, action) {
         ...state,
         searchList: action.data    
       }
-      break
+      break;
+    case 'SET_EDIT_LIST':
+      return {
+        ...state,
+        editList: action.data 
+      }
+      break;
+    case 'SET_FULL':
+      return {
+        ...state,
+        full: action.data 
+      }
+      break;
 
     default: return state;
   }

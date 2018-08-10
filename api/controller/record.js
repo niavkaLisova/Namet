@@ -75,14 +75,16 @@ recordRoutes.post('/find/collections/id', function(req, res) {
 
 recordRoutes.post('/find/collection/by/collid', function(req, res) {
   const { id, myId } = req.body;
-  console.log(id, myId)
-
-  Sections
-    .findOne({ _id: id, userId: myId })
-    .exec()
-    .then(function(collection) {
-      res.json(collection);
-    });
+  if (id) {
+    Sections
+      .findOne({ _id: id, userId: myId })
+      .exec()
+      .then(function(collection) {
+        res.json(collection);
+      });
+  } else {
+    res.json('empty')
+  }
 });
 
 recordRoutes.post('/find/collections/none', function(req, res) {
@@ -156,6 +158,28 @@ recordRoutes.post('/set/review', function(req, res) {
         return res.json({ success: true, message: 'successfully.', doc });
       });
 
+    });
+});
+
+recordRoutes.post('/full/id', function(req, res) {
+  const { recordId } = req.body;
+
+  Record
+    .findOne({ _id: recordId })
+    .exec()
+    .then(function(record) {
+      res.json(record);
+    });
+});
+
+recordRoutes.post('/remove/record/id', function(req, res) {
+  const { recordId } = req.body;
+
+  Record
+    .remove({ _id: recordId })
+    .exec()
+    .then(function(record) {
+      res.json(record);
     });
 });
 
