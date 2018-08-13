@@ -12,6 +12,7 @@ import Select from '@material-ui/core/Select'
 import NativeSelect from '@material-ui/core/NativeSelect'
 import TextField from '@material-ui/core/TextField'
 import { Container, Row, Col } from 'react-grid-system'
+import { Redirect } from 'react-router-dom'
 
 import PasswordSettingsContainer from './passwordSettings-container'
 import EmailSettingsContainer from './emailSettings-container'
@@ -165,7 +166,7 @@ export default class SettingsContainer extends React.Component {
 
     return (
       <div>
-      
+        {(localStorage.getItem('userId'))? (
         <Grid container spacing={8}>
           <Grid item xs={12}>
             <ValidatorForm
@@ -321,6 +322,7 @@ export default class SettingsContainer extends React.Component {
 
           </Grid>
         </Grid>
+        ) : (<Redirect to='/login' />) }
       </div>
     )
   }

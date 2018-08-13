@@ -49,11 +49,14 @@ class ReadContainer extends React.Component {
         id={this.props.id}
         handleCloseModal={this.handleCloseModal}
        />
+
       {(this.props.recordActive.title)? (
       	<div>
+
 	        <h2>{this.props.recordActive.title} <span>{this.props.recordActive.review}</span></h2>
-          <p onClick={this.handleClickOpenModal}>To Edit Modal</p>
-          <p onClick={this.handleClickOpen}>To Edit</p>
+          {(this.props.id == localStorage.getItem('userId'))? (
+            <p onClick={this.handleClickOpen}>To Edit</p>
+            ): ('')}
           <p onClick={this.handleOpenFull} >open</p>
           {(this.props.recordActive.img)? (
 	        <img

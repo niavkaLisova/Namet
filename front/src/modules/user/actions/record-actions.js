@@ -19,7 +19,7 @@ export function findRecordsByCollId(id) {
 }
 
 export function findRecordsByCollIdGuest(id) {
-  return (dispatch) => {
+  return (dispatcrecordIdh) => {
       request
         .post(Config.API_DOMAIN + 'record/find/records/collId/guest')
         .set('x-access-token', localStorage.getItem('token'))

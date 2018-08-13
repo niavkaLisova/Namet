@@ -51,6 +51,32 @@ const styles = theme => ({
 class RightSidebarContainer extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = {
+      open: false
+    }
+  }
+
+  handleClickOpenGenre = () => {
+    this.setState({ open: true });
+  };
+
+  handleCloseGenre = () => {
+    this.setState({ open: false });
+  };
+
+  setCheckInput = checked => {
+    let checkList = '';
+
+    checked.map(item => {
+      if (checkList.length > 0) {
+        checkList = checkList + ', '+ item;
+      } else {
+        checkList = item;
+      }
+    })
+
+    this.props.handleChangeRecordGenre(checkList)
   }
 
   render() {
@@ -113,6 +139,66 @@ class RightSidebarContainer extends React.Component {
           </Select>
           <span class='error'>{this.props.typeError}</span>
         </FormControl>
+
+        <FormControl>
+          <InputLabel htmlFor='select-type'>State</InputLabel>
+          <Select
+            native
+            value={record.state}
+            onChange={this.props.handleChangeRecord}
+            inputProps={{
+              name: 'state',
+              id: 'select-state',
+            }}
+          >
+            <option value={'draft'}>draft</option>
+            <option value={'public'}>public</option>
+          </Select>
+        </FormControl>
+
+        <FormControl>
+          <TextField
+            label="Language"
+            onChange={this.props.handleChangeRecord}
+            name="language"
+            value={record.language}
+          />
+        </FormControl>
+
+        <FormControl>
+          <TextField
+            label="Genre"
+            onChange={this.props.handleChangeRecord}
+            name="genre"
+            value={record.genre}
+          />
+          <Button onClick={this.handleClickOpenGenre}>Open list</Button>
+          <GenreModal
+            open={this.state.open}
+            handleCloseGenre={this.handleCloseGenre}
+            setCheckInput={this.setCheckInput}
+          />
+        </FormControl>
+
+        <ImgRecordContainer img={this.props.record.img} />
+
+        <FormControl>
+          <TextField
+            label="Gift"
+            onChange={this.props.handlelistGift}
+            name="gift"
+            value={record.gift}
+          />
+          
+          {(record.gift.length > 0)? (
+          this.props.list.map(item => {
+            return <MenuItem key={item._id} button onClick={() => this.props.handleUserGift(item)}>
+              <ListItemText>{item.nickname}({item.name})</ListItemText>
+            </MenuItem>
+          })
+          ): ''}
+        </FormControl>
+
       </div>
     )
   }

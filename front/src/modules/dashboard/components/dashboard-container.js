@@ -78,7 +78,7 @@ class DashboardContainer extends React.Component {
       <MuiThemeProvider>
         <div>
         <ToastContainer store={ToastStore}/>
-          {(localStorage.getItem('userId'))? (
+
             <div>
               <AppBar
                 title={"Намет"}
@@ -115,7 +115,7 @@ class DashboardContainer extends React.Component {
                 </div>
               </SwipeableDrawer>
             </div>
-          ) : (<Redirect to='/login' />) }
+          
         </div>
       </MuiThemeProvider>
     )

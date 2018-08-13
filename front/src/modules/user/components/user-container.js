@@ -94,9 +94,11 @@ export default class UserContainer extends React.Component {
             </ListItem>
 
           </List>
-          <Button variant="outlined" color="primary" onClick={this.handleClickOpen}>
-            create post
-          </Button>
+          {(localStorage.getItem('userId') == this.props.id)? (
+            <Button variant="outlined" color="primary" onClick={this.handleClickOpen}>
+              create post
+            </Button>
+            ): ('')}
           <Button variant="outlined" color="primary" onClick={this.handleOpenRead}>
             read records
           </Button>
