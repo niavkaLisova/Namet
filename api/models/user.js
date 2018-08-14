@@ -24,5 +24,6 @@ module.exports = mongoose.model('User', new Schema({
     gender: String,
     country: String,
     city: String,
-    avatar: String
+    avatar: String,
+    following: { type: Array, default: [] }
 }));

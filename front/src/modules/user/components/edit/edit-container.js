@@ -191,7 +191,7 @@ class EditContainer extends React.Component {
   render() {
     return (
       <Container fluid>
-        {(this.props.full.author == localStorage.getItem('userId'))? (
+        {(this.props.full.author != undefined && this.props.full.author == localStorage.getItem('userId'))? (
         (this.props.full)? (
         <Row>
           <Col md={8} >

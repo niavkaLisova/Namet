@@ -17,7 +17,10 @@ let init = {
   thumbnail: '',
   file: null,
   listColl: [],
-  listCollId:'',
+  listCollId: '',
+  listFollowers: [],
+  following:[],
+  followingList: []
 }
 
 function userReducer(state = init, action) {
@@ -35,7 +38,9 @@ function userReducer(state = init, action) {
         country: action.data.country,
         city: action.data.city,
         gender: action.data.gender,
-        birthday: action.data.birthday
+        birthday: action.data.birthday,
+        following: action.data.following,
+        id: action.data._id
       }
       break;
     case 'AVATAR_UPDATE':
@@ -93,7 +98,7 @@ function userReducer(state = init, action) {
     case 'USER_INFO':
       return {
         ...state,
-        info: state.info.concat(action.data)  
+        info: action.data 
       }
       break;
     case 'SET_FILE':
@@ -112,6 +117,24 @@ function userReducer(state = init, action) {
       return {
         ...state,
         listCollId: action.data  
+      }
+      break;
+    case 'SET_LIST_FOLLOWERS':
+      return {
+        ...state,
+        listFollowers: action.data  
+      }
+      break;
+    case 'SET_FOLLOWING':
+      return {
+        ...state,
+        following: action.data  
+      }
+      break;
+    case 'INFO_FOLLOWING':
+      return {
+        ...state,
+        followingList: action.data  
       }
       break;
 

@@ -587,4 +587,77 @@ userRoutes.post('/remove/record/img', function(req, res) {
 });
 /** end upload **/
 
+/** follow **/
+
+userRoutes.post('/user/follow', function(req, res) {
+  const { myId, followId } = req.body;
+
+  User
+    .findOne({'_id': myId})
+    .exec()
+    .then(function(user) {
+
+      if (!user.following.includes(followId)) {
+        let newFollowing = user.following;
+        if (!newFollowing) newFollowing = [];
+        newFollowing.push(followId);
+
+        user.following = newFollowing;
+        user.save(function(err, doc) {
+          if (err) throw err;
+          return res.json({ success: true, message: 'User updated successfully.', doc });
+        });
+      } else {
+        return throwFailed(res, 'Error');
+      }
+    });
+});
+
+userRoutes.post('/followers/list', function(req, res) {
+  const { myId } = req.body;
+
+  User
+    .find({following: {$elemMatch: {$in: [myId]}}}, {'_id': 1, 'name': 1, 'nickname': 1, email: '1'})
+    .exec()
+    .then(function(users) {
+      res.json(users);
+    })
+});
+
+userRoutes.post('/user/unsubscribe', function(req, res) {
+  const { myId, unsub } = req.body;
+
+  User
+    .findById(myId)
+    .exec()
+    .then(function(user) {
+      console.log('user', user.following);
+      let newFollowing = user.following.filter(item => item != unsub);
+      user.following = newFollowing;
+      user.save(function(err, doc) {
+        if (err) throw err;
+        return res.json({ success: true, message: 'User updated successfully.', doc });
+      });
+    })
+});
+
+userRoutes.post('/find/info/following/', function(req, res) {
+  const { id } = req.body;
+  console.log('array', id)
+
+  User
+    .findById(id)
+    .exec()
+    .then(function(doc) {
+      console.log(doc.following, 'users');
+      User
+        .find({'_id': {$in: doc.following }})
+        .exec()
+        .then(function(result) {
+          return res.json({ success: true, message: 'Found successfully.', result });
+        });
+    })
+});
+/** end follow **/
+
 module.exports = userRoutes;

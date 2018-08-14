@@ -37,7 +37,21 @@ export function findInfoUser(id) {
         .get(Config.API_DOMAIN + 'api/users/' + id)
         .set('x-access-token', localStorage.getItem('token'))
         .end((error, response) => { 
-          dispatch(userInfo(response.body))
+          dispatch(userInfo(response.body));
+        });
+  }
+}
+
+export function findInfoFollowing(id) {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'api/find/info/following/')
+        .set('x-access-token', localStorage.getItem('token'))
+        .send({
+          id
+        })
+        .end((error, response) => {
+          dispatch(followingInfo(response.body.result));
         });
   }
 }
@@ -277,6 +291,50 @@ export function saveEditRecord(record) {
   }
 } 
 
+export function follow(followId) {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'api/user/follow')
+        .set('x-access-token', localStorage.getItem('token'))
+        .send({
+          myId: localStorage.getItem('userId'),
+          followId
+        })
+        .end((error, response) => {
+        });
+  }
+}
+
+export function followersList(id) {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'api/followers/list')
+        .set('x-access-token', localStorage.getItem('token'))
+        .send({
+          myId: id,    
+        })
+        .end((error, response) => {
+          dispatch(setListFollowers(response.body));
+        });
+  }
+}
+
+export function unsubscribe(unsub, list) {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'api/user/unsubscribe')
+        .set('x-access-token', localStorage.getItem('token'))
+        .send({
+          myId: localStorage.getItem('userId'),
+          unsub    
+        })
+        .end((error, response) => {
+          console.log('unsub after', response.body);
+          dispatch(setFollowing(list));
+        });
+  }
+}
+
 export function setFile(data) {
   return {type: 'SET_FILE', data};
 }
@@ -288,22 +346,6 @@ export function listCollections(data) {
 export function listCollectionsId(data) {
   return {type: 'LIST_COLLECTIONS_ID', data};
 }
-
-/** end record **/
-
-// export function sendEmail() {
-//   return (dispatch) => {
-//       request
-//         .post(Config.API_DOMAIN + 'api/send/email')
-//         .set('x-access-token', localStorage.getItem('token'))
-//         .send({
-//           'joj': 'joj'
-//         })
-//         .end((error, response) => {
-//           // dispatch(activeSave(activeRoom))
-//         });
-//   }
-// }
 
 export function unreadUpdate(data) {
   return {type: 'UNREAD_UPDATE', data};
@@ -337,6 +379,10 @@ export function textSave(data) {
   return {type: 'TEXT_SAVE', data};
 }
 
+export function setListFollowers(data) {
+  return {type: 'SET_LIST_FOLLOWERS', data};
+}
+
 export function setGift(data) {
   return {type: 'SET_GIFT', data};
 }
@@ -345,3 +391,10 @@ export function userInfo(data) {
   return {type: 'USER_INFO', data};
 }
 
+export function setFollowing(data) {
+  return {type: 'SET_FOLLOWING', data};
+}
+
+export function followingInfo(data) {
+  return {type: 'INFO_FOLLOWING', data};
+}
