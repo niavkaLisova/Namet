@@ -8,7 +8,6 @@ import Parser from 'html-react-parser'
 import { API_DOMAIN } from '../../../../utils/config.js'
 import { connect } from "react-redux"
 import appHistory from '../../../../utils/app-history'
-import EditModal from '../edit/editModal'
 
 @connect((store, ownProps) => {
   return {
@@ -25,31 +24,21 @@ class ReadContainer extends React.Component {
     }
   }
 
-  handleClickOpenModal = () => {
-    this.setState({ open: true });
-  };
-
   handleClickOpen = () => {
     appHistory.push('/edit/' + this.props.recordActive._id)
   };
 
-  handleCloseModal = () => {
-    this.setState({ open: false });
-  };
-
   handleOpenFull = () => {
+    let recordActive = this.props.recordActive;
+    if (this.props.recordActive.author != localStorage.getItem('userId')) {
+      this.props.dispatch(RecordActions.setReview(recordActive._id));
+    }
     appHistory.push('/read/' + this.props.recordActive._id);
   }
 
   render() {
     return (
     <div>
-      <EditModal
-        open={this.state.open}
-        id={this.props.id}
-        handleCloseModal={this.handleCloseModal}
-       />
-
       {(this.props.recordActive.title)? (
       	<div>
 
@@ -73,11 +62,13 @@ class ReadContainer extends React.Component {
     	<Grid container justify="space-between" spacing={8}>  
     		{(this.props.recordActive.describe)? (
     			<Grid item md={6}>
+            Descibe: 
     				{this.props.recordActive.describe}
     			</Grid>
     		): ''}
     		{(this.props.recordActive.genre)? (
     			<Grid item md={2}>
+            Genre:
     				{this.props.recordActive.genre}
     			</Grid>
     		): ''}
@@ -86,11 +77,13 @@ class ReadContainer extends React.Component {
 				<Grid container justify="space-between" spacing={8}> 
 					{(this.props.recordActive.language)? (
     					<Grid item md={12}>
+                Language:
     						{this.props.recordActive.language}
     					</Grid>
 					): ''}
 					{(this.props.recordActive.gift)? (
 						<Grid item md={12}>
+              Gift:
 							{this.props.recordActive.gift}
 						</Grid>
 					): ''}

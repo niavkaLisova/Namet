@@ -32,13 +32,11 @@ class ListContainer extends React.Component {
 		if (localStorage.getItem('userId') == this.props.id) {
 	      this.props.dispatch(RecordActions.findRecordsByCollId(coll._id));
 	    } else {
-	      this.props.dispatch(RecordActions.findRecordsByCollIdGuest(coll._id));
+	      this.props.dispatch(RecordActions.findRecordsByCollIdGuest(coll._id, this.props));
 	    }
 	}
 
 	recordActive= record => {
-		this.props.dispatch(RecordActions.setRecordActive(record));
-		
 		if (localStorage.getItem('userId') == this.props.id) {
 			this.props.dispatch(RecordActions.updateRecordCreatedAt(record._id, this.props.id));
 		} else {

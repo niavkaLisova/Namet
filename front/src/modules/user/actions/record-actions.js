@@ -18,7 +18,7 @@ export function findRecordsByCollId(id) {
   }
 }
 
-export function findRecordsByCollIdGuest(id) {
+export function findRecordsByCollIdGuest(id, that) {
   return (dispatcrecordIdh) => {
       request
         .post(Config.API_DOMAIN + 'record/find/records/collId/guest')
@@ -27,7 +27,7 @@ export function findRecordsByCollIdGuest(id) {
           id
         })
         .end((error, response) => {
-          dispatch(setRecordsList(response.body));
+          that.dispatch(setRecordsList(response.body))
         });
   }
 }
@@ -156,7 +156,9 @@ export function setReview(recordId) {
           recordId
         })
         .end((error, response) => {
-          console.log('review', response.body)
+          let record = response.body.doc;
+          record.review = String(Number(record.review) + 1);
+          dispatch(setRecordActive(record));
         });
   }
 }

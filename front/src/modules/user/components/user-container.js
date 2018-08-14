@@ -18,6 +18,7 @@ import ListItemText from '@material-ui/core/ListItemText'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import UserFormContainer from './user-form-container'
 import CreateModal from './record/createModal'
+import FollowListContainer from './followList-container'
 
 import { Container, Row, Col } from 'react-grid-system'
 import { connect } from "react-redux"
@@ -36,7 +37,7 @@ class UserContainer extends React.Component {
   constructor(props) {
     super(props)
 
-    if(!this.props.id) appHistory.push('/user/' + localStorage.getItem('userId'));
+    if (!this.props.id) appHistory.push('/user/' + localStorage.getItem('userId'));
 
     this.state = {
       open: false,
@@ -75,17 +76,8 @@ class UserContainer extends React.Component {
     this.props.dispatch(UserActions.followersList(this.props.id));
   }
 
-  handleUnsubscribe = user => {
-    console.log('unsubscribe', user);
-    let list = [];
-    list = this.props.user.following.filter(item => item != user);
-    if (!list) list = [];
-    this.props.dispatch(UserActions.followingInfo(list))
-    console.log('list', list);
-    this.props.dispatch(UserActions.unsubscribe(user, list))
-    this.props.dispatch(UserActions.findInfoFollowing(this.props.id))
-    this.props.dispatch(UserActions.followersList(this.props.id));
-
+  handleSeeMoreFollow = () => {
+    appHistory.push('/follow/' + this.props.id)
   }
 
   render() {
@@ -155,24 +147,22 @@ class UserContainer extends React.Component {
           </Button>
           <div>
             <hr />
-            {this.props.followingList.map(follower => {
+            <p onClick={this.handleSeeMoreFollow}>See more</p>
+            {this.props.followingList
+              .slice(0, 5)
+              .map((follower, index) => {
               return (
-                <div key={follower._id}>
-                  {follower.name}
-                  {(this.props.id == localStorage.getItem('userId'))? (
-                    <span onClick={() => this.handleUnsubscribe(follower._id)}> unsubscribe</span>
-                  ): ('')}
-                </div>
+                <FollowListContainer 
+                  follower={follower}
+                  key={follower._id}
+                  id={this.props.id}
+                 />
               )
             })}
           </div>
           </Col>
           <Col md={4}>
             Sticky
-            followers 
-            {this.props.listFollowers.map((item, index) => {
-              return <p key={index}>{item.name}</p>
-            })}
           </Col>
           <Col md={2}>
             chat

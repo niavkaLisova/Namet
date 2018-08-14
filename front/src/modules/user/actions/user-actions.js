@@ -319,7 +319,7 @@ export function followersList(id) {
   }
 }
 
-export function unsubscribe(unsub, list) {
+export function unsubscribe(unsub) {
   return (dispatch) => {
       request
         .post(Config.API_DOMAIN + 'api/user/unsubscribe')
@@ -329,8 +329,6 @@ export function unsubscribe(unsub, list) {
           unsub    
         })
         .end((error, response) => {
-          console.log('unsub after', response.body);
-          dispatch(setFollowing(list));
         });
   }
 }

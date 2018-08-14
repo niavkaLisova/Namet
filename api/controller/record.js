@@ -91,7 +91,11 @@ recordRoutes.post('/find/collections/none', function(req, res) {
   const { myId } = req.body;
 
   Record
-    .find({ author: myId, section: '' })
+    .find(
+      { '$or': [ 
+        { author: myId, section: '' },
+        { author: myId, section: null }
+     ]})
     .exec()
     .then(function(records) {
       res.json(records);
@@ -102,7 +106,11 @@ recordRoutes.post('/find/collections/none/guest', function(req, res) {
   const { myId } = req.body;
 
   Record
-    .find({ author: myId, section: '', state: 'public' })
+    .find(
+      { '$or': [ 
+        { author: myId, section: '', state: 'public' },
+        { author: myId, section: null, state: 'public' }
+     ]})
     .exec()
     .then(function(records) {
       res.json(records);

@@ -11,6 +11,10 @@ import { connect } from "react-redux"
 })
 class RecentlyContainer extends React.Component {
 	recordActive = record => {
+		console.log('au', record.author, localStorage.getItem('userId'))
+		if (record.author != localStorage.getItem('userId')) {
+	    	this.props.dispatch(RecordActions.setReview(record._id));
+	    }
 		this.props.dispatch(RecordActions.setRecordActive(record));
 	}
 

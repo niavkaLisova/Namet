@@ -617,7 +617,7 @@ userRoutes.post('/followers/list', function(req, res) {
   const { myId } = req.body;
 
   User
-    .find({following: {$elemMatch: {$in: [myId]}}}, {'_id': 1, 'name': 1, 'nickname': 1, email: '1'})
+    .find({following: {$elemMatch: {$in: [myId]}}}, {'_id': 1, 'name': 1, 'nickname': 1, email: 1, avatar: 1})
     .exec()
     .then(function(users) {
       res.json(users);
