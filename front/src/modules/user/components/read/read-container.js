@@ -41,7 +41,6 @@ class ReadContainer extends React.Component {
     <div>
       {(this.props.recordActive.title)? (
       	<div>
-
 	        <h2>{this.props.recordActive.title} <span>{this.props.recordActive.review}</span></h2>
           {(this.props.id == localStorage.getItem('userId'))? (
             <p onClick={this.handleClickOpen}>To Edit</p>

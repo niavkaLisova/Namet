@@ -91,6 +91,21 @@ chatRoutes.post('/room/new', function(req, res) {
 	    });	
 });
 
+chatRoutes.post('/room/check', function(req, res) {
+	const { id, myId } = req.body
+    Room
+	    .findOne(
+	    { "$and": [ 
+		    { "between": { "$all": [id, myId] } },
+		    { "between": { "$size": 2 } }
+		]})
+	    .exec()
+	    .then(function(room) {
+	    	res.json(room);
+	    });	
+});
+
+
 chatRoutes.get('/room/:id', function(req, res) {
 	Room
 	    .findById(req.params.id)

@@ -2,6 +2,7 @@ import React from 'react';
 import { API_DOMAIN } from '../../../utils/config.js'
 
 import * as UserActions from '../actions/user-actions'
+import * as ChatActions from '../../chat/actions/chat-actions'
 import appHistory from '../../../utils/app-history'
 import { socketConnect } from 'socket.io-react'
 
@@ -80,6 +81,12 @@ class UserContainer extends React.Component {
     appHistory.push('/follow/' + this.props.id)
   }
 
+  goToChatWith = () => {
+    this.props.dispatch(UserActions.checkChat(this.props.id, this, window.location));
+
+    appHistory.push('/chat');
+  }
+
   render() {
     const { user } = this.props;
     const info = (this.props.info)? this.props.info: [];
@@ -131,7 +138,11 @@ class UserContainer extends React.Component {
             </Button>
           ): (
             <div>
-              {(list)? '': (
+              <Button variant="outlined" color="primary" onClick={this.goToChatWith}>
+                Go to chat
+              </Button>
+              {(list)? ''
+                : (
                 <div> 
                   {(this.state.visible)? (
                     <Button variant="outlined" color="primary" onClick={this.handleFollow}>

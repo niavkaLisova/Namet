@@ -319,6 +319,34 @@ export function followersList(id) {
   }
 }
 
+export function checkChat(id, that, location) {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'chat/room/check')
+        .set('x-access-token', localStorage.getItem('token'))
+        .send({
+          myId: localStorage.getItem('userId'),
+          id    
+        })
+        .end((error, response) => {
+          
+          if (response.body && response.body._id) {
+            if (response.body.delUser.includes(String(localStorage.getItem('userId')))) {
+              dispatch(ChatActions.newChat(that.props.info, that.props.user.name, that));
+              location.reload();
+            } else {
+              dispatch(selectActiveRoom(response.body._id));
+              location.reload();
+            }
+            
+          } else {
+            dispatch(ChatActions.newChat(that.props.info, that.props.user.name, that));
+            location.reload();
+          }
+        });
+  }
+}
+
 export function unsubscribe(unsub) {
   return (dispatch) => {
       request

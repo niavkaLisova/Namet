@@ -12,6 +12,7 @@ import FriendChatList from './friendChatList-container'
 import FindUserDialog from './findUser-dialog.js'
 import { socketConnect } from 'socket.io-react'
 import { connect } from "react-redux"
+import { API_DOMAIN } from '../../../utils/config.js'
 
 @connect((store, ownProps) => {
     return {
@@ -25,19 +26,19 @@ import { connect } from "react-redux"
 })
 class ListContainer extends React.Component {
 	constructor(props) {
-    	super(props);
+  	super(props);
 
-	    this.state = {
-	    	receiver: '',
-	    	visible: true,
-	    	receiverObj: {},
-	    	openModal: false,
-	    };
-	    this.props.dispatch(ChatActions.allChat());
+    this.state = {
+    	receiver: '',
+    	visible: true,
+    	receiverObj: {},
+    	openModal: false,
+    };
+    this.props.dispatch(ChatActions.allChat());
 
 		this.props.socket.on('room created', (data) => {
-	    	this.props.dispatch(ChatActions.chatAddRoom(data));
-	    })
+	    this.props.dispatch(ChatActions.chatAddRoom(data));
+	  })
 	}
 
 	handleOpen = () => {
@@ -68,10 +69,10 @@ class ListContainer extends React.Component {
 
 	userAddFunc() {
 		if(this.state.receiverObj._id) {
-		    this.props.dispatch(ChatActions.chatFindUser([]));
+		  this.props.dispatch(ChatActions.chatFindUser([]));
 			this.props.dispatch(ChatActions.newChat(this.state.receiverObj, this.props.user, this));
 		} else {
-		    this.props.dispatch(ChatActions.chatNoCreate())
+		  this.props.dispatch(ChatActions.chatNoCreate())
 		}
 
 		this.setState({
@@ -113,27 +114,27 @@ class ListContainer extends React.Component {
 				<List>
 					<Subheader>Find user</Subheader>
 			    	<TextField
-							hintText="Receiver"
-					     	name={'Receiver or receivers'}
-				            value={this.state.receiver}
-				            onChange={this.onChangeReceiver.bind(this)}
-				            floatingLabelText="Receiver"
-				    	/> 
+						hintText="Receiver"
+				     	name={'Receiver or receivers'}
+	            value={this.state.receiver}
+	            onChange={this.onChangeReceiver.bind(this)}
+	            floatingLabelText="Receiver"
+			    	/> 
 			    	<FlatButton
-				        label="add" 
-				        primary={true} 
-				        onClick={this.newChat.bind(this)}
-				      />
+			        label="add" 
+			        primary={true} 
+			        onClick={this.newChat.bind(this)}
+			      />
 				
 					{(!this.state.visible) ? (this.props.findUser.map( (user) => {
 						return (
-							<Card key={user._id}>
-							    <CardHeader
-							      title={user.name}
-							      subtitle={user.email}
-							      avatar=""
-							      onClick={ () => this.findReceiver(user)}
-							    />
+							<Card key={user._id}>}
+						    <CardHeader
+						      title={user.name}
+						      subtitle={user.email}
+						      avatar={API_DOMAIN + 'public/upload/user/noname.png'}
+						      onClick={ () => this.findReceiver(user)}
+						    />
 							</Card>
 							)
 					})) : ''
