@@ -53,6 +53,10 @@ class LeftMenu extends React.Component {
     appHistory.push('/follow/' + localStorage.getItem('userId'))
   }
 
+  goToCollection() {
+    appHistory.push('/collection');
+  }
+
   goToSettings() {
     appHistory.push('/settings');
   }
@@ -98,6 +102,13 @@ class LeftMenu extends React.Component {
               <Icon>chat</Icon>
             </ListItemIcon>
             <ListItemText inset primary="Follow" />
+          </ListItem>
+
+          <ListItem button onClick={this.goToCollection}>
+            <ListItemIcon>
+              <Icon>chat</Icon>
+            </ListItemIcon>
+            <ListItemText inset primary="Cpllection" />
           </ListItem>
 
           <ListItem button onClick={this.goToSettings}>
