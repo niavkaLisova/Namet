@@ -18,6 +18,7 @@ import PasswordSettingsContainer from './passwordSettings-container'
 import EmailSettingsContainer from './emailSettings-container'
 import AvatarSettingsContainer from './avatarSettings-container'
 import NameSettingsContainer from './nameSettings-container'
+import TeamSettingsContainer from './teamSettings-container'
 
 import '../User.sass'
 
@@ -315,11 +316,16 @@ export default class SettingsContainer extends React.Component {
             )}
 
             <Grid container justify="center" spacing={8}>
-                <Grid item>
-                  <AvatarSettingsContainer avatar={this.state.avatar} />
-             </Grid>
+              <Grid item>
+                <AvatarSettingsContainer avatar={this.state.avatar} />
+              </Grid>
             </Grid>
 
+            <Grid container justify="center" spacing={8}>
+              <Grid item>
+                <TeamSettingsContainer />
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
         ) : (<Redirect to='/login' />) }

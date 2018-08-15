@@ -20,7 +20,11 @@ let init = {
   listCollId: '',
   listFollowers: [],
   following:[],
-  followingList: []
+  followingList: [],
+  answersOne: [],
+  answersTwo: [],
+  answersThree: [],
+  answers: {}
 }
 
 function userReducer(state = init, action) {
@@ -135,6 +139,30 @@ function userReducer(state = init, action) {
       return {
         ...state,
         followingList: action.data  
+      }
+      break; 
+    case 'ANSWERS_ONE':
+      return {
+        ...state,
+        answersOne: action.data  
+      }
+      break;
+    case 'ANSWERS_TWO':
+      return {
+        ...state,
+        answersTwo: action.data  
+      }
+      break;
+    case 'ANSWERS_THRE':
+      return {
+        ...state,
+        answersThree: action.data  
+      }
+      break;
+    case 'ANSWERS_SAVE':
+      return {
+        ...state,
+        answers: action.data  
       }
       break;
 

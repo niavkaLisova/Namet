@@ -200,7 +200,7 @@ class EditContainer extends React.Component {
               titleError={this.state.titleError}
               handleChangeTitle={this.handleChangeTitle}             
              />
-            <EditorContainer />
+            <EditorContainer text={this.state.record.text} />
           </Col>
           <Col md={4}>
             <RightSidebarContainer

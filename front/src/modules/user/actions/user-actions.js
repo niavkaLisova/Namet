@@ -424,3 +424,19 @@ export function setFollowing(data) {
 export function followingInfo(data) {
   return {type: 'INFO_FOLLOWING', data};
 }
+
+export function saveAnswersOne(data) {
+  return {type: 'ANSWERS_ONE', data};
+}
+
+export function saveAnswersTwo(data) {
+  return {type: 'ANSWERS_TWO', data};
+}
+
+export function saveAnswersThree(data) {
+  return {type: 'ANSWERS_THRE', data};
+}
+
+export function saveAnswers(data) {
+  return {type: 'ANSWERS_SAVE', data};
+}

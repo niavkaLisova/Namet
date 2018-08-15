@@ -8,14 +8,29 @@ import { connect } from "react-redux"
 
 @connect((store, ownProps) => {
   return {
-    text: store.user.text,
   };
 })
 class EditorContainer extends React.Component {
-  state = {
-    value: RichTextEditor.createValueFromString(this.props.text, 'html')
+  componentDidMount() {
+    let time = setInterval(() => {
+      if (this.props.text) {
+        clearInterval(time);
+
+        this.setState({
+          value: RichTextEditor.createValueFromString(this.props.text, 'html')
+        })
+      }
+      
+    }, 1000);
   }
 
+  constructor(props){
+    super(props);
+
+    this.state = {
+      value: RichTextEditor.createValueFromString(this.props.text, 'html')
+    }
+  }
 
   onChange = (value) => {
     this.setState({value});

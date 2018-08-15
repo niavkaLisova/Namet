@@ -74,10 +74,37 @@ class TextareaContainer extends React.Component {
 		})
 	}
 
+	handleKeyPress = (event) => {
+		console.log(event.shiftKey)
+		if (event.ctrlKey || event.shiftKey) {
+	 		if (event.key === 'Enter') {
+				this.setState({
+	 				message: this.state.message + '\n'
+	 			})
+	 			setTimeout(() => {
+	 				this.setState({
+		 				message: this.state.message + ' '
+		 			})
+	 			}, 100);
+	 			setTimeout(() => {
+	 				this.setState({
+		 				message: this.state.message.substr(0, this.state.message.length - 1)
+		 			})
+	 			}, 100);
+	 		}
+	 	} else {
+	    	if (event.key === 'Enter') {
+	 			this.sendMessage();
+	 		}
+	    }
+	}
+
 	render() {
 		return (
 			<div style={this.props.activeRoom != '0' ? {} : { display: 'none' }}>
-			<TextField
+				<TextField
+					ref={(node) => this.textInput = node}
+					id='input'
 			     	hintText="text"
 			     	name={'message'}
 			     	fullWidth={true}
@@ -85,6 +112,7 @@ class TextareaContainer extends React.Component {
 		            onChange={this.onChangeMessage.bind(this)}
 		            floatingLabelText="Message"
 		            multiLine={true}
+		            onKeyPress={this.handleKeyPress}
 		    	/>
 		    	<EmojiPicker onEmojiClick={this.onChange} />
 		    	
