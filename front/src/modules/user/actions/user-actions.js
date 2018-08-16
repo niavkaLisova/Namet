@@ -3,6 +3,7 @@ import _ from 'lodash';
 import appHistory from '../../../utils/app-history'
 import * as Config from '../../../utils/config';
 import * as ChatActions from '../../chat/actions/chat-actions'
+import * as RecordActions from '../../user/actions/record-actions'
 import * as NotificationActions from '../../notification/actions/notification-actions'
 import {ToastContainer, ToastStore} from 'react-toasts'
 
@@ -210,7 +211,8 @@ export function findGift(gift) {
 /** end settings **/
 /** record **/
 
-export function createCollection(state) {
+export function createCollection(state, extra) {
+  console.log('createCollection', state, state.title)
   return (dispatch) => {
       request
         .post(Config.API_DOMAIN + 'api/create/collection')
@@ -223,6 +225,10 @@ export function createCollection(state) {
         .end((error, response) => {
           if (response.body.success) {
             ToastStore.success(response.body.message);
+
+            if (extra){
+              dispatch(RecordActions.findCollectionsById(localStorage.getItem('userId')));
+            }
           } else {
             ToastStore.error(response.body.message);
           }

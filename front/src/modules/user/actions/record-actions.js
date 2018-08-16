@@ -50,7 +50,7 @@ export function findCollectionsById(id) {
 export function findRecoordswithoutCollections(author) {
   return (dispatch) => {
       request
-        .post(Config.API_DOMAIN + 'record/find/collections/none')
+        .post(Config.API_DOMAIN + 'record/finremoveCollectionByIdd/collections/none')
         .set('x-access-token', localStorage.getItem('token'))
         .send({
           myId: author
@@ -186,6 +186,36 @@ export function removeRecordById(recordId) {
           recordId
         })
         .end((error, response) => {
+        });
+  }
+}
+
+export function collectionUpdate(record, newList) {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'record/record/update')
+        .set('x-access-token', localStorage.getItem('token'))
+        .send({
+          record
+        })
+        .end((error, response) => {
+          ToastStore.success('updated');
+          if (typeof(newlist) != 'undefined') dispatch(setcollectionsList(newlist))
+          // dispatch(findCollectionsById(localStorage.getItem('userId')));
+        });
+  }
+}
+
+export function removeCollectionById(collectionId) {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'record/remove/section/id')
+        .set('x-access-token', localStorage.getItem('token'))
+        .send({
+          sectionId: collectionId
+        })
+        .end((error, response) => {
+          ToastStore.success('removed');
         });
   }
 }

@@ -87,6 +87,31 @@ recordRoutes.post('/find/collection/by/collid', function(req, res) {
   }
 });
 
+recordRoutes.post('/record/update', function(req, res) {
+  const { record } = req.body;
+  
+  Sections
+    .update({ _id: record._id }, { 
+      title: record.title,
+      describe: record.describe
+    }, function (err, doc) {
+      if (err) throw err;
+
+      res.json(doc)
+    });
+});
+
+recordRoutes.post('/remove/section/id', function(req, res) {
+  const { sectionId } = req.body;
+
+  Sections
+    .remove({ _id: sectionId })
+    .exec()
+    .then(function(result) {
+      res.json(result);
+    });
+});
+
 recordRoutes.post('/find/collections/none', function(req, res) {
   const { myId } = req.body;
 

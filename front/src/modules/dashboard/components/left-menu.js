@@ -108,7 +108,7 @@ class LeftMenu extends React.Component {
             <ListItemIcon>
               <Icon>chat</Icon>
             </ListItemIcon>
-            <ListItemText inset primary="Cpllection" />
+            <ListItemText inset primary="Collection" />
           </ListItem>
 
           <ListItem button onClick={this.goToSettings}>

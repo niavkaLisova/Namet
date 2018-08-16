@@ -34,9 +34,11 @@ class CollectionEditContainer extends React.Component {
   }
 
   handleActive = item => {
+    let copy = Object.assign({}, item);
+
     this.setState({
-      activeCollection: item,
-      test: 1
+      activeCollection: copy,
+      titleError: ''
     })
   }
 
@@ -45,13 +47,58 @@ class CollectionEditContainer extends React.Component {
     activeCollection[e.target.name] = e.target.value;
 
     this.setState({
-      test: e.target.value,
       activeCollection
     })
   }
 
   handleUpdate = () => {
-    console.log('save', this.state.activeCollection);
+    if (this.state.activeCollection.title.length > 0) {
+      let newList = [];
+      this.props.collectionsList.map(record => {
+        if (record._id != this.state.activeCollection._id) {
+          newList.push(record);
+        } else {
+          record.title = this.state.activeCollection.title;
+          record.describe = this.state.activeCollection.describe;
+          newList.push(record);
+        }
+      });
+
+      this.props.dispatch(RecordActions.collectionUpdate(this.state.activeCollection, newList))
+      
+      let activeCollection = this.state.activeCollection;
+      activeCollection.title = '';
+      activeCollection.describe = '';
+      this.setState({ activeCollection });
+    } else {
+      this.setState({ titleError: 'Title is required' });
+    }
+  }
+
+  handleCreate = () => {
+    if (this.state.activeCollection.title.length > 0){
+      this.props.dispatch(UserActions.createCollection(this.state.activeCollection, this.props.collectionsList));
+
+      let activeCollection = this.state.activeCollection;
+      activeCollection.title = '';
+      activeCollection.describe = '';
+      
+      this.setState({ 
+        activeCollection
+      });
+
+    } else {
+      this.setState({ titleError: 'Title is required' });
+    }
+  }
+
+  handleRemove = item => {
+    let newList = this.props.collectionsList.filter(record => {
+      return record._id != item._id
+    });
+
+    this.props.dispatch(RecordActions.setcollectionsList(newList))
+    this.props.dispatch(RecordActions.removeCollectionById(item._id))
   }
 
   render() {
@@ -64,12 +111,13 @@ class CollectionEditContainer extends React.Component {
                 <div key={item._id}>
                   <div onClick={() => this.handleActive(item)}>
                     {item.title}
+                    <span onClick={() => this.handleRemove(item)}> remove</span>
                   </div>
                 </div>
               )
             })}
+            
             <div>
-              {(this.state.activeCollection && this.state.activeCollection.title.length > 0)? (
                 <div>
                   <TextField
                     label='Title'
@@ -78,8 +126,11 @@ class CollectionEditContainer extends React.Component {
                     onChange={this.handleChange}
                     margin="normal"
                   />
+                  <div class='error'>{this.state.titleError}</div>
                   <TextField
                     label='Describe'
+                    multiline
+                    rowsMax='4'
                     name='describe'
                     value={this.state.activeCollection.describe}
                     onChange={this.handleChange}
@@ -88,8 +139,10 @@ class CollectionEditContainer extends React.Component {
                   <Button variant="contained" onClick={this.handleUpdate}>
                     Update
                   </Button>
+                  <Button variant="contained" onClick={this.handleCreate}>
+                    Create
+                  </Button>
                 </div>
-              ): ''}
             </div>
           </div>
         ) : (<Redirect to='/login' />) }
