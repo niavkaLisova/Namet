@@ -13,12 +13,12 @@ import NativeSelect from '@material-ui/core/NativeSelect'
 import TextField from '@material-ui/core/TextField'
 import { Container, Row, Col } from 'react-grid-system'
 import { Redirect } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 import PasswordSettingsContainer from './passwordSettings-container'
 import EmailSettingsContainer from './emailSettings-container'
 import AvatarSettingsContainer from './avatarSettings-container'
 import NameSettingsContainer from './nameSettings-container'
-import TeamSettingsContainer from './teamSettings-container'
 
 import '../User.sass'
 
@@ -323,7 +323,7 @@ export default class SettingsContainer extends React.Component {
 
             <Grid container justify="center" spacing={8}>
               <Grid item>
-                <TeamSettingsContainer />
+                <Link to="/select/team">Select Team</Link>
               </Grid>
             </Grid>
           </Grid>

@@ -61,7 +61,7 @@ function recordReducer(state = init, action) {
         ...state,
         full: action.data 
       }
-      break;
+      break; 
 
     default: return state;
   }

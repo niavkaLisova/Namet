@@ -38,7 +38,7 @@ const styles = theme => ({
 });
 
 function getSteps() {
-  return ['Select campaign settings', 'Create an ad group', 'Create an ad'];
+  return ['', '', ''];
 }
 
 function getStepContent(step) {
@@ -59,7 +59,8 @@ function getStepContent(step) {
     answersOne: store.user.answersOne,
     answersTwo: store.user.answersTwo,
     answersThree: store.user.answersThree,
-    answers: store.user.answers
+    answers: store.user.answers,
+    topTeam: store.user.topTeam
   };
 })
 class TeamSettingsContainer extends React.Component {
@@ -74,7 +75,7 @@ class TeamSettingsContainer extends React.Component {
   };
 
   isStepOptional = step => {
-    return step === 1;
+    
   };
 
   handleSkip = () => {
@@ -157,7 +158,7 @@ class TeamSettingsContainer extends React.Component {
           answers[this.props.answersOne[i].team] += 1;
         }
       }
-      console.log('new', answers);
+
       this.props.dispatch(UserActions.saveAnswers(answers));
     } else if (this.state.activeStep == 1) {
       if (answers[this.props.answersTwo[0].team] == undefined){
@@ -173,7 +174,7 @@ class TeamSettingsContainer extends React.Component {
           answers[this.props.answersTwo[i].team] += 1;
         }
       }
-      console.log('new', answers);
+
       this.props.dispatch(UserActions.saveAnswers(answers));
     } else {
       if (answers[this.props.answersThree[0].team] == undefined){
@@ -189,8 +190,23 @@ class TeamSettingsContainer extends React.Component {
           answers[this.props.answersThree[i].team] += 1;
         }
       }
-      console.log('new', answers);
+
       this.props.dispatch(UserActions.saveAnswers(answers));
+    }
+
+    if(this.state.completed.size == 2) {
+      let sortable = [];
+      for (let vehicle in this.props.answers) {
+          sortable.push([vehicle, this.props.answers[vehicle]]);
+      }
+
+      sortable.sort(function(a, b) {
+        return a[1] - b[1];
+      });
+
+      let topTeam = sortable.reverse().splice(0, 3);
+      console.log(topTeam, 'sortable');
+      this.props.dispatch(UserActions.setTopTeam(topTeam));
     }
   };
 
@@ -233,6 +249,7 @@ class TeamSettingsContainer extends React.Component {
 
     return (
      <div className={classes.root}>
+      {!this.allStepsCompleted() ? (
         <Stepper alternativeLabel nonLinear activeStep={activeStep}>
           {steps.map((label, index) => {
             const props = {};
@@ -256,46 +273,26 @@ class TeamSettingsContainer extends React.Component {
             );
           })}
         </Stepper>
+      ): ''}
         <div>
-          {console.log('answers', this.props.answers)}
           {this.allStepsCompleted() ? (
             <div>
               <Typography className={classes.instructions}>
                 All steps completed - you&quot;re finished
               </Typography>
-              {console.log('all steps completed', this.props.answers)}
-              <Button onClick={this.handleReset}>Reset</Button>
+              {this.props.topTeam.map(team => {
+                return (
+                  <div key={team[0]}>
+                    <p>team number {team[0]}: {team[1]} points</p>
+                  </div>
+                )
+              })}
             </div>
           ) : (
             <div>
               <div className={classes.instructions}>{getStepContent(activeStep)}</div>
               <div>
-                <Button
-                  disabled={activeStep === 0}
-                  onClick={this.handleBack}
-                  className={classes.button}
-                >
-                  Back
-                </Button>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={this.handleNext}
-                  className={classes.button}
-                >
-                  Next
-                </Button>
-                {this.isStepOptional(activeStep) &&
-                  !this.state.completed.has(this.state.activeStep) && (
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={this.handleSkip}
-                      className={classes.button}
-                    >
-                      Skip
-                    </Button>
-                  )}
+                
                 {activeStep !== steps.length &&
                   (this.state.completed.has(this.state.activeStep) ? (
                     <Typography variant="caption" className={classes.completed}>

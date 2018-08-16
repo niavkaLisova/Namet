@@ -28,7 +28,7 @@ class EditorContainer extends React.Component {
     super(props);
 
     this.state = {
-      value: RichTextEditor.createValueFromString(this.props.text, 'html')
+      value: RichTextEditor.createValueFromString('', 'html')
     }
   }
 

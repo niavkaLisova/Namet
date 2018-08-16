@@ -367,6 +367,21 @@ export function unsubscribe(unsub) {
   }
 }
 
+export function setTeam(teamId) {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'api/set/team')
+        .set('x-access-token', localStorage.getItem('token'))
+        .send({
+          userId: localStorage.getItem('userId'),
+          teamId    
+        })
+        .end((error, response) => {
+          console.log('set team ', response.body);
+        });
+  }
+}
+
 export function setFile(data) {
   return {type: 'SET_FILE', data};
 }
@@ -445,4 +460,8 @@ export function saveAnswersThree(data) {
 
 export function saveAnswers(data) {
   return {type: 'ANSWERS_SAVE', data};
+}
+
+export function setTopTeam(data) {
+  return {type: 'TOP_TEAM', data};
 }

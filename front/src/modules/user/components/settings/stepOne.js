@@ -32,22 +32,24 @@ export default class StepOne extends React.Component {
   
 
   handleSelectOption = item => {
-    let newAnswers = this.state.answers;
-    newAnswers.push(item);
-
-    let newQuestions = this.state.questions.filter(elem => elem.text != item.text);
-
     if (this.state.answers.length <= this.state.answersLength) {
+      let newAnswers = this.state.answers;
+      newAnswers.push(item);
+
+      let newQuestions = this.state.questions.filter(elem => elem.text != item.text);
+
+
       this.setState({
         answers: newAnswers,
         questions: newQuestions
-      })
+      });
+
+      this.props.dispatch(UserActions.saveAnswersOne(newAnswers));
     }
 
-    this.props.dispatch(UserActions.saveAnswersOne(newAnswers));
   }
 
-  handleReturnOprion = item => {
+  handleReturnOption = item => {
     let newQuestions = this.state.questions;
     newQuestions.push(item);
 
@@ -79,7 +81,7 @@ export default class StepOne extends React.Component {
             {this.state.answers.map((item, index) => {
               return (
                 <div key={index}>
-                  <p onClick={() => this.handleReturnOprion(item)}>{item.text}</p>
+                  <p onClick={() => this.handleReturnOption(item)}>{item.text}</p>
                 </div>
               )
             })}

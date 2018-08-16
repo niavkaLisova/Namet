@@ -660,4 +660,18 @@ userRoutes.post('/find/info/following/', function(req, res) {
 });
 /** end follow **/
 
+/** team **/
+userRoutes.post('/set/team', function(req, res) {
+  const { teamId, userId } = req.body;
+  console.log('team', teamId)
+
+  User
+    .update({ _id: userId }, { team: teamId }, function (err, user) {
+    if (err) throw err;
+
+    res.json(user)
+  });
+});
+/** end team **/
+
 module.exports = userRoutes;

@@ -24,7 +24,8 @@ let init = {
   answersOne: [],
   answersTwo: [],
   answersThree: [],
-  answers: {}
+  answers: {},
+  topTeam: []
 }
 
 function userReducer(state = init, action) {
@@ -163,6 +164,12 @@ function userReducer(state = init, action) {
       return {
         ...state,
         answers: action.data  
+      }
+      break;
+    case 'TOP_TEAM':
+      return {
+        ...state,
+        topTeam: action.data 
       }
       break;
 

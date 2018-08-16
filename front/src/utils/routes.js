@@ -10,6 +10,7 @@ import SettingsContainer from '../modules/user/components/settings/settings-cont
 import FullScreenContainer from '../modules/user/components/read/fullScreen-container'
 import FollowContainer from '../modules/user/components/follow/follow-container'
 import CollectionEditContainer from '../modules/user/components/edit/collectionEdit-container'
+import TeamSettingsContainer from '../modules/user/components/settings/teamSettings-container'
 
 import AdminPanelContainer from '../modules/admin/components/adminPanel-container'
 import AdminJuniorContainer from '../modules/admin/components/adminJunior-container'
@@ -47,6 +48,7 @@ export default (
 			<Route path='/read/:idRecord' component={FullScreenContainer} />
 			<Route path='/follow/:id' component={FollowContainer} />
 			<Route path='/collection' component={CollectionEditContainer} />
+			<Route path='/select/team' component={TeamSettingsContainer} />
 		</DashboardContainer>
 	</Switch>
 );
