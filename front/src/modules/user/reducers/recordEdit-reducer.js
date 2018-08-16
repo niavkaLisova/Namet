@@ -8,7 +8,6 @@ let init = {
 function recordEditReducer(state = init, action) {
   switch (action.type) {
     case 'SET_COLL_NAME':
-      console.log('record edit reducer', action.data)
       return {
         ...state,
         collName: action.data    

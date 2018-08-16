@@ -2,6 +2,7 @@ import React from 'react'
 import axios, { post } from 'axios'
 
 import * as RecordActions from '../../actions/record-actions'
+import * as RecordEditActions from '../../actions/recordEdit-actions'
 import * as UserActions from '../../actions/user-actions'
 import appHistory from '../../../../utils/app-history'
 
@@ -26,13 +27,15 @@ import '../User.sass'
     list: store.user.giftList,
     user: store.user,
     file: store.user.file,
-    text: store.user.text
+    text: store.user.text,
+    listCollId: store.user.listCollId
   };
 })
 class EditContainer extends React.Component {
   componentDidMount() {
     let time = setInterval(() => {
       if (this.props.full) {
+        this.props.dispatch(RecordEditActions.findCollectionByCollId(this.props.full.section))
         let record = this.state.record;
         record.describe = this.props.full.describe;
         record.type = this.props.full.type;
@@ -146,7 +149,7 @@ class EditContainer extends React.Component {
         }
     }
 
-    return  post(url, formData, config)
+    return post(url, formData, config)
   }
 
   handleDeleteRecord = () => {
@@ -163,8 +166,12 @@ class EditContainer extends React.Component {
     let { record } = this.state;
     record.title = this.state.title;
     record.text = this.props.text;
+    // console.log('text', this.props.text)
     record.authorName = this.props.user.nickname;
     record.id= this.props.id;
+    // console.log('record', record)
+
+    record.collection = this.props.listCollId;
 
     if (this.props.file) {
       if (this.state.record.img) {
@@ -185,13 +192,14 @@ class EditContainer extends React.Component {
 
     this.props.dispatch(RecordActions.setRecordActive(record));
     
-    appHistory.push('/record/' + localStorage.getItem('userId'))
+    appHistory.push('/user/' + localStorage.getItem('userId'))
   }
 
   render() {
     return (
       <Container fluid>
-        {(this.props.full.author != undefined && this.props.full.author == localStorage.getItem('userId'))? (
+        {
+          (this.props.full.author != 'undefined' && this.props.full.author == localStorage.getItem('userId'))? (
         (this.props.full)? (
         <Row>
           <Col md={8} >
@@ -218,7 +226,8 @@ class EditContainer extends React.Component {
           <p onClick={this.handleDeleteRecord}>DELETE</p>
         </Row>
         ): 'Not Found'
-        ): (<Redirect to={`/user/${localStorage.getItem('userId')}`} />)}
+        ): (<Redirect to={`/user/${localStorage.getItem('userId')}`} />)
+        }
       </Container>
     )
   }

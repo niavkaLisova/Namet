@@ -50,7 +50,7 @@ export function findCollectionsById(id) {
 export function findRecoordswithoutCollections(author) {
   return (dispatch) => {
       request
-        .post(Config.API_DOMAIN + 'record/finremoveCollectionByIdd/collections/none')
+        .post(Config.API_DOMAIN + 'record/find/collections/none')
         .set('x-access-token', localStorage.getItem('token'))
         .send({
           myId: author

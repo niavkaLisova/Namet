@@ -3,6 +3,7 @@ import React from 'react'
 import * as RecordActions from '../../actions/record-actions'
 import * as UserActions from '../../actions/user-actions'
 import ImgRecordContainer from '../record/imgRecord-container'
+import CollectionModal from './collectionModal'
 
 import { withStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
@@ -46,6 +47,7 @@ const styles = theme => ({
 
 @connect((store, ownProps) => {
   return {
+    collName: store.recordEdit.collName
   };
 })
 class RightSidebarContainer extends React.Component {
@@ -181,6 +183,10 @@ class RightSidebarContainer extends React.Component {
         </FormControl>
 
         <ImgRecordContainer img={this.props.record.img} />
+
+        <div>
+          <CollectionModal title={this.props.collName.title} />
+        </div>
 
         <FormControl>
           <TextField

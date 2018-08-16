@@ -20,5 +20,5 @@ export function findCollectionByCollId(id) {
 }
 
 export function setEditColl(data) {
-  return {type: 'SET_EDIT_LIST', data};
+  return {type: 'SET_COLL_NAME', data};
 }
