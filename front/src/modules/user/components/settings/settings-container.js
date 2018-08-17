@@ -24,7 +24,8 @@ import '../User.sass'
 
 @connect((store, ownProps) => {
   return {
-    user: store.user
+    user: store.user,
+    team: store.user.team
   };
 })
 export default class SettingsContainer extends React.Component {
@@ -245,7 +246,7 @@ export default class SettingsContainer extends React.Component {
                           shrink: true,
                         }}
                       />
-                      ): 'na joj'}
+                      ): ''}
                     </Grid>
                   </Grid>
                   
@@ -323,7 +324,9 @@ export default class SettingsContainer extends React.Component {
 
             <Grid container justify="center" spacing={8}>
               <Grid item>
-                <Link to="/select/team">Select Team</Link>
+                {(this.props.team && this.props.team.length > 0)? 'You have a team': (
+                  <Link to="/select/team">Select Team</Link>
+                )}
               </Grid>
             </Grid>
           </Grid>

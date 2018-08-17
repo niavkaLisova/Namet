@@ -11,7 +11,6 @@ const questions = [
 
 @connect((store, ownProps) => {
   return {
-    user: store.user
   };
 })
 export default class StepThree extends React.Component {

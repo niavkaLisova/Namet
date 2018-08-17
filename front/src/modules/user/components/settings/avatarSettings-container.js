@@ -4,7 +4,6 @@ import axios, { post } from 'axios'
 import { API_DOMAIN } from '../../../../utils/config.js'
 import { ToastStore } from 'react-toasts'
 
-
 import * as UserActions from '../../actions/user-actions'
 
 import Input from '@material-ui/core/Input'

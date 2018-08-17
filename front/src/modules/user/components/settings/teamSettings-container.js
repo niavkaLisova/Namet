@@ -11,10 +11,15 @@ import Step from '@material-ui/core/Step';
 import StepButton from '@material-ui/core/StepButton';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import { API_DOMAIN } from '../../../../utils/config.js'
+import Avatar from '@material-ui/core/Avatar'
 
 import StepOne from './stepOne'
 import StepTwo from './stepTwo'
 import StepThree from './stepThree'
+import SelectTeam from './selectTeam'
+
+import JoinTeamContainer from './joinTeam-container'
 
 import '../User.sass'
 
@@ -41,6 +46,42 @@ function getSteps() {
   return ['', '', ''];
 }
 
+function getTeams (step, points, index) {
+    let title = '';
+    switch (step) {
+      case 0:
+        title = 'Stargard';
+        break;
+      case 1:
+        title = 'Never Mind';
+        break;
+      case 2:
+        title = 'Тризуб Пагоня';
+        break;
+      case 3:
+        title = 'Бомбосховище';
+        break;
+      case 4:
+        title = 'Poetry Starts';
+        break;
+      case 5:
+        title = 'Навколо нас магія';
+        break;
+      case 6:
+        title = 'Сингулярність';
+        break;
+      default:
+        title = fasle;
+        break;
+      }
+
+    return <SelectTeam 
+      title={title}
+      points={points} 
+      index={index} 
+      />
+  }
+
 function getStepContent(step) {
   switch (step) {
     case 0:
@@ -60,7 +101,10 @@ function getStepContent(step) {
     answersTwo: store.user.answersTwo,
     answersThree: store.user.answersThree,
     answers: store.user.answers,
-    topTeam: store.user.topTeam
+    topTeam: store.user.topTeam,
+    teamOne: store.user.teamOne,
+    teamTwo: store.user.teamTwo,
+    teamThree: store.user.teamThree
   };
 })
 class TeamSettingsContainer extends React.Component {
@@ -200,12 +244,12 @@ class TeamSettingsContainer extends React.Component {
           sortable.push([vehicle, this.props.answers[vehicle]]);
       }
 
-      sortable.sort(function(a, b) {
+      sortable.sort((a, b)=> {
         return a[1] - b[1];
       });
 
       let topTeam = sortable.reverse().splice(0, 3);
-      console.log(topTeam, 'sortable');
+      // console.log(topTeam, 'sortable');
       this.props.dispatch(UserActions.setTopTeam(topTeam));
     }
   };
@@ -280,13 +324,17 @@ class TeamSettingsContainer extends React.Component {
               <Typography className={classes.instructions}>
                 All steps completed - you&quot;re finished
               </Typography>
-              {this.props.topTeam.map(team => {
+              {this.props.topTeam.map((team, index) => {
                 return (
                   <div key={team[0]}>
-                    <p>team number {team[0]}: {team[1]} points</p>
+                    <div>{getTeams(Number(team[0]), team[1], index)}</div>
                   </div>
                 )
               })}
+              <hr />
+              {(this.props.teamOne.length == 0)? '': (<JoinTeamContainer team={this.props.teamOne} />)}
+              {(this.props.teamTwo.length == 0)? '': (<JoinTeamContainer team={this.props.teamTwo} />)}
+              {(this.props.teamThree.length == 0)? '': (<JoinTeamContainer team={this.props.teamThree} />)}
             </div>
           ) : (
             <div>

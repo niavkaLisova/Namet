@@ -11,6 +11,7 @@ const User = require('../models/user')
 const BlackList = require('../models/blackList')
 const Sections = require('../models/sections')
 const Record = require('../models/record')
+const Team = require('../models/team')
 const config = require('../config/config')
 const { ObjectId } = require('mongodb');
  
@@ -663,7 +664,6 @@ userRoutes.post('/find/info/following/', function(req, res) {
 /** team **/
 userRoutes.post('/set/team', function(req, res) {
   const { teamId, userId } = req.body;
-  console.log('team', teamId)
 
   User
     .update({ _id: userId }, { team: teamId }, function (err, user) {
@@ -671,6 +671,17 @@ userRoutes.post('/set/team', function(req, res) {
 
     res.json(user)
   });
+});
+
+userRoutes.post('/find/team/id', function(req, res) {
+  const { title } = req.body;
+
+  Team
+    .findOne({name: title})
+    .exec()
+    .then(function(doc) {
+      return res.json({ success: true, message: 'Found successfully.', doc });
+    });
 });
 /** end team **/
 

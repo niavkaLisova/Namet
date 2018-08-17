@@ -22,7 +22,6 @@ const questions = [
 
 @connect((store, ownProps) => {
   return {
-    user: store.user
   };
 })
 export default class StepTwo extends React.Component {

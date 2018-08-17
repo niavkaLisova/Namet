@@ -4,6 +4,7 @@ import _ from 'lodash';
 let init = {
   name: '',
   nickname: '',
+  team: '',
   email: '',
   online: [],
   activeRoom: '',
@@ -25,7 +26,10 @@ let init = {
   answersTwo: [],
   answersThree: [],
   answers: {},
-  topTeam: []
+  topTeam: [],
+  teamOne: [],
+  teamTwo: [],
+  teamThree: []
 }
 
 function userReducer(state = init, action) {
@@ -45,7 +49,8 @@ function userReducer(state = init, action) {
         gender: action.data.gender,
         birthday: action.data.birthday,
         following: action.data.following,
-        id: action.data._id
+        id: action.data._id,
+        team: action.data.team
       }
       break;
     case 'AVATAR_UPDATE':
@@ -170,6 +175,30 @@ function userReducer(state = init, action) {
       return {
         ...state,
         topTeam: action.data 
+      }
+      break;
+    case 'SET_TEAM_ONE':
+      return {
+        ...state,
+        teamOne: action.data 
+      }
+      break;
+    case 'SET_TEAM_TWO':
+      return {
+        ...state,
+        teamTwo: action.data 
+      }
+      break;
+    case 'SET_TEAM_THREE':
+      return {
+        ...state,
+        teamThree: action.data 
+      }
+      break;
+    case 'SET_TEAM_ID':
+      return {
+        ...state,
+        team: action.data 
       }
       break;
 

@@ -377,7 +377,31 @@ export function setTeam(teamId) {
           teamId    
         })
         .end((error, response) => {
-          console.log('set team ', response.body);
+          ToastStore.success('Team Join')
+          dispatch(setTeamId(teamId));
+        });
+  }
+}
+
+export function getTeamByTitle(title, index) {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'api/find/team/id')
+        .set('x-access-token', localStorage.getItem('token'))
+        .send({
+          title   
+        })
+        .end((error, response) => {
+          if (response.body.success)  {
+            // console.log('get team ', index, response.body.doc);
+            if (index == 0) {
+              dispatch(setTeamOne(response.body.doc));
+            } else if (index == 1) {
+              dispatch(setTeamTwo(response.body.doc));
+            } else {
+              dispatch(setTeamThree(response.body.doc));
+            }
+          }
         });
   }
 }
@@ -420,7 +444,7 @@ export function activeSave(data) {
 
 export function avatarUpdate(data) {
   return {type: 'AVATAR_UPDATE', data};
-}
+}setTeamOne
 
 export function textSave(data) {
   return {type: 'TEXT_SAVE', data};
@@ -464,4 +488,20 @@ export function saveAnswers(data) {
 
 export function setTopTeam(data) {
   return {type: 'TOP_TEAM', data};
+}
+
+export function setTeamOne(data) {
+  return {type: 'SET_TEAM_ONE', data};
+}
+
+export function setTeamTwo(data) {
+  return {type: 'SET_TEAM_TWO', data};
+}
+
+export function setTeamThree(data) {
+  return {type: 'SET_TEAM_THREE', data};
+}
+
+export function setTeamId(data) {
+  return {type: 'SET_TEAM_ID', data};
 }

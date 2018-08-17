@@ -16,7 +16,6 @@ const questions = [
 
 @connect((store, ownProps) => {
   return {
-    user: store.user
   };
 })
 export default class StepOne extends React.Component {

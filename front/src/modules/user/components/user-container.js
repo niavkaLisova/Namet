@@ -31,7 +31,8 @@ import { setActiveLanguage } from 'react-localize-redux'
     id: ownProps.match.params.id,
     info: store.user.info,
     listFollowers: store.user.listFollowers,
-    followingList: store.user.followingList
+    followingList: store.user.followingList,
+    team: store.user.team
   };
 })
 class UserContainer extends React.Component {
@@ -174,6 +175,7 @@ class UserContainer extends React.Component {
           </Col>
           <Col md={4}>
             Sticky
+            <p>Team {this.props.team}</p>
           </Col>
           <Col md={2}>
             chat
