@@ -3,6 +3,7 @@ import React from 'react'
 import * as RecordActions from '../../actions/record-actions'
 
 import { connect } from "react-redux"
+import appHistory from '../../../../utils/app-history'
 
 @connect((store, ownProps) => {
   return {
@@ -13,8 +14,8 @@ class RecentlyContainer extends React.Component {
 	recordActive = record => {
 		if (record.author != localStorage.getItem('userId')) {
 	    	this.props.dispatch(RecordActions.setReview(record._id));
-	    }
-		this.props.dispatch(RecordActions.setRecordActive(record));
+	    } 
+	    appHistory.push('/record/' + this.props.id + '/' + record._id)
 	}
 
 	render() {

@@ -9,12 +9,14 @@ import { Container, Row, Col } from 'react-grid-system'
 import { connect } from "react-redux"
 
 import ReadContainer from '../read/read-container'
+import ReadActiveContainer from '../read/readActive-container'
 import SidebarContainer from '../read/sidebar-container'
 
 @connect((store, ownProps) => {
   return {
     user: store.user,
-    id: ownProps.match.params.id,
+    id: ownProps.match.params.idUser,
+    idRecord: ownProps.match.params.idRecord
   };
 })
 class RecordContainer extends React.Component {
@@ -41,7 +43,10 @@ class RecordContainer extends React.Component {
             <SidebarContainer id={this.props.id} />
           </Col>
           <Col md={8}>
-            <ReadContainer id={this.props.id} />
+            <ReadActiveContainer
+              idRecord={this.props.idRecord}
+              id={this.props.id}
+             />
           </Col>
         </Row>
       </Container>

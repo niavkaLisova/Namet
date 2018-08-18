@@ -11,8 +11,7 @@ import appHistory from '../../../../utils/app-history'
 
 @connect((store, ownProps) => {
   return {
-    recordActive: store.record.recordActive,
-    topRecords: store.record.topRecords
+    recordActive: store.record.recordActive
   };
 })
 class ReadContainer extends React.Component {

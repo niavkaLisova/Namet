@@ -20,14 +20,21 @@ import '../User.sass'
 
 @connect((store, ownProps) => {
   return {
-    listColl: store.user.listColl
+    listColl: store.user.listColl,
+    collectionsList: store.record.collectionsList
   };
 })
 class CollectionModal extends React.Component {
-  state = {
-    open: false,
-    collection: ''
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      open: false,
+      collection: ''
+    };
+
+    this.props.dispatch(RecordActions.findCollectionsById(localStorage.getItem('userId')))
+  }
 
   handleClickOpen = () => {
     this.setState({ open: true });
@@ -46,9 +53,9 @@ class CollectionModal extends React.Component {
   }
 
   selectCollections = coll => {
-    console.log('select', coll);
+    // console.log('select', coll);
     this.setState({ collection: coll.title });
-    console.log('state', this.state)
+    // console.log('state', this.state)
     this.props.dispatch(UserActions.listCollectionsId(coll._id));
     this.props.dispatch(UserActions.listCollections([]));
   }
@@ -82,14 +89,22 @@ class CollectionModal extends React.Component {
                   )
                 })}
               </div>
+              {(this.state.collection.length > 0)? '': (
+              <div>
+                {this.props.collectionsList.map(collection => {
+                  return (
+                    <div key={collection._id}>
+                      <p onClick={() => this.selectCollections(collection)}>{collection.title}</p>
+                    </div>
+                  )
+                })}
+              </div>
+              )}
             </div>
           </DialogContent>
           <DialogActions>
             <Button onClick={this.handleClose} color="primary">
               Cancel
-            </Button>
-            <Button onClick={this.handleClose} color="primary">
-              Subscribe
             </Button>
           </DialogActions>
         </Dialog>

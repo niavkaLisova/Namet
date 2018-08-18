@@ -43,9 +43,9 @@ export default (
 			<Route path='/settings' component={SettingsContainer} />
    			<Route path='/user/:id?' component={UserContainer} />
      	   	<Route path='/chat/' component={ChatContainer} />
-     	   	<Route path='/record/:id' component={RecordContainer} />
+     	   	<Route path='/record/:idUser/:idRecord?' component={RecordContainer} />
 			<Route path='/edit/:idRecord' component={EditContainer} />
-			<Route path='/read/:idRecord' component={FullScreenContainer} />
+			<Route path='/read/:idRecord/' component={FullScreenContainer} />
 			<Route path='/follow/:id' component={FollowContainer} />
 			<Route path='/collection' component={CollectionEditContainer} />
 			<Route path='/select/team' component={TeamSettingsContainer} />

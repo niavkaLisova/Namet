@@ -18,7 +18,9 @@ class EditorContainer extends React.Component {
 
         this.setState({
           value: RichTextEditor.createValueFromString(this.props.text, 'html')
-        })
+        });
+        
+        this.props.dispatch(UserActions.textSave(this.state.value.toString('html')));
       }
       
     }, 1000);

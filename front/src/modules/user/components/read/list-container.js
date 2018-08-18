@@ -1,5 +1,6 @@
 import React from 'react'
 
+import appHistory from '../../../../utils/app-history'
 import * as RecordActions from '../../actions/record-actions'
 
 import Button from '@material-ui/core/Button'
@@ -36,12 +37,14 @@ class ListContainer extends React.Component {
 	    }
 	}
 
-	recordActive= record => {
+	recordActive = record => {
 		if (localStorage.getItem('userId') == this.props.id) {
 			this.props.dispatch(RecordActions.updateRecordCreatedAt(record._id, this.props.id));
 		} else {
 			this.props.dispatch(RecordActions.setReview(record._id));
 		}
+		console.log('active', record._id)
+		appHistory.push('/record/' + this.props.id + '/' + record._id)
 	}
 
   	render() {

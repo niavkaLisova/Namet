@@ -153,7 +153,7 @@ class EditContainer extends React.Component {
   }
 
   handleDeleteRecord = () => {
-    console.log('delete',this.props.id);
+    // console.log('delete',this.props.id);
     if (this.state.record.img) {
       this.props.dispatch(UserActions.removeRecordImg(this.state.record.img))
     }
@@ -192,7 +192,7 @@ class EditContainer extends React.Component {
 
     this.props.dispatch(RecordActions.setRecordActive(record));
     
-    appHistory.push('/user/' + localStorage.getItem('userId'))
+    appHistory.push('/record/' + localStorage.getItem('userId'))
   }
 
   render() {
