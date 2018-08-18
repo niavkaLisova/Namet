@@ -11,8 +11,7 @@ import { connect } from "react-redux"
 export default class SelectTeam extends React.Component {
   constructor(props) {
     super(props);
-
-    this.props.dispatch(UserActions.getTeamByTitle(this.props.title, this.props.index));
+    this.props.dispatch(UserActions.getTeamByTitle(this.props.title, this.props.index, this.props.points));
   }
  
   render() {

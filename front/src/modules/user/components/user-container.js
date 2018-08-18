@@ -19,7 +19,7 @@ import ListItemText from '@material-ui/core/ListItemText'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import UserFormContainer from './user-form-container'
 import CreateModal from './record/createModal'
-import FollowListContainer from './followList-container'
+import FollowListContainer from './follow/followList-container'
 
 import { Container, Row, Col } from 'react-grid-system'
 import { connect } from "react-redux"
@@ -56,6 +56,7 @@ class UserContainer extends React.Component {
       this.props.dispatch(UserActions.findInfoFollowing(this.props.id))
       this.props.dispatch(UserActions.findInfoUser(this.props.id))
       this.props.dispatch(UserActions.followersList(this.props.id));
+      this.setState({ visible: true })
     }
   }
 
@@ -167,7 +168,7 @@ class UserContainer extends React.Component {
                 <FollowListContainer 
                   follower={follower}
                   key={follower._id}
-                  id={this.props.id}
+                  id={null}
                  />
               )
             })}
@@ -175,7 +176,7 @@ class UserContainer extends React.Component {
           </Col>
           <Col md={4}>
             Sticky
-            <p>Team {this.props.team}</p>
+            <p>Team {this.props.info.team}</p>
           </Col>
           <Col md={2}>
             chat

@@ -6,7 +6,7 @@ import appHistory from '../../../../utils/app-history'
 import { socketConnect } from 'socket.io-react'
 
 import Avatar from '@material-ui/core/Avatar'
-import FollowListContainer from '../followList-container'
+import FollowListContainer from './followList-container'
 
 import { Container, Row, Col } from 'react-grid-system'
 import { connect } from "react-redux"

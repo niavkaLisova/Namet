@@ -13,6 +13,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { API_DOMAIN } from '../../../../utils/config.js'
 import Avatar from '@material-ui/core/Avatar'
+import { Redirect } from 'react-router-dom'
 
 import StepOne from './stepOne'
 import StepTwo from './stepTwo'
@@ -104,7 +105,8 @@ function getStepContent(step) {
     topTeam: store.user.topTeam,
     teamOne: store.user.teamOne,
     teamTwo: store.user.teamTwo,
-    teamThree: store.user.teamThree
+    teamThree: store.user.teamThree,
+    team: store.user.team
   };
 })
 class TeamSettingsContainer extends React.Component {
@@ -112,6 +114,7 @@ class TeamSettingsContainer extends React.Component {
     activeStep: 0,
     completed: new Set(),
     skipped: new Set(),
+    activeTeam: 0
   };
 
   totalSteps = () => {
@@ -286,12 +289,18 @@ class TeamSettingsContainer extends React.Component {
     return this.state.activeStep === this.totalSteps() - 1;
   }
 
+  hansleActiveTeam = team => {
+    this.setState({ activeTeam: team.index })
+  }
+
   render() {
     const { classes } = this.props;
     const steps = getSteps();
     const { activeStep } = this.state;
 
     return (
+      <div>
+      {(this.props.team)? (<Redirect to='/settings' />): (
      <div className={classes.root}>
       {!this.allStepsCompleted() ? (
         <Stepper alternativeLabel nonLinear activeStep={activeStep}>
@@ -332,9 +341,11 @@ class TeamSettingsContainer extends React.Component {
                 )
               })}
               <hr />
-              {(this.props.teamOne.length == 0)? '': (<JoinTeamContainer team={this.props.teamOne} />)}
-              {(this.props.teamTwo.length == 0)? '': (<JoinTeamContainer team={this.props.teamTwo} />)}
-              {(this.props.teamThree.length == 0)? '': (<JoinTeamContainer team={this.props.teamThree} />)}
+              <div class='teamContainer'>
+                {(this.props.teamOne.length == 0)? '': (<JoinTeamContainer team={this.props.teamOne} active={this.state.activeTeam} hansleActiveTeam={this.hansleActiveTeam} />)}
+                {(this.props.teamTwo.length == 0)? '': (<JoinTeamContainer team={this.props.teamTwo} active={this.state.activeTeam} hansleActiveTeam={this.hansleActiveTeam} />)}
+                {(this.props.teamThree.length == 0)? '': (<JoinTeamContainer team={this.props.teamThree} active={this.state.activeTeam} hansleActiveTeam={this.hansleActiveTeam} />)}
+              </div>
             </div>
           ) : (
             <div>
@@ -372,6 +383,8 @@ class TeamSettingsContainer extends React.Component {
             </div>
           )}
         </div>
+      </div>
+      )}
       </div>
     )
   }

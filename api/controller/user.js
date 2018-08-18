@@ -644,20 +644,24 @@ userRoutes.post('/user/unsubscribe', function(req, res) {
 
 userRoutes.post('/find/info/following/', function(req, res) {
   const { id } = req.body;
-  console.log('array', id)
+  console.log('array', id);
 
-  User
-    .findById(id)
-    .exec()
-    .then(function(doc) {
-      console.log(doc.following, 'users');
-      User
-        .find({'_id': {$in: doc.following }})
-        .exec()
-        .then(function(result) {
-          return res.json({ success: true, message: 'Found successfully.', result });
-        });
-    })
+  if (id) {
+    User
+      .findById(id)
+      .exec()
+      .then(function(doc) {
+        console.log(doc.following, 'users');
+        User
+          .find({'_id': {$in: doc.following }})
+          .exec()
+          .then(function(result) {
+            return res.json({ success: true, message: 'Found successfully.', result });
+          });
+      }) 
+  } else {
+    return throwFailed(res, 'No id')
+  }
 });
 /** end follow **/
 

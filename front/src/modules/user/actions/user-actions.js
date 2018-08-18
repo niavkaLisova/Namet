@@ -37,7 +37,7 @@ export function findInfoUser(id) {
       request
         .get(Config.API_DOMAIN + 'api/users/' + id)
         .set('x-access-token', localStorage.getItem('token'))
-        .end((error, response) => { 
+        .end((error, response) => {
           dispatch(userInfo(response.body));
         });
   }
@@ -52,7 +52,9 @@ export function findInfoFollowing(id) {
           id
         })
         .end((error, response) => {
-          dispatch(followingInfo(response.body.result));
+          if (response.body.success) {
+            dispatch(followingInfo(response.body.result));
+          }
         });
   }
 }
@@ -383,7 +385,7 @@ export function setTeam(teamId) {
   }
 }
 
-export function getTeamByTitle(title, index) {
+export function getTeamByTitle(title, index, points) {
   return (dispatch) => {
       request
         .post(Config.API_DOMAIN + 'api/find/team/id')
@@ -394,6 +396,8 @@ export function getTeamByTitle(title, index) {
         .end((error, response) => {
           if (response.body.success)  {
             // console.log('get team ', index, response.body.doc);
+            response.body.doc.points = points;
+            response.body.doc.index = index;
             if (index == 0) {
               dispatch(setTeamOne(response.body.doc));
             } else if (index == 1) {

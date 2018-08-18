@@ -1,8 +1,8 @@
 import React from 'react';
-import { API_DOMAIN } from '../../../utils/config.js'
+import { API_DOMAIN } from '../../../../utils/config.js'
 
-import * as UserActions from '../actions/user-actions'
-import appHistory from '../../../utils/app-history'
+import * as UserActions from '../../actions/user-actions'
+import appHistory from '../../../../utils/app-history'
 import { connect } from "react-redux"
 
 import Avatar from '@material-ui/core/Avatar'
