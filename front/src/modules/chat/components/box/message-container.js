@@ -4,17 +4,16 @@ import RefreshIndicator from 'material-ui/RefreshIndicator'
 import ReactTimeout from 'react-timeout'
 import { socketConnect } from 'socket.io-react'
 import { List, ListItem } from 'material-ui/List'
-import * as ChatActions from '../actions/chat-actions'
+import * as ChatActions from '../../actions/chat-actions'
 import MsgContainer from './msg-container'
 import Divider from 'material-ui/Divider';
 import { connect } from "react-redux"
 import { IntlProvider } from 'react-intl'
 
-import './Message.sass';
+import '../Message.sass';
 
 @connect((store, ownProps) => {
     return {
-      roomId: store.chat.roomId,
       messages: store.chat.messages,
       limit: store.chat.limit,
       user: store.user
@@ -71,36 +70,38 @@ class MessageContainer extends React.Component {
 
 	render() {
 		return (
-			<List 
-				class='messageContainer' 
-				id='scrollContainer' 
-				ref="messageContainer" 
-				onScroll={ () => this.onScroll() }
-				>
-				{(this.state.loader)?(
-					<RefreshIndicator
-				      size={40}
-				      left={10}
-				      top={0}
-				      status="loading"
-				      style={this.state.loading ? {} : { display: 'none' }}
-				    />
-			    ): 'Start' }
-			    {(this.props.user.activeRoom == '0')? '' : (
-				<List class='messagesList' id='scroll' ref="messageList">
-					{this.props.messages.map( (msg) => {
-						return (
-							<div key={msg._id}>
-								<IntlProvider locale="en">
-									<MsgContainer msg={msg} />
-								</IntlProvider>
-								<Divider />
-							</div>
-						)
-					})}
+			<div>
+				<List 
+					class='messageContainer' 
+					id='scrollContainer' 
+					ref="messageContainer" 
+					onScroll={ () => this.onScroll() }
+					>
+					{(this.state.loader)?(
+						<RefreshIndicator
+					      size={40}
+					      left={10}
+					      top={0}
+					      status="loading"
+					      style={this.state.loading ? {} : { display: 'none' }}
+					    />
+				    ): 'Start' }
+				    {(typeof(this.props.messages) === 'string')? 'String': (
+				   	<List class='messagesList' id='scroll' ref="messageList">
+						{this.props.messages.map( (msg) => {
+							return (
+								<div key={msg._id}>
+									<IntlProvider locale="en">
+										<MsgContainer msg={msg} />
+									</IntlProvider>
+									<Divider />
+								</div>
+							)
+						})}
+					</List>
+					)}
 				</List>
-				)}
-			</List>
+			</div>
 		)
 	}
 }

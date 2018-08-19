@@ -171,7 +171,7 @@ userRoutes.post('/user/find', function(req, res) {
   const { id, search } = req.body;
   const regexp = new RegExp(search);
   User
-      .find({ 'nickname': regexp }, {name: 1, email: 1, nickname: 1, _id: 1})
+      .find({ 'nickname': regexp }, {name: 1, email: 1, nickname: 1, _id: 1, avatar: 1})
       .where('_id').ne(id)
       .where('email').ne('admino')
       .exec()

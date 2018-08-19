@@ -1,5 +1,5 @@
 import React from 'react'
-import * as ChatActions from '../actions/chat-actions'
+import * as ChatActions from '../../actions/chat-actions'
 import { connect } from "react-redux"
 
 @connect((store, ownProps) => {
@@ -15,8 +15,7 @@ export default class CounterMessagesName extends React.Component {
     render() {
 	    return (
 	        <div>
-	        {this.props.chatName[this.props.id]}
-	  
+	        	{this.props.chatName[this.props.id]}
 	        </div>
 	    )
 	}

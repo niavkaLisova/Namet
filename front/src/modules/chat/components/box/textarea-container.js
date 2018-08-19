@@ -3,13 +3,12 @@ import ReactDOM from 'react-dom'
 import RaisedButton from 'material-ui/RaisedButton'
 import TextField from 'material-ui/TextField'
 import { socketConnect } from 'socket.io-react'
-import * as ChatActions from '../actions/chat-actions'
+import * as ChatActions from '../../actions/chat-actions'
 import { connect } from "react-redux"
 import EmojiPicker from 'emoji-picker-react'
 
 @connect((store, ownProps) => {
     return {
-      roomId: store.chat.roomId,
       between: store.chat.between,
       messages: store.chat.messages,
       activeRoom: store.user.activeRoom

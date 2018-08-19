@@ -1,8 +1,10 @@
 import request from 'superagent';
 import _ from 'lodash';
+import appHistory from '../../../utils/app-history'
 import * as Config from '../../../utils/config';
 import * as UserActions from '../../user/actions/user-actions'
 import * as NotificationActions from '../../notification/actions/notification-actions'
+import {ToastContainer, ToastStore} from 'react-toasts'
 
 export function allChat() {
   return (dispatch) => {
@@ -31,13 +33,15 @@ export function newChat(user, myname, that) {
 			  })
         .end((error, response) => {
         	if(response.body.success == false) {
-        		return NotificationActions.show('Nie')(dispatch);
+        		return ToastStore.error('Cannot create new Chat');
           } else {
             dispatch(chatAddRoom(response.body.data));
             if(response.body.socket) {
               that.props.socket.emit('new room', response.body.data, user._id);
             }
-          	return NotificationActions.show('Room created')(dispatch);
+            console.log('new room action', response.body.data);
+            // appHistory.push('/chat/' + response.body.data)
+          	return ToastStore.success('Room created');
           }
         });
   }

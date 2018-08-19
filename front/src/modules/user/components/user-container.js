@@ -85,8 +85,6 @@ class UserContainer extends React.Component {
 
   goToChatWith = () => {
     this.props.dispatch(UserActions.checkChat(this.props.id, this, window.location));
-
-    appHistory.push('/chat');
   }
 
   render() {

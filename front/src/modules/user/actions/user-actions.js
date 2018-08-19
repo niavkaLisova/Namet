@@ -341,15 +341,12 @@ export function checkChat(id, that, location) {
           if (response.body && response.body._id) {
             if (response.body.delUser.includes(String(localStorage.getItem('userId')))) {
               dispatch(ChatActions.newChat(that.props.info, that.props.user.name, that));
-              location.reload();
             } else {
-              dispatch(selectActiveRoom(response.body._id));
-              location.reload();
+              appHistory.push('/chat/' + response.body._id);
             }
             
           } else {
             dispatch(ChatActions.newChat(that.props.info, that.props.user.name, that));
-            location.reload();
           }
         });
   }

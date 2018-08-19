@@ -45,8 +45,12 @@ class LeftMenu extends React.Component {
     appHistory.push('/user/' + localStorage.getItem('userId'));
   }
 
-  goToChat() {
-    appHistory.push('/chat');
+  goToChat = () => {
+    if (this.props.user.activeRoom) {
+      appHistory.push('/chat/' + this.props.user.activeRoom);
+    } else {
+      appHistory.push('/chat');
+    }
   }
 
   goToFollow() {

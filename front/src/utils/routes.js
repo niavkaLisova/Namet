@@ -42,7 +42,7 @@ export default (
 		<DashboardContainer>
 			<Route path='/settings' component={SettingsContainer} />
    			<Route path='/user/:id?' component={UserContainer} />
-     	   	<Route path='/chat/' component={ChatContainer} />
+     	   	<Route path='/chat/:idChat?' component={ChatContainer} />
      	   	<Route path='/record/:idUser/:idRecord?' component={RecordContainer} />
 			<Route path='/edit/:idRecord' component={EditContainer} />
 			<Route path='/read/:idRecord/' component={FullScreenContainer} />
