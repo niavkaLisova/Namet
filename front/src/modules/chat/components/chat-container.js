@@ -25,7 +25,7 @@ class ChatContainer extends React.Component {
 		super(props);
 
 		let time = setInterval(() => {
-      if (this.props.email.length > 0) {
+      if (this.props.email.length > 0 && this.props.chat.length > 0) {
       	if (this.props.idChat) {
       		console.log('is idchat', this.props.idChat)
       		this.handle();

@@ -49,7 +49,7 @@ class MsgContainer extends React.Component {
 	          	<Container>
 	          		<Row>
 		          		<Col sm={10}>
-		          			<span class='msgName'>{this.props.betweenName.map((user) => (user._id == this.props.msg.author)? user.name: '')}</span>
+		          			<span class='msgName'>{this.props.betweenName.slice(0, 2).map((user) => (user._id == this.props.msg.author)? user.name: '')}</span>
 		          		</Col>
 		          		<Col sm={2} onClick={ () => this.handleDelete(this.props.msg) }>
 		          			<Icon>clear</Icon>

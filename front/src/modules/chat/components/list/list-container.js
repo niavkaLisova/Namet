@@ -9,6 +9,7 @@ import {ToastContainer, ToastStore} from 'react-toasts'
 import FindUserDialog from './findUser-dialog'
 import UserCardContainer from './userCard-container'
 import ListroomsContainer from './listrooms-container'
+import FriendChatList from './friendChatList-container'
 
 import Subheader from 'material-ui/Subheader'
 import TextField from 'material-ui/TextField'
@@ -137,7 +138,7 @@ class ListContainer extends React.Component {
 				    </div>
 
 				    <div>
-				    	{(this.props.room.length)? 
+				    	{(this.props.room.length && this.state.visible)? 
 				    		(<ListroomsContainer 
 				    			chat={this.props.room} 
 				    			visible={this.state.visible}
@@ -145,7 +146,7 @@ class ListContainer extends React.Component {
 				    		 />)
 							:'' }
 				    </div>
-
+				    <FriendChatList chat={this.props.room} friend={this.props.findUser} visible={!this.state.visible} />
 				</div>
 			</div>
 		)

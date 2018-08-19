@@ -39,9 +39,9 @@ export function newChat(user, myname, that) {
             if(response.body.socket) {
               that.props.socket.emit('new room', response.body.data, user._id);
             }
-            console.log('new room action', response.body.data);
-            // appHistory.push('/chat/' + response.body.data)
-          	return ToastStore.success('Room created');
+            // console.log('new room action', response.body.data._id);
+            appHistory.push('/chat/' + response.body.data._id)
+            return ToastStore.success('Room created');
           }
         });
   }

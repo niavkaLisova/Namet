@@ -61,18 +61,19 @@ class ListroomsContainer extends React.Component {
 		this.props.dispatch(ChatActions.messageRead('', this));
 
 		this.props.socket.on('message g', (data) => {
-	      this.props.chat.map((item) => {
+	    this.props.chat.map((item) => {
 				this.props.dispatch(ChatActions.unreadSelect(item._id));
 			});
-	      this.props.dispatch(ChatActions.allChat());
-	      console.log(data, 'g')
-	    });
+      this.props.dispatch(ChatActions.allChat());
+      console.log(data, 'g')
+	  });
 
-	    this.props.socket.on('reload read message', () => {
-	    	this.props.chat.map((item, index) => {
-					this.props.dispatch(ChatActions.getMessagesRoom(this.props.idChat, this.props.limit))
-				});
-	    })
+    this.props.socket.on('reload read message', () => {
+    	console.log('reload')
+    	this.props.chat.map((item, index) => {
+				this.props.dispatch(ChatActions.getMessagesRoom(this.props.idChat, this.props.limit))
+			});
+    })
 
 		this.props.socket.on('message', (data) =>{
 			console.log('msg', data)
@@ -80,7 +81,7 @@ class ListroomsContainer extends React.Component {
 			data.read = true
 			this.props.dispatch(ChatActions.messageAdd(data));
 
-			if(window.document.getElementById('scroll')) {
+			if (window.document.getElementById('scroll')) {
 				let nodeList = window.document.getElementById('scroll')
 			    let node = window.document.getElementById('scrollContainer')
 				let style = window.getComputedStyle(nodeList, null);
@@ -101,41 +102,64 @@ class ListroomsContainer extends React.Component {
 		appHistory.push('/chat/' + chat._id)
 	}
 
-	render() {
+	handleDeleteAllM = () => {
+		console.log('delete m', this.props.messages.length, this.props.idChat)
+		if (this.props.messages.length > 0) {
+			this.props.dispatch(ChatActions.deleteUserFromChatAllM(this.props.idChat, this.props.between.length))
+			this.props.dispatch(ChatActions.getMessagesRoom(this.props.idChat, this.props.limit))
+		}
+	}
+
+	handleDeleteRoom = () => {
+		if(this.props.messages.length > 0) {
+			this.props.dispatch(ChatActions.deleteUserFromChatAllM(this.props.idChat, this.props.between.length))
+		}
+		this.props.dispatch(ChatActions.deleteRoom(this.props.idChat, this.props.between.length, this.props.socket))
+		this.props.socket.emit('leave room', this.props.roomId);
+	}
+
+	render = () => {
 		const { classes, theme } = this.props;
 
 		return (
 			<div>
+				<hr />
 				{(Object.keys(this.props.chat)).map(key => {
-				    return (
-				    	<div key={key}>
-					    	<Card className={classes.card} onClick={() => this.openChat(this.props.chat[key])}>
-					        <CardMedia
-					          className={classes.cover}
-					          image={API_DOMAIN + 'public/upload/user/noname.png'}
-					          title={this.props.chat[key].name}
-					        />
+			    return (
+			    	<div key={key}>
+				    	<Card className={classes.card}>
+				        <CardMedia
+				          className={classes.cover}
+				          image={API_DOMAIN + 'public/upload/user/noname.png'}
+				          title={this.props.chat[key].name}
+				        />
 
-					        <div className={classes.details}>
-					          <CardContent className={classes.content}>
-					            <Typography variant="body2">
-					            	<CounterMessages 
-									      	id={key} 
-									      	that={this.props.dispatch} 
-									      	unread={this.props.unread[this.props.chat[key]._id]} 
-									      	active={this.props.chat[key]._id == this.props.idChat}  
-									      	between={this.props.chat[key].between}
-									       />
-					            </Typography>
-					            <Typography variant="caption" color="textSecondary">
-					              
-					            </Typography>
-					          </CardContent>
-					        </div>
-					      </Card>
-				    	</div>
+				        <div className={classes.details}>
+				          <CardContent className={classes.content}>
+				            <Typography variant="body2">
+				            	<CounterMessages 
+								      	id={key} 
+								      	that={this.props.dispatch} 
+								      	unread={this.props.unread[this.props.chat[key]._id]} 
+								      	active={this.props.chat[key]._id == this.props.idChat}  
+								      	between={this.props.chat[key].between}
+								     	 	handleDeleteAllM={this.handleDeleteAllM}
+								     	 	handleDeleteRoom={this.handleDeleteRoom}
+								     	 />
+				            </Typography>
+				            <Typography 
+				            	variant="caption"
+				            	color="textSecondary"
+				            	onClick={() => this.openChat(this.props.chat[key])}
+				             >
+				              select
+				            </Typography>
+				          </CardContent>
+				        </div>
+				      </Card>
+				    </div>
 				    )
-				  })}
+				  })
 				}
 			</div>
 		)
