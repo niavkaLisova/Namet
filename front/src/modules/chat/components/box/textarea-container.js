@@ -71,10 +71,10 @@ class TextareaContainer extends React.Component {
 		this.setState({
 			message: this.state.message + String.fromCodePoint(parseInt (emoji , 16))
 		})
+		
 	}
 
 	handleKeyPress = (event) => {
-		console.log(event.shiftKey)
 		if (event.ctrlKey || event.shiftKey) {
 	 		if (event.key === 'Enter') {
 				this.setState({
@@ -102,7 +102,6 @@ class TextareaContainer extends React.Component {
 		return (
 			<div style={this.props.activeRoom != '0' ? {} : { display: 'none' }}>
 				<TextField
-					ref={(node) => this.textInput = node}
 					id='input'
 			     	hintText="text"
 			     	name={'message'}

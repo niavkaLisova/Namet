@@ -17,10 +17,12 @@ export default function CounterMessages(props) {
        	 	<CounterMessagesName id={props.id}  />
             {(props.unread)? props.unread: ''}
             {(props.active) ? 'Kessa': 'Doar'}
-            <MenuMessagesContainer
-            	handleDeleteAllM={props.handleDeleteAllM}
-            	handleDeleteRoom={props.handleDeleteRoom}
-             />
+            {(props.active)? (
+              <MenuMessagesContainer
+              	handleDeleteAllM={props.handleDeleteAllM}
+              	handleDeleteRoom={props.handleDeleteRoom}
+               />
+            ): ''}
         </Col> 
       </Row>
     </Container>

@@ -67,27 +67,34 @@ chatRoutes.post('/room/new', function(req, res) {
 		    		}
 
 		    		room.delUser = delUser;
-		    		room.save();
-		    		
-		    		res.json({data: room, socket: false});
-		    		return false;
+		    		room.save(function (err, data) {
+				    	if(err) {
+				    		console.log(err);
+				        	return res.status(500).json({msg: 'internal server error'});
+				      	}
+
+			      		res.json({success: true, data: room, socket: false});
+		    			return false;
+			    	});
+		    
 		    	} else {
 		        	return throwFailed(res, 'There is already such room exist.');
 	    		}
-	    	} 
-	    	
-	    	let data = req.body;
-	    	data.lastTime=new Date().getTime();
+	    	} else {
+	    		let data = req.body;
+		    	data.lastTime=new Date().getTime();
+				console.log('data new Room', data);
 
-    		const newRoom = new Room(data);
-		    newRoom.save(function (err, data) {
-		    	if(err) {
-		    		console.log(err);
-		        	return res.status(500).json({msg: 'internal server error'});
-		      	}
+	    		const newRoom = new Room(data);
+			    newRoom.save(function (err, data) {
+			    	if(err) {
+			    		console.log(err);
+			        	return res.status(500).json({success: false , msg: 'internal server error'});
+			      	}
 
-	      		res.json({data, socket: true});
-	    	});
+		      		res.json({success: true, data, socket: true});
+		    	});
+	    	}
 	    });	
 });
 
@@ -162,7 +169,8 @@ chatRoutes.post('/message/make/read', function(req, res) {
 chatRoutes.post('/message/room', async function(req, res) {
 	const { roomId, user, limit } = req.body;
 
-	const room = await Room.findById(roomId);
+	let room = null;
+	if (roomId) room = await Room.findById(roomId);
 
 	if (!room) {
 		return res.json({ error: true, message: 'Room not exist' });
@@ -243,8 +251,16 @@ chatRoutes.post('/delete/room', function(req, res) {
 		.findOne({'_id': roomId})
 		.exec()
 		.then(function(docs) {
-			if((len - 1) == docs.delUser.length) {
-				docs.remove();	
+			console.log('doc', docs.delUser)
+			if (docs.delUser.length == (len - 1)) {
+				console.log(len, docs.delUser.length, docs.delUser.length == len);
+				
+				if (docs.delUser.includes(user)) {
+					console.log('me is already del')
+				} else {
+					console.log('remove room')
+					docs.remove();
+				}
 			} else {
 				docs.delUser.push(user);
 				docs.save();
@@ -254,9 +270,16 @@ chatRoutes.post('/delete/room', function(req, res) {
 			  .exec()
 			  .then(function(findUser) {
 				findUser.activeRoom = '0';
-				findUser.save();
+				findUser.save(function (err, data) {
+			    	if(err) {
+			    		console.log(err);
+			        	return res.status(500).json({msg: 'internal server error'});
+			      	}
+
+		      		res.json({ success: true, message: 'ok' })
+		    	});
 			  })
-			res.json({ success: true, message: 'ok' })
+			
 	})
 });
 
@@ -267,12 +290,20 @@ chatRoutes.post('/room/delete/messages', function(req, res) {
 		.find({'roomID': roomId})
 		.exec()
 		.then(function(docs) {
+			console.log('docs dlete msg', docs);
 			docs.map((doc) => {
-				if((len - 1) == doc.delUser.length) {
-					doc.remove();	
-				} else {
-					doc.delUser.push(user);
-					doc.save();
+				if (doc.delUser) {
+					if (doc.delUser.length == (len - 1)) {
+					
+						if (doc.delUser.includes(user)) {
+							console.log('me is already del')
+						} else {
+							doc.remove();
+						}
+					} else {
+						doc.delUser.push(user);
+						doc.save();
+					}
 				}
 			})
 	})

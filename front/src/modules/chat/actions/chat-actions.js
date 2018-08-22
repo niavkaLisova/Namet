@@ -20,7 +20,7 @@ export function allChat() {
   }
 }
 
-export function newChat(user, myname, that) {
+export function newChat(user, myname, that, location) {
   return (dispatch) => {
       request
         .post(Config.API_DOMAIN + 'chat/room/new')
@@ -40,7 +40,11 @@ export function newChat(user, myname, that) {
               that.props.socket.emit('new room', response.body.data, user._id);
             }
             // console.log('new room action', response.body.data._id);
-            appHistory.push('/chat/' + response.body.data._id)
+            if (location) {
+              appHistory.push('/chat/' + response.body.data._id)
+              location.reload();
+            }
+            
             return ToastStore.success('Room created');
           }
         });
@@ -64,7 +68,7 @@ export function sendMessage(obj) {
           obj.that.props.socket.emit('message', {'roomId': obj.id, 'msg': newMsg});
           dispatch(messageAdd(newMsg));
 
-          obj.node.scrollTo(0, obj.height);  
+          obj.node.scrollTo(0, obj.height);
           obj.that.props.between.map( (uid) => {
             const object = {
               uid, 
@@ -88,6 +92,7 @@ export function socketMessage(object) {
           const user = response.body;
           if(user.online.length && user.online.length > 0) {
             user.online.map( (id_online) => {
+              // console.log('send message action', object);
               object.that.props.socket.emit('message global', id_online, {
                 'roomId': object.id,
                 'text': object.text,
@@ -117,6 +122,7 @@ export function getMessages(roomId, limit) {
 }
 
 export function deleteUserFromChatM(msg, len) {
+  console.log('delete yser from chat m', msg);
   return (dispatch) => {
       request
         .post(Config.API_DOMAIN + 'chat/room/delete/user')
@@ -133,6 +139,7 @@ export function deleteUserFromChatM(msg, len) {
 }
 
 export function deleteUserFromChatAllM(roomId, len) {
+  console.log('dlete all m', roomId, len)
   return (dispatch) => {
       request
         .post(Config.API_DOMAIN + 'chat/room/delete/messages')

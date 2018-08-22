@@ -21,21 +21,32 @@ import * as UserActions from '../../user/actions/user-actions'
   };
 })
 class ChatContainer extends React.Component {
+	componentDidMount() {
+		let time = setInterval(() => {
+			if (this.props.email && this.props.idChat) {
+      	if (this.props.idChat.length > 0) {
+      		this.props.socket.emit('join room', this.props.idChat);
+      		this.handle();
+      	} else {
+      		if (this.props.activeRoom != 0) {
+      			appHistory.push('/chat/' + this.props.activeRoom)
+      		}
+      	}
+        clearInterval(time);
+      } else {
+    		if (this.props.activeRoom != 0) {
+    			appHistory.push('/chat/' + this.props.activeRoom)
+    		}
+
+      	clearInterval(time);
+      }
+    }, 1000);
+	}
+
 	constructor(props) {
 		super(props);
 
-		let time = setInterval(() => {
-      if (this.props.email.length > 0 && this.props.chat.length > 0) {
-      	if (this.props.idChat) {
-      		console.log('is idchat', this.props.idChat)
-      		this.handle();
-      	} else {
-      		console.log('active Room', this.props.activeRoom)
-      		appHistory.push('/chat/' + this.props.activeRoom)
-      	}
-        clearInterval(time);
-      }
-    }, 1000);
+		
 	}
 
 	componentDidUpdate(prevProps) {
@@ -43,6 +54,7 @@ class ChatContainer extends React.Component {
 			if (prevProps.idChat){
 				this.props.socket.emit('leave room', prevProps.idChat);
 			}
+			this.props.socket.emit('join room', this.props.idChat);
 
 			this.handle();
 		}
@@ -51,7 +63,6 @@ class ChatContainer extends React.Component {
 	handle = () => {
 		this.props.dispatch(ChatActions.beetwenUpdated(this.props.idChat));
 		this.props.dispatch(ChatActions.getMessagesRoom(this.props.idChat, this.props.limit))
-		this.props.socket.emit('join room', this.props.idChat);
 		this.props.dispatch(ChatActions.limitStart());
 		this.props.dispatch(ChatActions.messageRead(this.props.idChat, this));
 
@@ -62,7 +73,6 @@ class ChatContainer extends React.Component {
 		this.props.chat.map((item) => {
 			this.props.dispatch(ChatActions.unreadSelect(item._id));
 		});
-		console.log('did update')
 		
 		setTimeout(function(){
 			let style = window.getComputedStyle(window.document.getElementById('scroll'), null);

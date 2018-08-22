@@ -61,24 +61,24 @@ class ListroomsContainer extends React.Component {
 		this.props.dispatch(ChatActions.messageRead('', this));
 
 		this.props.socket.on('message g', (data) => {
-	    this.props.chat.map((item) => {
+	    	this.props.chat.map((item) => {
 				this.props.dispatch(ChatActions.unreadSelect(item._id));
 			});
-      this.props.dispatch(ChatActions.allChat());
-      console.log(data, 'g')
-	  });
+	    	this.props.dispatch(ChatActions.allChat());
+	    	console.log(data, 'g')
+		});
 
-    this.props.socket.on('reload read message', () => {
-    	console.log('reload')
-    	this.props.chat.map((item, index) => {
-				this.props.dispatch(ChatActions.getMessagesRoom(this.props.idChat, this.props.limit))
-			});
-    })
+	    this.props.socket.on('reload read message', () => {
+	    	console.log('reload')
+	    	this.props.chat.map((item, index) => {
+					this.props.dispatch(ChatActions.getMessagesRoom(this.props.idChat, this.props.limit))
+				});
+	    })
 
 		this.props.socket.on('message', (data) =>{
-			console.log('msg', data)
+			console.log('msg', data);
 			this.props.dispatch(ChatActions.messageRead(this.props.roomId, this));
-			data.read = true
+			data.read = true;
 			this.props.dispatch(ChatActions.messageAdd(data));
 
 			if (window.document.getElementById('scroll')) {
@@ -116,6 +116,7 @@ class ListroomsContainer extends React.Component {
 		}
 		this.props.dispatch(ChatActions.deleteRoom(this.props.idChat, this.props.between.length, this.props.socket))
 		this.props.socket.emit('leave room', this.props.roomId);
+		appHistory.push('/chat');
 	}
 
 	render = () => {

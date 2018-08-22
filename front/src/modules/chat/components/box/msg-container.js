@@ -31,13 +31,13 @@ class MsgContainer extends React.Component {
 	  this.handleDelete = this.handleDelete.bind(this)
 	}
 
-	handleDelete(msg) {
+	handleDelete = msg => {
 		if(!msg.delUser.includes(msg._id)) {
 			this.props.dispatch(ChatActions.deleteUserFromChatM(msg, this.props.betweenName.length));
 		}
 		this.setState({
-    	visible: false
-    });
+	    	visible: false
+	    });
 	}
 
 	render() {
