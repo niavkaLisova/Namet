@@ -2,6 +2,7 @@ import React from 'react';
 import { API_DOMAIN } from '../../../utils/config.js'
 
 import * as UserActions from '../actions/user-actions'
+import * as RecordActions from '../actions/record-actions'
 import * as ChatActions from '../../chat/actions/chat-actions'
 import appHistory from '../../../utils/app-history'
 import { socketConnect } from 'socket.io-react'
@@ -20,6 +21,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import UserFormContainer from './user-form-container'
 import CreateModal from './record/createModal'
 import FollowListContainer from './follow/followList-container'
+import WallContainer from './home/wall-container'
 
 import { Container, Row, Col } from 'react-grid-system'
 import { connect } from "react-redux"
@@ -49,6 +51,9 @@ class UserContainer extends React.Component {
     this.props.dispatch(UserActions.findInfoUser(this.props.id))
     this.props.dispatch(UserActions.followersList(this.props.id));
     this.props.dispatch(UserActions.findInfoFollowing(this.props.id))
+    if (this.props.id) {
+      this.props.dispatch(RecordActions.findWallRecord(this.props.id));
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -57,6 +62,7 @@ class UserContainer extends React.Component {
       this.props.dispatch(UserActions.findInfoUser(this.props.id))
       this.props.dispatch(UserActions.followersList(this.props.id));
       this.setState({ visible: true })
+      this.props.dispatch(RecordActions.findWallRecord(this.props.id));
     }
   }
 
@@ -172,12 +178,16 @@ class UserContainer extends React.Component {
             })}
           </div>
           </Col>
-          <Col md={4}>
-            Sticky
-            <p>Team {this.props.info.team}</p>
+          <Col md={3}>
+            <Row>
+              <p>Team {this.props.info.team}</p>
+            </Row>
+            <Row>
+              <WallContainer idUser={this.props.id} />
+            </Row>
           </Col>
           <Col md={2}>
-            chat
+            <p>chat</p>
           </Col>
         </Row>
       </Container>

@@ -220,6 +220,20 @@ export function removeCollectionById(collectionId) {
   }
 }
 
+export function findWallRecord(idUser) {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'record/find/record/wall')
+        .set('x-access-token', localStorage.getItem('token'))
+        .send({
+          idUser
+        })
+        .end((error, response) => {
+          dispatch(setWallRecord(response.body));
+        });
+  }
+}
+
 export function setcollectionsList(data) {
   return {type: 'SET_COLLECTIONS', data};
 }
@@ -246,4 +260,8 @@ export function setSearch(data) {
 
 export function setFull(data) {
   return {type: 'SET_FULL', data};
+}
+
+export function setWallRecord(data) {
+  return {type: 'SET_WALL_RECORD', data};
 }

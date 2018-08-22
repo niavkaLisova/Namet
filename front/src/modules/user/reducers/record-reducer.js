@@ -9,7 +9,8 @@ let init = {
   topRecords: [],
   searchList: [],
   editList: [],
-  full: []
+  full: [],
+  wall: []
 }
 
 function recordReducer(state = init, action) {
@@ -61,7 +62,13 @@ function recordReducer(state = init, action) {
         ...state,
         full: action.data 
       }
-      break; 
+      break;
+    case 'SET_WALL_RECORD':
+      return {
+        ...state,
+        wall: action.data 
+      }
+      break;
 
     default: return state;
   }

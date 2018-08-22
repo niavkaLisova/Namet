@@ -216,4 +216,19 @@ recordRoutes.post('/remove/record/id', function(req, res) {
     });
 });
 
+recordRoutes.post('/find/record/wall', function(req, res) {
+  const { idUser } = req.body;
+  
+  Record
+    .find({
+      author: idUser,
+      type: { $elemMatch: {$in: ["wall"]}},
+      state: "public"
+    })
+    .exec()
+    .then(function(record) {
+      res.json(record);
+    });
+});
+
 module.exports = recordRoutes;
