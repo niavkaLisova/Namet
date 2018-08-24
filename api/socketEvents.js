@@ -3,6 +3,7 @@ const User = require('./models/user')
 const Message = require('./models/message')
 
 let adminChat = [];
+let generalChat = [];
 let chatLength = 30;
 
 exports = module.exports = function(io) {
@@ -35,6 +36,27 @@ exports = module.exports = function(io) {
 
 			socket.to('adminChat').emit('adminChat push message', message);
 			socket.emit('adminChat push message', message);
+		});
+
+		socket.on('generalChat get messages b', function(){
+			console.log('emit general chat')
+			socket.emit('generalChat get messages', generalChat);
+		});
+
+		socket.on('generalChat push messages b', function(message){
+			message._id = new ObjectID();
+			
+			generalChat.push(message);
+			if(generalChat.length >= chatLength) {
+				generalChat.splice(0, 1)
+			}
+
+			socket.to('generalChat').emit('generalChat push message', message);
+			socket.emit('generalChat push message', message);
+		});
+
+		socket.on('scroll down b', function(){
+			socket.emit('scroll down');
 		});
 
 		socket.on('type b', function(data){

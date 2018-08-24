@@ -234,6 +234,17 @@ export function findWallRecord(idUser) {
   }
 }
 
+export function findRecentlyRerords() {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'record/find/record/recently')
+        .set('x-access-token', localStorage.getItem('token'))
+        .end((error, response) => {
+          dispatch(setRecentlyRecord(response.body));
+        });
+  }
+}
+
 export function setcollectionsList(data) {
   return {type: 'SET_COLLECTIONS', data};
 }
@@ -264,4 +275,8 @@ export function setFull(data) {
 
 export function setWallRecord(data) {
   return {type: 'SET_WALL_RECORD', data};
+}
+
+export function setRecentlyRecord(data) {
+  return {type: 'SET_RECENTLY_RECORD', data};
 }

@@ -225,6 +225,20 @@ recordRoutes.post('/find/record/wall', function(req, res) {
       type: { $elemMatch: {$in: ["wall"]}},
       state: "public"
     })
+    .sort({ 'createdAt': -1 })
+    .exec()
+    .then(function(record) {
+      res.json(record);
+    });
+});
+
+recordRoutes.post('/find/record/recently', function(req, res) {
+  Record
+    .find({
+      type: { $elemMatch: {$in: ["work"]}},
+      state: "public"
+    })
+    .sort({ 'createdAt': -1 })
     .exec()
     .then(function(record) {
       res.json(record);

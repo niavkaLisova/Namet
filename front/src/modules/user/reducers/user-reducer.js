@@ -29,7 +29,8 @@ let init = {
   topTeam: [],
   teamOne: [],
   teamTwo: [],
-  teamThree: []
+  teamThree: [],
+  listChat: []
 }
 
 function userReducer(state = init, action) {
@@ -199,6 +200,18 @@ function userReducer(state = init, action) {
       return {
         ...state,
         team: action.data 
+      }
+      break; 
+    case 'SET_LIST_CHAT':
+      return {
+        ...state,
+        listChat: action.data 
+      }
+      break;
+    case 'PUSH_LIST_CHAT':
+      return {
+        ...state,
+        listChat: state.listChat.concat(action.data)
       }
       break;
 

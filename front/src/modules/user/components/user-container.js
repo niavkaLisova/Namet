@@ -20,8 +20,10 @@ import ListItemText from '@material-ui/core/ListItemText'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import UserFormContainer from './user-form-container'
 import CreateModal from './record/createModal'
-import FollowListContainer from './follow/followList-container'
+import FollowItemContainer from './follow/followItem-container'
 import WallContainer from './home/wall-container'
+import HomeLeftSidebarContainer from './home/homeLeftSidebar-container'
+import UserInfoContainer from './home/userInfo-container'
 
 import { Container, Row, Col } from 'react-grid-system'
 import { connect } from "react-redux"
@@ -95,7 +97,6 @@ class UserContainer extends React.Component {
 
   render() {
     const { user } = this.props;
-    const info = (this.props.info)? this.props.info: [];
 
     let list = this.props.listFollowers.find(item => {
       return item._id == localStorage.getItem('userId') 
@@ -109,36 +110,10 @@ class UserContainer extends React.Component {
          />
         <Row>
           <Col md={6}>
-           {(info.avatar != undefined)?(
-             <Avatar
-              alt={info.nickname}
-              src={API_DOMAIN + 'public/upload/user/' + info.avatar}
-            />
-          ): ''}
-          <List>
-            {this.state.text}
-            <ListItem button>
-              <ListItemText primary={`Nickname: ${info.nickname}`} />
-            </ListItem>
-            <ListItem button>
-              <ListItemText primary={`Name: ${info.name}`} />
-            </ListItem>
-            {(info.country)? (
-            <ListItem button>
-              <ListItemText primary={`Country: ${info.country}`} />
-            </ListItem>
-            ): ('')}
-            {(info.city)? (
-            <ListItem button>
-              <ListItemText primary={`City: ${info.city}`} />
-            </ListItem>
-            ): ('')}
-            <ListItem button>
-              <ListItemText primary={`Gender: ${info.gender}`} />
-            </ListItem>
-
-          </List>
-          {(localStorage.getItem('userId') == this.props.id)? (
+            <UserInfoContainer 
+              info={this.props.info}
+             />
+            {(localStorage.getItem('userId') == this.props.id)? (
             <Button variant="outlined" color="primary" onClick={this.handleClickOpen}>
               create post
             </Button>
@@ -165,29 +140,27 @@ class UserContainer extends React.Component {
           <div>
             <hr />
             <p onClick={this.handleSeeMoreFollow}>See more</p>
-            {this.props.followingList
-              .slice(0, 5)
-              .map((follower, index) => {
-              return (
-                <FollowListContainer 
-                  follower={follower}
-                  key={follower._id}
-                  id={null}
-                 />
-              )
-            })}
+            <div class='followBox'>
+              {this.props.followingList
+                .slice(0, 5)
+                .map((follower, index) => {
+                return (
+                  <FollowItemContainer
+                    key={follower._id}
+                    follower={follower}
+                   />
+                )
+              })}
+            </div>
           </div>
           </Col>
           <Col md={3}>
             <Row>
-              <p>Team {this.props.info.team}</p>
-            </Row>
-            <Row>
               <WallContainer idUser={this.props.id} />
             </Row>
           </Col>
-          <Col md={2}>
-            <p>chat</p>
+          <Col md={3}>
+            <HomeLeftSidebarContainer id={this.props.id} />
           </Col>
         </Row>
       </Container>

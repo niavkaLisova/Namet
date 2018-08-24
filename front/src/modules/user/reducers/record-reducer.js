@@ -10,7 +10,8 @@ let init = {
   searchList: [],
   editList: [],
   full: [],
-  wall: []
+  wall: [],
+  recently: []
 }
 
 function recordReducer(state = init, action) {
@@ -67,6 +68,12 @@ function recordReducer(state = init, action) {
       return {
         ...state,
         wall: action.data 
+      }
+      break;
+    case 'SET_RECENTLY_RECORD':
+      return {
+        ...state,
+        recently: action.data 
       }
       break;
 

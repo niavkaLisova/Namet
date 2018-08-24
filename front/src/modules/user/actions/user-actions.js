@@ -507,3 +507,11 @@ export function setTeamThree(data) {
 export function setTeamId(data) {
   return {type: 'SET_TEAM_ID', data};
 }
+
+export function setListChat(data) {
+  return {type: 'SET_LIST_CHAT', data};
+}
+
+export function pushListChat(data) {
+  return {type: 'PUSH_LIST_CHAT', data};
+}
