@@ -8,6 +8,7 @@ import dashboardReducer from '../modules/dashboard/reducers/dashboard-reducer';
 import adminReducer from '../modules/admin/reducers/admin-reducer';
 import { localeReducer as locale, initialize  } from 'react-localize-redux';
 import notificationReducer from '../modules/notification/reducers/notification-reducer'
+import teamReducer from '../modules/team/reducers/team-reducer';
 
 const rootReducer = combineReducers({
   login: loginReducer,
@@ -18,7 +19,8 @@ const rootReducer = combineReducers({
   dashboard: dashboardReducer,
   adminN: adminReducer,
   record: recordReducer,
-  recordEdit: recordEditReducer
+  recordEdit: recordEditReducer,
+  team: teamReducer
 });
 
 export default rootReducer;

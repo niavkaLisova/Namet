@@ -4,6 +4,7 @@ const Message = require('./models/message')
 
 let adminChat = [];
 let generalChat = [];
+let teamChat = [];
 let chatLength = 30;
 
 exports = module.exports = function(io) {
@@ -39,7 +40,6 @@ exports = module.exports = function(io) {
 		});
 
 		socket.on('generalChat get messages b', function(){
-			console.log('emit general chat')
 			socket.emit('generalChat get messages', generalChat);
 		});
 
@@ -58,6 +58,25 @@ exports = module.exports = function(io) {
 		socket.on('scroll down b', function(){
 			socket.emit('scroll down');
 		});
+
+		socket.on('teamChat get messages b', function(room){
+			socket.emit('teamChat get messages', teamChat[room]);
+		});
+
+		socket.on('teamChat push messages b', function(info){
+			const { message, room } = info;
+			message._id = new ObjectID();
+			
+			if (!teamChat[room]) teamChat[room] = [];
+			
+			teamChat[room].push(message);
+			if(teamChat[room].length >= chatLength) {
+				teamChat.splice(0, 1)
+			}
+			console.log('teamChat', teamChat);
+			socket.to(room).emit('teamChat push message', message);
+			socket.emit('teamChat push message', message);
+		});	
 
 		socket.on('type b', function(data){
 			socket.to(data.roomId).emit('type', data.user);

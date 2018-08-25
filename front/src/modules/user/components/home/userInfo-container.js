@@ -13,19 +13,18 @@ import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
+import { Link } from 'react-router-dom'
 
 import { Container, Row, Col } from 'react-grid-system'
 import { connect } from "react-redux"
+
+import TeamInfoContainer from './teamInfo-container'
 
 @connect((store, ownProps) => {
   return {
   };
 })
 class UserInfoContainer extends React.Component {
-  constructor(props) {
-    super(props)
-  }
-
   render() {
     const info = this.props.info;
     const avatar = 'url(' + API_DOMAIN + 'public/upload/user/' + info.avatar + ')';
@@ -65,6 +64,14 @@ class UserInfoContainer extends React.Component {
               {info.country}
             </span>
             ): ('')}
+          </div>
+
+          <div>
+            {(info.team)? (
+              <Link to={`/team/${info.team}`}>
+                <TeamInfoContainer id={info.team} />
+              </Link>
+            ): ''}
           </div>
 
         </div>

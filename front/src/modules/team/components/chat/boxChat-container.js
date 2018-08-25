@@ -10,16 +10,12 @@ import { connect } from "react-redux"
   };
 })
 class BoxChatContainer extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <div>
         <MessageContainer />
         {(localStorage.getItem('userId'))? (
-          <TextareaContainer />
+          <TextareaContainer idTeam={this.props.idTeam} />
         ): ''}
       </div>
     )

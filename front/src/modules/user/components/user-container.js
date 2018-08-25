@@ -16,7 +16,7 @@ import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
-
+import { Redirect } from 'react-router-dom'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import UserFormContainer from './user-form-container'
 import CreateModal from './record/createModal'
@@ -104,6 +104,8 @@ class UserContainer extends React.Component {
 
     return (
       <Container fluid>
+        {(this.props.info.error)? (<Redirect to='/' />): (
+        <div>
         <CreateModal
           open={this.state.open}
           handleCloseModal={this.handleCloseModal}
@@ -163,6 +165,8 @@ class UserContainer extends React.Component {
             <HomeLeftSidebarContainer id={this.props.id} />
           </Col>
         </Row>
+        </div>
+        )}
       </Container>
     )
   }

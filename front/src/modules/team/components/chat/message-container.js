@@ -4,7 +4,7 @@ import ReactTimeout from 'react-timeout'
 import { socketConnect } from 'socket.io-react'
 import { List, ListItem } from 'material-ui/List'
 
-import * as UserActions from '../../../actions/user-actions'
+import * as TeamActions from '../../actions/team-actions'
 import MsgContainer from './msg-container'
 
 import Divider from 'material-ui/Divider';
@@ -21,22 +21,24 @@ class MessageContainer extends React.Component {
 	constructor(props) {
     	super(props);
 
-    	this.props.socket.on('generalChat get messages', (list) => {
-	    	this.props.dispatch(UserActions.setListChat(list));
+    	this.props.socket.on('teamChat get messages', (list) => {
+    		if (list) {
+	    		this.props.dispatch(TeamActions.setListChat(list));
+    		}
 	    	
-	    	let nodeList = window.document.getElementById('scrollGeneral')
-		    let node = window.document.getElementById('scrollGeneralC')
+	    	let nodeList = window.document.getElementById('scrollTeaml')
+		    let node = window.document.getElementById('scrollTeamC')
 
 		    if(node) { 
 				node.scrollTo(0, nodeList.clientHeight);
 			}
 	    })
 
-    	this.props.socket.on('generalChat push message', message => {
-	    	this.props.dispatch(UserActions.pushListChat(message))
+    	this.props.socket.on('teamChat push message', message => {
+	    	this.props.dispatch(TeamActions.pushListChat(message))
 	    
-			let nodeList = window.document.getElementById('scrollGeneral')
-		    let node = window.document.getElementById('scrollGeneralC')
+			let nodeList = window.document.getElementById('scrollTeaml')
+		    let node = window.document.getElementById('scrollTeamC')
 
 		    if(node) {
 				node.scrollTo(0, nodeList.clientHeight);
@@ -44,8 +46,8 @@ class MessageContainer extends React.Component {
 	    });
 
 	    this.props.socket.on('scroll down', () => {
-	    	let nodeList = window.document.getElementById('scrollGeneral')
-		    let node = window.document.getElementById('scrollGeneralC')
+	    	let nodeList = window.document.getElementById('scrollTeam')
+		    let node = window.document.getElementById('scrollTeamC')
 
 		    if(node) {
 				node.scrollTo(0, nodeList.clientHeight);
@@ -55,15 +57,15 @@ class MessageContainer extends React.Component {
 
 	render() {
 		return (
-			<List class='messagesContainer' id='scrollGeneralC'>
-			    <List class='messagesList' id='scrollGeneral'>
+			<List class='messagesTeamContainer' id='scrollTeamC'>
+			    <List class='messagesList' id='scrollTeaml'>
 			    	{this.props.listChat.map((msg, index) => {
-			    		if (index - 1 == -1 || index - 1 >= 0 && msg._id != (this.props.listChat[index - 1])._id) {
+			    		if (index - 1 == -1 || (index - 1 >= 0 && msg._id != (this.props.listChat[index - 1])._id)) {
 			    			return <div key={index}>
-					    			<IntlProvider locale="en">
-										<MsgContainer msg={msg} username={this.props.user} />
-									</IntlProvider>
-								</div>
+				    			<IntlProvider locale="en">
+									<MsgContainer msg={msg} username={this.props.user} />
+								</IntlProvider>
+							</div>
 			    		}
 			    		
 						}

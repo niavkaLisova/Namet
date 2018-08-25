@@ -23,6 +23,9 @@ import Welcome from '../modules/register/components/welcome'
 import Error from '../modules/user/components/error'
 import Confirm from '../modules/login/components/confirm'
 import RegisterContainer from '../modules/register/components/register-container'
+
+import TeamPageContainer from '../modules/team/components/teamPage-container'
+
 import { RouteHandler } from 'react-router'
 import requireAuth from './require-auth'
 
@@ -49,6 +52,7 @@ export default (
 			<Route path='/follow/:id' component={FollowContainer} />
 			<Route path='/collection' component={CollectionEditContainer} />
 			<Route path='/select/team' component={TeamSettingsContainer} />
+			<Route path='/team/:idTeam?' component={TeamPageContainer} />
 		</DashboardContainer>
 	</Switch>
 );

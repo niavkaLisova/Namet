@@ -79,43 +79,49 @@ class DashboardContainer extends React.Component {
         <div>
         <ToastContainer store={ToastStore}/>
 
-            <div>
-              <AppBar
-                title={"Намет"}
-                iconElementRight={
-                  <FlatButton
-                    label={this.props.user.name + " Logout" }
-                    secondary={true}
-                    onClick={self.onLogout.bind(self)}
-                  />
-                }
-                iconElementLeft={
-                  <Button onClick={this.toggleDrawer('left', true)}><Icon>menu</Icon></Button>
-                }
-              />
-              <div>
-                {this.props.children}
-              </div>
-              
-              <SwipeableDrawer
-                open={this.state.left}
-                onClose={this.toggleDrawer('left', false)}
-                onOpen={this.toggleDrawer('left', true)}
-              >
-                <div
-                  class='drawer'
-                  tabIndex={0}
-                  role="button"
-                  onClick={this.toggleDrawer('left', false)}
-                  onKeyDown={this.toggleDrawer('left', false)}
-                >
-                  <LeftMenu
-                  handleToggle={self.handleToggle.bind(self)}
+          <div>
+            <AppBar
+              title={"Намет"}
+              iconElementRight={
+                <FlatButton
+                  label={this.props.user.name + " Logout" }
+                  secondary={true}
+                  onClick={self.onLogout.bind(self)}
                 />
+              }
+              iconElementLeft={
+                <div>
+                  {(localStorage.getItem('userId'))? (
+                  <Button onClick={this.toggleDrawer('left', true)}><Icon>menu</Icon></Button>
+                  ): ''}
                 </div>
-              </SwipeableDrawer>
+              }
+            />
+            <div>
+              {this.props.children}
             </div>
-          
+            
+            {(localStorage.getItem('userId'))? (
+            <SwipeableDrawer
+              open={this.state.left}
+              onClose={this.toggleDrawer('left', false)}
+              onOpen={this.toggleDrawer('left', true)}
+            >
+              <div
+                class='drawer'
+                tabIndex={0}
+                role="button"
+                onClick={this.toggleDrawer('left', false)}
+                onKeyDown={this.toggleDrawer('left', false)}
+              >
+                <LeftMenu
+                handleToggle={self.handleToggle.bind(self)}
+              />
+              </div>
+            </SwipeableDrawer>
+            ): ''}
+          </div>
+        
         </div>
       </MuiThemeProvider>
     )

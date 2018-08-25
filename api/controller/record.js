@@ -5,6 +5,7 @@ const bson = require('bson')
 
 const Sections = require('../models/sections')
 const Record = require('../models/record')
+const Team = require('../models/team')
 const config = require('../config/config')
 const { ObjectId } = require('mongodb')
  
@@ -245,4 +246,24 @@ recordRoutes.post('/find/record/recently', function(req, res) {
     });
 });
 
+recordRoutes.post('/find/recently/idTeam', function(req, res) {
+  const { idTeam } = req.body;
+
+  User
+    .find({team: idTeam})
+    .exec()
+    .then(function(users) {
+      console.log('users', users);
+    })
+  // Record
+  //   .find({
+  //     type: { $elemMatch: {$in: ["work"]}},
+  //     state: "public"
+  //   })
+  //   .sort({ 'createdAt': -1 })
+  //   .exec()
+  //   .then(function(record) {
+  //     res.json(record);
+  //   });
+});
 module.exports = recordRoutes;

@@ -12,6 +12,7 @@ const userRoutes = require('./controller/user')
 const chatRoutes = require('./controller/chat')
 const adminRoutes = require('./controller/admin')
 const recordRoutes = require('./controller/record')
+const teamRoutes = require('./controller/team')
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
@@ -34,3 +35,4 @@ app.use('/api', userRoutes);
 app.use('/chat', chatRoutes);
 app.use('/admin', adminRoutes);
 app.use('/record', recordRoutes);
+app.use('/team', teamRoutes)
