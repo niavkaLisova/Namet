@@ -408,6 +408,20 @@ export function getTeamByTitle(title, index, points) {
   }
 }
 
+export function checkPoint() {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'api/check/point')
+        .set('x-access-token', localStorage.getItem('token'))
+        .send({
+          userId: localStorage.getItem('userId')    
+        })
+        .end((error, response) => {
+          // console.log('check point', response.body);
+        });
+  }
+}
+
 export function setFile(data) {
   return {type: 'SET_FILE', data};
 }

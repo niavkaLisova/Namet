@@ -50,6 +50,8 @@ class UserContainer extends React.Component {
       visible: true
     }
 
+    this.props.dispatch(UserActions.checkPoint());
+
     this.props.dispatch(UserActions.findInfoUser(this.props.id))
     this.props.dispatch(UserActions.followersList(this.props.id));
     this.props.dispatch(UserActions.findInfoFollowing(this.props.id))

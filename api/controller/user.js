@@ -689,4 +689,49 @@ userRoutes.post('/find/team/id', function(req, res) {
 });
 /** end team **/
 
+/** point **/
+
+userRoutes.post('/check/point', function(req, res) {
+  const { userId } = req.body;
+
+  User
+    .findById(userId, {timePoint: 1, coin: 1})
+    .exec()
+    .then(function(doc) {
+      let time = new Date();
+      time.setTime(Number(doc.timePoint));
+
+      const year = time.getFullYear();
+      const month = time.getMonth();
+      const date = time.getDate();
+
+      // console.log(year, month, date, 'then');
+      const now = new Date();
+
+      const yearNow = now.getFullYear();
+      const monthNow = now.getMonth();
+      const dateNow = now.getDate();
+      // console.log(yearNow, monthNow, dateNow, 'now');
+
+      if (date != dateNow || month != monthNow || year != yearNow) {
+        // doc.timePoint = now.getTime();
+
+        User
+          .update(
+            {'_id': userId},
+            { $set: { 'coin.neutral': 25 }, timePoint: now.getTime() }, function(err, doc) {
+              if (err) throw err;
+
+              console.log('coin', doc.coin);
+              return res.json({ success: true, message: 'Time Point updated successfully.', doc });
+            }
+          )
+      } else {
+        return res.json({ success: false, message: 'Time Point does not updated.', doc });
+      }
+    });
+});
+
+/** end point **/
+
 module.exports = userRoutes;
