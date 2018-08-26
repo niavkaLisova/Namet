@@ -36,7 +36,10 @@ export default class CreateTeamContainer extends React.Component {
 			g: 77,
 			a: 100,
 			emblem: '',
-			file: null
+			file: null,
+			point: null,
+			fileError: '',
+			pointError: ''
 		}
 	}
 
@@ -49,10 +52,17 @@ export default class CreateTeamContainer extends React.Component {
 		this.setState({file: file})
 	}
 
-	fileUpload = file =>{
+	handleChangePoint = event => {
+		const point = event.target.files[0];
+		this.setState({point: point})
+	}
+
+	fileUpload = (file, point) =>{
 	    const url = API_DOMAIN + 'api/upload/team';
 	    const formData = new FormData(this);
     	formData.append('file', file);
+    	formData.append('point', point);
+   
     	const config = {
         	headers: {
             	'content-type': 'multipart/form-data'
@@ -71,18 +81,34 @@ export default class CreateTeamContainer extends React.Component {
 			g: Number(inputs[3].defaultValue),
 			b: Number(inputs[4].defaultValue),
 			a: (Number(inputs[5].defaultValue) / 100)
-		})
+		});
+		let fileError = '';
+		let pointError = '';
 
-    	this.fileUpload(this.state.file).then((response)=>{
-    		const color = `rgba(${this.state.r}, ${this.state.g}, ${this.state.b}, ${this.state.a})`;
-    		this.props.dispatch(AdminActions.createTeam(response.data, this.state.name, color));
+		if (!this.state.file) fileError = 'Emblem is required';
+		if (!this.state.point) pointError = 'Point is required'; 
 
-    		this.setState({ 
-    			name: '',
-    			file: null
+    	if (!this.state.file || !this.state.point) {
+    		this.setState({
+    			fileError,
+    			pointError
     		})
-    	})
+    	} else {
+	    	this.fileUpload(this.state.file, this.state.point).then((response)=>{
+	    		const color = `rgba(${this.state.r}, ${this.state.g}, ${this.state.b}, ${this.state.a})`;
+	    		console.log(response.data, 'file upload')
+	    		const { result, resultPoint} = response.data;
+	    		this.props.dispatch(AdminActions.createTeam(result, this.state.name, color, resultPoint));
 
+	    		this.setState({ 
+	    			name: '',
+	    			file: null,
+	    			point: point,
+	    			fileError,
+	    			pointError
+	    		})
+	    	})
+	    }
   	}
 
 	render() {
@@ -105,12 +131,25 @@ export default class CreateTeamContainer extends React.Component {
 
 				     <SketchPicker />
 
-				    <input
-					    accept="image/*"
-					    id="upload-file"
-					    type="file"
-						onChange={this.handleChangeImage}
-					 />
+				    <div>Emplem:
+					    <input
+						    accept="image/*"
+						    id="upload-file"
+						    type="file"
+							onChange={this.handleChangeImage}
+						 />
+						<p class='error'>{this.state.fileError}</p>
+					</div>
+
+					<div>Point:
+						<input
+						    accept="image/*"
+						    id="upload-file-point"
+						    type="file"
+							onChange={this.handleChangePoint}
+						 />
+						<p class='error'>{this.state.pointError}</p>
+					</div>
 
 				    <Button
 				    	variant="contained"

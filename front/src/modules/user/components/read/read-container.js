@@ -43,7 +43,9 @@ class ReadContainer extends React.Component {
 	        <h2>{this.props.recordActive.title} <span>{this.props.recordActive.review}</span></h2>
           {(this.props.id == localStorage.getItem('userId'))? (
             <p onClick={this.handleClickOpen}>To Edit</p>
-            ): ('')}
+          ): (
+            <p>Send Points</p>
+          )}
           <p onClick={this.handleOpenFull} >open</p>
           {(this.props.recordActive.img)? (
 	        <img

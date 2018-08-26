@@ -19,10 +19,19 @@ class FullScreenContainer extends React.Component {
 		this.props.dispatch(RecordActions.findRecordById(this.props.id));
 	}
 
+	sendPoint = () => {
+		console.log('send point', this.props.full._id)
+	}
+
 	render() {
 	    return (
 	      <div>
 	      	<h2>{this.props.full.title}</h2>
+	      	{(this.props.full.author != localStorage.getItem('userId'))?
+	      		(	
+	      			<p onClick={this.sendPoint}>Send Points</p>
+	      		):
+	      	''}
 	      	{(this.props.full.img)? (
 	        <img
 	          class='recordThumbnail'

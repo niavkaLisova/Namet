@@ -219,7 +219,8 @@ export function deleteRepot(id, reports) {
   }
 }
 
-export function createTeam(emblem, name, color) {
+export function createTeam(emblem, name, color, point) {
+  console.log('create team action', emblem, name, color, point)
   return (dispatch) => {
     request
       .post(Config.API_DOMAIN + 'admin/create/team')
@@ -227,7 +228,8 @@ export function createTeam(emblem, name, color) {
       .send({
         name,
         emblem,
-        color
+        color,
+        point
       })
       .end((error, response) => {
         dispatch(pushTeam(response.body));
@@ -261,14 +263,15 @@ export function removeImage(emblem) {
   }
 }
 
-export function editTeam(img, team) {
+export function editTeam(img, team, point) {
   return (dispatch) => {
     request
       .post(Config.API_DOMAIN + 'admin/edit/team')
       .set('x-access-token', localStorage.getItem('token'))
       .send({
         img,
-        team
+        team,
+        point
       })
       .end((error, response) => {
       });

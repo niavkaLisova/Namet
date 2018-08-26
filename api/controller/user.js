@@ -519,7 +519,7 @@ userRoutes.post('/upload/user', function(req, res) {
   });
 });
 
-userRoutes.post('/upload/team', function(req, res) {
+userRoutes.post('/upload/team/one', function(req, res) {
   const files = req.files;
   const file = files.file;
 
@@ -539,6 +539,41 @@ userRoutes.post('/upload/team', function(req, res) {
  
     const result = name + '.' +  type;
     res.send(result);
+  });
+});
+
+userRoutes.post('/upload/team', function(req, res) {
+  const files = req.files;
+  const file = files.file;
+  const point = files.point;
+  console.log('point upload ream', point);
+
+  const name = ObjectId();
+  const namePoint = ObjectId();
+
+  if (!files)
+    return res.status(400).send('No files were uploaded.');
+
+  let type = file.mimetype.split('/');
+  type = type[1];
+
+  let typePoint = point.mimetype.split('/');
+  typePoint = typePoint[1];
+
+  if (type == 'jpeg') type = 'jpg';
+
+  file.mv(`public/upload/team/${name}.${type}`, function(err) {
+    if (err)
+      return res.status(500).send(err);
+ 
+    const result = name + '.' +  type;
+    point.mv(`public/upload/team/${namePoint}.${typePoint}`, function(err) {
+      if (err)
+        return res.status(500).send(err);
+   
+      const resultPoint = namePoint + '.' +  typePoint;
+      res.send({result, resultPoint});
+    });
   });
 });
 

@@ -206,12 +206,13 @@ adminRoutes.post('/delete/report', function(req, res) {
 });
 
 adminRoutes.post('/create/team', function(req, res) {
-    const { name, emblem, color } = req.body;
+    const { name, emblem, color, point } = req.body;
 
     let team = new Team({
       name,
       emblem,
-      color
+      color,
+      point
     })
 
     team.save(function(err, docs) {
@@ -229,56 +230,80 @@ adminRoutes.get('/get/team', function(req, res) {
 }); 
 
 adminRoutes.post('/edit/team', function(req, res) {
-    const { img, team } = req.body;
-    const oldEmblem = team.emblem;
+    const { img, team, point } = req.body;
+    let upTeam = team;
+    let oldEmblem = false;
+    let oldPoint = false;
 
-    console.log(team, 'team', img);
+    if (img) {
+      oldEmblem = team.emblem;
+      upTeam.emblem = img;
+    }
+    if (point) {
+      oldPoint = team.point;
+      upTeam.point = point;
+    }
+    
+    Team
+      .update({ '_id': team._id}, 
+        { 
+          color: team.color,
+          name: team.name,
+          emblem: team.emblem,
+          point: team.point
+        })
+      .exec()
+      .then(function(team) {
+        let link = false;
+        let link2 = false;
 
-    if (!img) {
-      Team
-        .update({ '_id': team._id}, 
-          { 
-            color: team.color,
-            name: team.name
-          })
-        .exec()
-        .then(function(team) {
-          res.json(team);
-        });
-    } else {
-      Team
-        .update({ '_id': team._id}, 
-          { 
-            color: team.color,
-            name: team.name,
-            emblem: img
-          })
-        .exec()
-        .then(function(team) {
-          const link = 'public/upload/team/' + oldEmblem;
+        if (oldEmblem) {
+          link = 'public/upload/team/' + oldEmblem;
+          if (oldPoint) link2 = 'public/upload/team/' + oldPoint;
+        } else if (oldPoint) {
+          link = 'public/upload/team/' + oldPoint;
+        }
 
+        if (link) {
           fs.unlink(link,function(err){
             if(err) return console.log(err);
-            console.log('file deleted successfully');
-            res.json(team);
+            // console.log('file deleted successfully');
+
+            if (link2){
+              fs.unlink(link2,function(err){
+                if(err) return console.log(err);
+                res.json(team);
+              });
+            } else {
+              res.json(team);
+            }
           }); 
-        });
-    }
+        }
+        
+      });
+    
 });
 
 adminRoutes.post('/delete/team', function(req, res) {
   const { team } = req.body;
   const emblem = team.emblem;
+  const point = team.point;
 
   Team.remove({'_id': team._id}, (err) => {
     if(err) throw err;
 
     const link = 'public/upload/team/' + emblem;
+    const link2 = 'public/upload/team/' + point;
 
     fs.unlink(link,function(err){
       if(err) return console.log(err);
-      console.log('file deleted successfully');
-      res.json({ success: true, message: 'team removed successfully' });
+      // console.log('file deleted successfully');
+    
+      fs.unlink(link2,function(err){
+        if(err) return console.log(err);
+        // console.log('file deleted successfully');
+        res.json({ success: true, message: 'team removed successfully' });
+      })
     });
 
   });

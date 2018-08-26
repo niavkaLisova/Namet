@@ -148,11 +148,11 @@ class AdminContainer extends React.Component {
 	      </div>
         ) : (
             setTimeout(() =>{
-                  if(!this.props.user.admin) {
-                    if(this.props.user.email != 'admino')
-                      appHistory.push('/user');
-                  }
-              }, 1000
+              if(!this.props.user.admin) {
+                if(this.props.user.email != 'admino')
+                  appHistory.push('/user');
+              }
+            }, 1000
           )
           ))}
         </div>

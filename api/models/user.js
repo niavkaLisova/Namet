@@ -16,7 +16,7 @@ module.exports = mongoose.model('User', new Schema({
 	  	default: ''
 	},
     team: String,
-    coin: Object,
+    coin: { type: Object, default: {} },
     timePoint: { type: String, default: (new Date()).getTime() },
     status: String,
     sticky0: String,

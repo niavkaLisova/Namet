@@ -24,6 +24,7 @@ import FollowItemContainer from './follow/followItem-container'
 import WallContainer from './home/wall-container'
 import HomeLeftSidebarContainer from './home/homeLeftSidebar-container'
 import UserInfoContainer from './home/userInfo-container'
+import PointInfoContainer from './home/pointInfo-container'
 
 import { Container, Row, Col } from 'react-grid-system'
 import { connect } from "react-redux"
@@ -40,6 +41,19 @@ import { setActiveLanguage } from 'react-localize-redux'
   };
 })
 class UserContainer extends React.Component {
+  componentDidMount() {
+    let timer = setInterval(() => {
+      
+      if (this.props.info._id){
+        clearInterval(timer);
+
+        if (this.props.info._id == localStorage.getItem('userId')) {
+          this.props.dispatch(UserActions.checkPoint());
+        }
+      }
+    }, 500)
+  }
+
   constructor(props) {
     super(props)
 
@@ -49,8 +63,6 @@ class UserContainer extends React.Component {
       open: false,
       visible: true
     }
-
-    this.props.dispatch(UserActions.checkPoint());
 
     this.props.dispatch(UserActions.findInfoUser(this.props.id))
     this.props.dispatch(UserActions.followersList(this.props.id));
@@ -141,6 +153,9 @@ class UserContainer extends React.Component {
           <Button variant="outlined" color="primary" onClick={this.handleOpenRead}>
             read records
           </Button>
+          <PointInfoContainer
+            coin={this.props.info.coin}
+           />
           <div>
             <hr />
             <p onClick={this.handleSeeMoreFollow}>See more</p>

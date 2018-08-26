@@ -6,4 +6,4 @@ front/dist/*.js
 .idea
 .DS_Store
 npm-debug.log
-front/dist/upload
+api/public

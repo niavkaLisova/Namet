@@ -58,13 +58,24 @@ class ModalTeam extends React.Component {
 					                	/>
 				                	</Grid>
 				                	<Grid item>
-				                		<input
-										 	accept="image/*"
-											id="upload-file"
-											type="file"
-											onChange={this.props.handleChangeImage}
-										/>
-
+				                		<div>
+					                		Emblem:
+					                		<input
+											 	accept="image/*"
+												id="upload-file"
+												type="file"
+												onChange={this.props.handleChangeImage}
+											/>
+										</div>
+										<div>
+											Point:
+											<input
+											 	accept="image/*"
+												id="upload-file-point"
+												type="file"
+												onChange={this.props.handleChangePoint}
+											/>
+										</div>
 				                	</Grid>
               					</Grid>
 

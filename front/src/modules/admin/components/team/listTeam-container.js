@@ -34,7 +34,8 @@ export default class ListTeamContainer extends React.Component {
 			open: false,
 			team: '',
             submitted: false,
-            file: null
+            file: null,
+            point: null
 		}
 	}
 
@@ -66,15 +67,34 @@ export default class ListTeamContainer extends React.Component {
             setTimeout(() => this.setState({ submitted: false }), 5000);
         });
 
-        if (this.state.file == null) {
+        if (this.state.file == null && this.state.point == null) {
 	        this.props.dispatch(AdminActions.editTeam(false, this.state.team));
         } else {
-	     	this.fileUpload(this.state.file).then((response)=>{	
-	    		this.props.dispatch(AdminActions.editTeam(response.data, this.state.team));
-	    		const { team } = this.state;
-	    		team.emblem = response.data;
-	    		this.setState({ team });
-	    	})
+        	if (this.state.file && this.state.point){
+		     	this.fileUpload(this.state.file, this.state.point).then((response)=>{	
+		    		this.props.dispatch(AdminActions.editTeam(response.data.result, this.state.team, response.data.resultPoint));
+		    		const { team } = this.state;
+		    		team.emblem = response.data.result;
+		    		team.point = response.data.resultPoint;
+		    		this.setState({ team });
+		    	})
+	     	} else {
+	     		if (this.state.file) {
+	     			this.fileUploadOne(this.state.file).then((response)=>{	
+			    		this.props.dispatch(AdminActions.editTeam(response.data, this.state.team, false));
+			    		const { team } = this.state;
+			    		team.emblem = response.data;
+			    		this.setState({ team });
+			    	})
+	     		} else {
+	     			this.fileUploadOne(this.state.point).then((response)=>{	
+			    		this.props.dispatch(AdminActions.editTeam(false, this.state.team, response.data));
+			    		const { team } = this.state;
+			    		team.point = response.data;
+			    		this.setState({ team });
+			    	})
+	     		}
+	     	}
         }
 
        
@@ -87,6 +107,13 @@ export default class ListTeamContainer extends React.Component {
 		});
 	}
 
+	handleChangePoint = event => {
+		const point = event.target.files[0];;
+		this.setState({
+			point: point
+		});
+	}
+
 	handleDeleteTeam = () => {
 		this.handleClose();
 		let newTeams = this.props.teams.filter(item => item._id != this.state.team._id);
@@ -94,10 +121,26 @@ export default class ListTeamContainer extends React.Component {
 		this.props.dispatch(AdminActions.deleteTeam(this.state.team))
 	}
 
-	fileUpload = file =>{
+	fileUploadOne = file =>{
+	    const url = API_DOMAIN +'api/upload/team/one';
+	    const formData = new FormData(this);
+    	formData.append('file', file);
+
+    	const config = {
+        	headers: {
+            	'content-type': 'multipart/form-data'
+        	}
+    	}
+
+    	return  post(url, formData, config)
+	}
+
+	fileUpload = (file, point) =>{
 	    const url = API_DOMAIN +'api/upload/team';
 	    const formData = new FormData(this);
     	formData.append('file', file);
+    	formData.append('point', point);
+
     	const config = {
         	headers: {
             	'content-type': 'multipart/form-data'
@@ -118,6 +161,7 @@ export default class ListTeamContainer extends React.Component {
 		  			handleSubmit={this.handleSubmit}
 		  			submitted={this.state.submitted}
 		  			handleChangeImage={this.handleChangeImage}
+		  			handleChangePoint={this.handleChangePoint}
 		  			handleDeleteTeam={this.handleDeleteTeam}
 		  		 />
 		  		{this.props.teams.map(team => (
@@ -131,6 +175,11 @@ export default class ListTeamContainer extends React.Component {
 	              		<Avatar 
 	              			alt='team'
 	              			src = {API_DOMAIN + 'public/upload/team/' + team.emblem}
+	              			onClick={() => this.props.activeItem(team._id)}
+	              		/>
+	              		<Avatar 
+	              			alt='point'
+	              			src = {API_DOMAIN + 'public/upload/team/' + team.point}
 	              			onClick={() => this.props.activeItem(team._id)}
 	              		/>
 	              		<ListItemText primary={team.name} onClick={() => this.props.activeItem(team._id)} />
