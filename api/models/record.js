@@ -9,7 +9,7 @@ module.exports = mongoose.model('Record', new Schema({
 	type: [],
 	review: String,
 	gift: String,
-	coin: { type: Object, default: {} },
+	coin: Object,
 	state: String,
 	describe: String,
 	img: String,

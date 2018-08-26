@@ -245,6 +245,54 @@ export function findRecentlyRerords() {
   }
 }
 
+export function getTeamByTitle(title, index) {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'api/find/team/id')
+        .set('x-access-token', localStorage.getItem('token'))
+        .send({
+          title   
+        })
+        .end((error, response) => {
+          if (response.body.success)
+            dispatch(setTeamInfo(response.body.doc));
+        });
+  }
+}
+
+export function getTeamById(id) {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'record/find/team/by/id')
+        .set('x-access-token', localStorage.getItem('token'))
+        .send({
+          id   
+        })
+        .end((error, response) => {
+          dispatch(myTeamInfo(response.body))
+        });
+  }
+}
+
+export function sendPoint(idRecord, point) {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'record/send/point')
+        .set('x-access-token', localStorage.getItem('token'))
+        .send({
+          idRecord,
+          idUser: localStorage.getItem('userId'),
+          point
+        })
+        .end((error, response) => {
+          if (response.body.success){
+            console.log('send', response.body);
+            dispatch(findRecordById(idRecord));
+          }
+        });
+  }
+}
+
 export function setcollectionsList(data) {
   return {type: 'SET_COLLECTIONS', data};
 }
@@ -257,7 +305,7 @@ export function setRecordsListNC(data) {
   return {type: 'SET_RECORDS_NC', data};
 }
 
-export function setRecordActive(data) {
+export function setsetTeamInfoRecordActive(data) {
   return {type: 'RECORD_ACTIVE', data};
 }
 
@@ -279,4 +327,12 @@ export function setWallRecord(data) {
 
 export function setRecentlyRecord(data) {
   return {type: 'SET_RECENTLY_RECORD', data};
+}
+
+export function setTeamInfo(data) {
+  return {type: 'SET_TEAM_INFO', data};
+}
+
+export function myTeamInfo(data) {
+  return {type: 'SET_MY_TEAM', data};
 }

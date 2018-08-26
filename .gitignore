@@ -7,3 +7,4 @@ front/dist/*.js
 .DS_Store
 npm-debug.log
 api/public
+api/public/pload

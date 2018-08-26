@@ -11,7 +11,9 @@ let init = {
   editList: [],
   full: [],
   wall: [],
-  recently: []
+  recently: [],
+  teamInfo: [],
+  myTeam: []
 }
 
 function recordReducer(state = init, action) {
@@ -74,6 +76,18 @@ function recordReducer(state = init, action) {
       return {
         ...state,
         recently: action.data 
+      }
+      break;
+    case 'SET_TEAM_INFO':
+      return {
+        ...state,
+        teamInfo: state.teamInfo.concat(action.data) 
+      }
+      break;
+    case 'SET_MY_TEAM':
+      return {
+        ...state,
+        myTeam: action.data 
       }
       break;
 

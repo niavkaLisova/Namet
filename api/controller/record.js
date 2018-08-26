@@ -6,6 +6,7 @@ const bson = require('bson')
 const Sections = require('../models/sections')
 const Record = require('../models/record')
 const Team = require('../models/team')
+const User = require('../models/user')
 const config = require('../config/config')
 const { ObjectId } = require('mongodb')
  
@@ -266,4 +267,37 @@ recordRoutes.post('/find/recently/idTeam', function(req, res) {
   //     res.json(record);
   //   });
 });
+
+recordRoutes.post('/send/point', function(req, res) {
+  const { idRecord, idUser, point } = req.body;
+  
+  Record
+    .findById(idRecord)
+    .exec()
+    .then(function(record) {
+      let newCoin = record.coin;
+      newCoin[point] = record.coin[point] + 1;
+
+      Record
+        .update({ _id: idRecord },
+          { coin: newCoin }
+        , function (err, doc) {
+          if (err) throw err;
+
+          res.json({success: true, message: doc})
+        });
+    })
+});
+
+recordRoutes.post('/find/team/by/id', function(req, res) {
+  const { id } = req.body;
+
+  Team
+    .findById(id)
+    .exec()
+    .then(function(team) {
+      res.json(team);
+    });
+});
+
 module.exports = recordRoutes;

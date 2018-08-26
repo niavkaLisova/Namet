@@ -51,7 +51,8 @@ function userReducer(state = init, action) {
         birthday: action.data.birthday,
         following: action.data.following,
         id: action.data._id,
-        team: action.data.team
+        team: action.data.team,
+        coin: action.data.coin
       }
       break;
     case 'AVATAR_UPDATE':

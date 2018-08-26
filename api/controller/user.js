@@ -461,11 +461,21 @@ userRoutes.post('/save/record', function(req, res) {
     genre: record.genre,
     img: record.img,
     state: record.state,
-    section: record.collection
+    section: record.collection,
+    coin: {
+      "key": 0,
+      "cup": 0,
+      "heraldus": 0,
+      "mark": 0,
+      "diamond": 0,
+      "butterfly": 0,
+      "fireball": 0
+    }
   });
 
   newRecord.save(function(err, doc) {
-    console.log('doc', doc);
+    // console.log('doc', doc);
+    res.json({success: true, message: 'Save Record', doc: doc})
   });
  
 });
