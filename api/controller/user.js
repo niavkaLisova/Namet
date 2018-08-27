@@ -91,7 +91,17 @@ userRoutes.post('/register', function(req, res) {
               admin: false,
               online: [],
               confirm: false,
-              activeRoom: 0
+              activeRoom: 0,
+              coin: {
+                "neutral": 25,
+                "key": 0,
+                "cup": 0,
+                "heraldus": 0,
+                "mark": 0,
+                "diamond": 0,
+                "butterfly": 0,
+                "fireball": 0
+              }
             });
 
             user.save(function(err, doc) {
@@ -775,6 +785,53 @@ userRoutes.post('/check/point', function(req, res) {
         return res.json({ success: false, message: 'Time Point does not updated.', doc });
       }
     });
+});
+
+userRoutes.post('/take/point', function(req, res) {
+  const { idUser } = req.body;
+  
+  User
+    .findById(idUser)
+    .exec()
+    .then(function(user) {
+      let newCoin = user.coin;
+      if (user.coin.neutral > 0) {
+        newCoin.neutral = newCoin.neutral - 1;
+      } else {
+        return throwFailed(res, 'You have no neutral point')
+      }
+
+      User
+        .update({ _id: idUser },
+          { coin: newCoin }
+        , function (err, doc) {
+          if (err) throw err;
+
+          res.json({success: true, doc, message: 'Take point from user-sender'})
+        });
+    })
+});
+
+userRoutes.post('/give/point', function(req, res) {
+  const { idUser, point } = req.body;
+  
+  User
+    .findById(idUser)
+    .exec()
+    .then(function(user) {
+      let newCoin = user.coin;
+
+      newCoin[point] = newCoin[point] + 1;
+
+      User
+        .update({ _id: idUser },
+          { coin: newCoin }
+        , function (err, doc) {
+          if (err) throw err;
+
+          res.json({success: true, doc, message: 'Give point to user-receiver'})
+        });
+    })
 });
 
 /** end point **/

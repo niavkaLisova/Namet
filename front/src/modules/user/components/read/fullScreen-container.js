@@ -3,6 +3,7 @@ import React from 'react'
 import * as RecordActions from '../../actions/record-actions'
 import * as UserActions from '../../actions/user-actions'
 import { API_DOMAIN, TEAM_LIST } from '../../../../utils/config.js'
+import {ToastContainer, ToastStore} from 'react-toasts'
 
 import { connect } from "react-redux"
 import Parser from 'html-react-parser'
@@ -36,14 +37,22 @@ class FullScreenContainer extends React.Component {
 
 	sendPoint = () => {
 		if (this.props.coin.neutral > 0) {
+			let random = Math.floor(Math.random() * 7);
 			let index = null;
-			Object.keys(TEAM_LIST).map(key => {
-				if (TEAM_LIST[key] == this.props.myTeam.name) {
-					index = key;
-				}
-			})
 
-			this.props.dispatch(RecordActions.sendPoint(this.props.full._id, index));
+			if (this.props.team) {
+				Object.keys(TEAM_LIST).map(key => {
+					if (TEAM_LIST[key] == this.props.myTeam.name) {
+						index = key;
+					}
+				})
+			} else {
+				index = Object.keys(TEAM_LIST)[random];
+			}
+
+			this.props.dispatch(RecordActions.takePoint(this.props.full._id, this.props.full.author, index));
+		} else {
+			ToastStore.error('you have no neutral point');
 		}
 	}
 

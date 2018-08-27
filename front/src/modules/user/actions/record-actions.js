@@ -274,7 +274,7 @@ export function getTeamById(id) {
   }
 }
 
-export function sendPoint(idRecord, point) {
+export function sendPoint(idRecord, idReceiver, point) {
   return (dispatch) => {
       request
         .post(Config.API_DOMAIN + 'record/send/point')
@@ -286,9 +286,41 @@ export function sendPoint(idRecord, point) {
         })
         .end((error, response) => {
           if (response.body.success){
-            console.log('send', response.body);
+            ToastStore.success(point + ' send')
             dispatch(findRecordById(idRecord));
+            dispatch(givePoint(idReceiver, point))
           }
+        });
+  }
+}
+
+export function takePoint(idRecord, idReceiver, point) {
+  return (dispatch) => {
+    request
+      .post(Config.API_DOMAIN + 'api/take/point')
+      .set('x-access-token', localStorage.getItem('token'))
+      .send({
+        idUser: localStorage.getItem('userId'),
+        point
+      })
+      .end((error, response) => {
+        if (response.body.success){
+          dispatch(sendPoint(idRecord, idReceiver, point));
+        }
+      });
+  }
+}
+
+export function givePoint(idUser, point) {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'api/give/point')
+        .set('x-access-token', localStorage.getItem('token'))
+        .send({
+          idUser,
+          point
+        })
+        .end((error, response) => {
         });
   }
 }
