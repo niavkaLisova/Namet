@@ -8,7 +8,7 @@ import {ToastContainer, ToastStore} from 'react-toasts'
 import { connect } from "react-redux"
 import Parser from 'html-react-parser'
 
-import CoinInfoContainer from './coinInfo-container'
+import PointBoxContainer from './pointBox-container'
 
 @connect((store, ownProps) => {
   return {
@@ -16,44 +16,13 @@ import CoinInfoContainer from './coinInfo-container'
   	full: store.record.full,
   	team: store.user.team,
   	coin: store.user.coin,
-  	myTeam: store.record.myTeam
   };
 })
 class FullScreenContainer extends React.Component {
-	componentDidMount() {
-		let timer = setInterval(() => {
-			if (this.props.team) {
-				clearInterval(timer);
-				this.props.dispatch(RecordActions.getTeamById(this.props.team));
-			}
-		}, 500)
-	}
-
 	constructor(props) {
 		super(props);
 
 		this.props.dispatch(RecordActions.findRecordById(this.props.id));
-	}
-
-	sendPoint = () => {
-		if (this.props.coin.neutral > 0) {
-			let random = Math.floor(Math.random() * 7);
-			let index = null;
-
-			if (this.props.team) {
-				Object.keys(TEAM_LIST).map(key => {
-					if (TEAM_LIST[key] == this.props.myTeam.name) {
-						index = key;
-					}
-				})
-			} else {
-				index = Object.keys(TEAM_LIST)[random];
-			}
-
-			this.props.dispatch(RecordActions.takePoint(this.props.full._id, this.props.full.author, index));
-		} else {
-			ToastStore.error('you have no neutral point');
-		}
 	}
 
 	render() {
@@ -62,11 +31,6 @@ class FullScreenContainer extends React.Component {
 	    return (
 	      <div>
 	      	<h2>{this.props.full.title}</h2>
-	      	{(this.props.full.author != localStorage.getItem('userId'))?
-	      		(	
-	      			<p onClick={this.sendPoint}>Send Points</p>
-	      		):
-	      	''}
 	      	{(this.props.full.img)? (
 	        <img
 	          class='recordThumbnail'
@@ -76,10 +40,8 @@ class FullScreenContainer extends React.Component {
             ): ''}
 	        <div>
 	        	{Parser('' + this.props.full.text)}
-	        </div>  
-	        {(!coin)? '' : (
-	        	<CoinInfoContainer coin={coin} />
-	        )}
+	        </div>
+	        <PointBoxContainer />
 	      </div>
 	    )
 	}

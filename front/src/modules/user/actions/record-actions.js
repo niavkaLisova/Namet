@@ -1,6 +1,7 @@
 import request from 'superagent';
 import _ from 'lodash';
 import appHistory from '../../../utils/app-history'
+import * as UserActions from '../../user/actions/user-actions'
 import * as Config from '../../../utils/config'
 import {ToastContainer, ToastStore} from 'react-toasts'
 
@@ -158,7 +159,7 @@ export function setReview(recordId) {
         .end((error, response) => {
           let record = response.body.doc;
           record.review = String(Number(record.review) + 1);
-          dispatch(setRecordActive(record));
+          // dispatch(setRecordActive(record));
         });
   }
 }
@@ -245,7 +246,7 @@ export function findRecentlyRerords() {
   }
 }
 
-export function getTeamByTitle(title, index) {
+export function getTeamByTitle(title, count, cle) {
   return (dispatch) => {
       request
         .post(Config.API_DOMAIN + 'api/find/team/id')
@@ -254,8 +255,14 @@ export function getTeamByTitle(title, index) {
           title   
         })
         .end((error, response) => {
-          if (response.body.success)
-            dispatch(setTeamInfo(response.body.doc));
+          if (response.body.success) {
+            if (count != 'udefined') {
+              let doc = response.body.doc;
+              doc.count = count;
+
+              dispatch(setTeamInfo({key: cle, doc}));
+            }
+          }
         });
   }
 }
@@ -306,6 +313,7 @@ export function takePoint(idRecord, idReceiver, point) {
       .end((error, response) => {
         if (response.body.success){
           dispatch(sendPoint(idRecord, idReceiver, point));
+          dispatch(UserActions.coinUpdate(response.body.doc))
         }
       });
   }
@@ -367,4 +375,8 @@ export function setTeamInfo(data) {
 
 export function myTeamInfo(data) {
   return {type: 'SET_MY_TEAM', data};
+}
+
+export function myTeamInfoStart(data) {
+  return {type: 'SET_START_TEAM', data};
 }

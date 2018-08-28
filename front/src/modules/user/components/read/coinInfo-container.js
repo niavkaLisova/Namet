@@ -15,18 +15,18 @@ class CoinInfoContainer extends React.Component {
 		let coin = this.props.coin;
 
 	    return (
-	      <div class='coinBox'>
-	      	{Object.keys(coin).map((point, index) => {
-	      		return (
-	      			<PointDisplayContainer 
-	      				key={index}
-	      				point={TEAM_LIST[point]}
-	      				index={index}
-	      				count={coin[point]}
-	      			 />
-	      		)
-	      	})}
-	      </div>
+	      	<div class='coinBox'>
+		      	{Object.keys(coin).map((point, index) => {
+		      		return (
+		      			<PointDisplayContainer 
+		      				key={index}
+		      				count={coin[point]}
+		      				point={TEAM_LIST[point]}
+		      				index={index}
+		      			 />
+		      		)
+		      	})}
+	      	</div>
 	    )
 	}
 };

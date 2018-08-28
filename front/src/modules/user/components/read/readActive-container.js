@@ -9,9 +9,12 @@ import { API_DOMAIN } from '../../../../utils/config.js'
 import { connect } from "react-redux"
 import appHistory from '../../../../utils/app-history'
 
+import PointBoxContainer from './pointBox-container'
+
 @connect((store, ownProps) => {
   return {
-    full: store.record.full
+    full: store.record.full,
+    coin: store.user.coin
   };
 })
 class ReadActiveContainer extends React.Component {
@@ -62,6 +65,11 @@ class ReadActiveContainer extends React.Component {
             ): ''}
           <div>
             {Parser('' + this.props.full.text)}
+          </div>
+          <div>
+            {(this.props.full && this.props.full.coin)? (
+              <PointBoxContainer />
+            ): ''}
           </div>
         
           <Grid item md={4}>

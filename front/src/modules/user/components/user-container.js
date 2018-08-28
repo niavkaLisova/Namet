@@ -24,7 +24,6 @@ import FollowItemContainer from './follow/followItem-container'
 import WallContainer from './home/wall-container'
 import HomeLeftSidebarContainer from './home/homeLeftSidebar-container'
 import UserInfoContainer from './home/userInfo-container'
-import PointInfoContainer from './home/pointInfo-container'
 
 import { Container, Row, Col } from 'react-grid-system'
 import { connect } from "react-redux"
@@ -129,6 +128,7 @@ class UserContainer extends React.Component {
             <UserInfoContainer 
               info={this.props.info}
              />
+            
             {(localStorage.getItem('userId') == this.props.id)? (
             <Button variant="outlined" color="primary" onClick={this.handleClickOpen}>
               create post
@@ -153,9 +153,6 @@ class UserContainer extends React.Component {
           <Button variant="outlined" color="primary" onClick={this.handleOpenRead}>
             read records
           </Button>
-          <PointInfoContainer
-            coin={this.props.info.coin}
-           />
           <div>
             <hr />
             <p onClick={this.handleSeeMoreFollow}>See more</p>

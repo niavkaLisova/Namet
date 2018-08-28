@@ -529,3 +529,7 @@ export function setListChat(data) {
 export function pushListChat(data) {
   return {type: 'PUSH_LIST_CHAT', data};
 }
+
+export function coinUpdate(data) {
+  return {type: 'COIN_UPDATE', data};
+}

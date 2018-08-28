@@ -8,3 +8,13 @@ export const TEAM_LIST = {
 	'butterfly': 'Навколо нас магія',
 	'fireball': 'Сингулярність'
 }
+
+export const TEAM_LIST_REVERSE = {
+	'Stargard': 'key',
+	'Never Mind': 'cup',
+	'Тризуб Пагоня': 'heraldus',
+	'Бомбосховище': 'mark',
+	'Poetry Starts': 'diamond',
+	'Навколо нас магія': 'butterfly',
+	'Сингулярність': 'fireball'
+}

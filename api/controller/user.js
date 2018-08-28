@@ -93,14 +93,14 @@ userRoutes.post('/register', function(req, res) {
               confirm: false,
               activeRoom: 0,
               coin: {
-                "neutral": 25,
                 "key": 0,
                 "cup": 0,
                 "heraldus": 0,
                 "mark": 0,
                 "diamond": 0,
                 "butterfly": 0,
-                "fireball": 0
+                "fireball": 0,
+                "neutral": 25
               }
             });
 
@@ -807,7 +807,7 @@ userRoutes.post('/take/point', function(req, res) {
         , function (err, doc) {
           if (err) throw err;
 
-          res.json({success: true, doc, message: 'Take point from user-sender'})
+          res.json({success: true, doc: newCoin, message: 'Take point from user-sender'})
         });
     })
 });

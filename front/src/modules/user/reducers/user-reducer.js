@@ -215,6 +215,12 @@ function userReducer(state = init, action) {
         listChat: state.listChat.concat(action.data)
       }
       break;
+    case 'COIN_UPDATE':
+      return {
+        ...state,
+        coin: action.data
+      }
+      break;
 
     default: return state;
   }
