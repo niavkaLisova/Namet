@@ -20,13 +20,21 @@ class ListContainer extends React.Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      limit: 6
+    }
+
     this.props.dispatch(CommentActions.findCommentByRecord(this.props.idRecord));
+  }
+
+  moreComments = () => {
+    this.setState({ limit: this.state.limit + 6 })
   }
 
   render() {
     return (
       <div>
-        {(this.props.comments.map(comment => {
+        {(this.props.comments.slice(0, this.state.limit).map(comment => {
           return (
             <ItemContainer
               key={comment._id}
@@ -34,6 +42,13 @@ class ListContainer extends React.Component {
              />
           )
         }))}
+         {(this.props.comments.length - this.state.limit > 0)? (
+        <div
+          onClick={this.moreComments}
+         >
+          More Comments
+        </div>
+        ): ''}
       </div>
     )
   }

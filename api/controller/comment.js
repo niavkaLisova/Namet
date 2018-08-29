@@ -15,12 +15,13 @@ var throwFailed = function (res, message) {
 }
 
 commentRoutes.post('/send', function(req, res) {
-  const { author, text, idRecord } = req.body;
+  const { author, text, idRecord, answerer } = req.body;
 
   const newComment = new Comment({
     author,
     text,
-    idRecord
+    idRecord,
+    answerer
   })
 
   newComment.save(function(err, docs) {
@@ -38,6 +39,15 @@ commentRoutes.post('/find/by/id', function(req, res) {
     .then(function(comments) {
       res.json({success: true, doc: comments});
     });
+});
+
+commentRoutes.post('/clear', function(req, res) {
+  const { idComment } = req.body;
+
+  Comment.remove({'_id': idComment}, (err) => {
+    if(err) throw err;
+    res.json({ success: true, message: 'comment clear' });
+  });
 });
 
 module.exports = commentRoutes;

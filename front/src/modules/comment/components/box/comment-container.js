@@ -13,6 +13,7 @@ import Button from '@material-ui/core/Button'
 
 @connect((store, ownProps) => {
   return {
+    answerer: store.comment.idAnswerer
   };
 })
 class CommentContainer extends React.Component {
@@ -29,16 +30,29 @@ class CommentContainer extends React.Component {
   }
 
   handleSend = () => {
-    console.log('send', this.state.text, this.props.idRecord);
+    if (this.state.text.length > 0) {
 
-    this.setState({ text: '' });
-    this.props.dispatch(CommentActions.sendComment(this.state.text, this.props.idRecord));
+      this.setState({ text: '' });
+      this.props.dispatch(CommentActions.setIdAnswerer(null));
+      this.props.dispatch(CommentActions.sendComment(
+          this.state.text,
+          this.props.idRecord,
+          this.props.answerer
+        ));
+    }
+  }
+
+  clearAnswers = () => {
+    this.props.dispatch(CommentActions.setIdAnswerer(null));
   }
 
   render() {
     return (
       <div class='textareaBox'>
         <div>
+          {(this.props.answerer)? (
+            <p onClick={this.clearAnswers}>Answer to: {this.props.answerer}</p>
+          ): ''}
           <TextField
             label="Comment"
             multiline

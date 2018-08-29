@@ -23,27 +23,47 @@ class ItemContainer extends React.Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      visible: true
+    }
+
     this.props.dispatch(CommentActions.findUserById(this.props.comment.author));
   }
 
+  clearComment = () => {
+    this.setState({ visible: false });
+    this.props.dispatch(CommentActions.clearComment(this.props.comment._id))
+  }
+
   render() {
+    let info= this.props.info[this.props.comment.author]
+    
     return (
-      <div class='comment'>
-        <IntlProvider locale="en">
-          <InfoContainer
-            comment={this.props.comment}
-            info={this.props.info}
-           />
-        </IntlProvider>
-        <div class='item distance'>
-          {(this.props.info.avatar)? (
-            <AvatarContainer
-              avatar={this.props.info.avatar}
-              alt={this.props.info.name}
-             />
+      <div>
+        {(info)? (
+        <div>
+          {(this.state.visible)? (
+          <div class='comment'>
+            <IntlProvider locale="en">
+              <InfoContainer
+                comment={this.props.comment}
+                info={info}
+                clearComment={this.clearComment}
+               />
+            </IntlProvider>
+            <div class='item distance'>
+              {(info.avatar)? (
+                <AvatarContainer
+                  avatar={info.avatar}
+                  idAuthor={info._id}
+                 />
+              ): ''}
+              <div class='text'>{this.props.comment.text}</div>
+            </div>
+          </div>
           ): ''}
-          <div class='text'>{this.props.comment.text}</div>
         </div>
+        ): ''}
       </div>
     )
   }

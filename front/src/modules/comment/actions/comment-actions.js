@@ -1,8 +1,9 @@
 import request from 'superagent';
 import _ from 'lodash';
 import * as Config from '../../../utils/config';
+import {ToastContainer, ToastStore} from 'react-toasts'
 
-export function sendComment(text, idRecord) {
+export function sendComment(text, idRecord, answerer) {
   return (dispatch) => {   
     request
       .post(Config.API_DOMAIN + 'comment/send/')
@@ -10,10 +11,29 @@ export function sendComment(text, idRecord) {
       .send({
         text,
         author: localStorage.getItem('userId'),
-        idRecord
+        idRecord,
+        answerer
       })
       .end((error, response) => {
         dispatch(pushCommentByRecord(response.body))
+      })
+  }
+}
+
+export function clearComment(idComment) {
+  return (dispatch) => {   
+    request
+      .post(Config.API_DOMAIN + 'comment/clear/')
+      .set('x-access-token', localStorage.getItem('token'))
+      .send({
+        idComment
+      })
+      .end((error, response) => {
+        if (response.body.success) {
+          ToastStore.success('Successfully removed');
+        } else {
+          ToastStore.error('Can not remove');
+        }
       })
   }
 }
@@ -41,7 +61,7 @@ export function findUserById(id) {
       .set('x-access-token', localStorage.getItem('token'))
       .end((error, response) => {
         if (!response.body.error) {
-          dispatch(saveUserInfo(response.body));
+          dispatch(saveUserInfo({key: response.body._id, doc: response.body}));
         }
       })
   }
@@ -57,4 +77,8 @@ export function pushCommentByRecord(data) {
 
 export function saveUserInfo(data) {
   return {type: 'SAVE_USER_INFO', data};
+}
+
+export function setIdAnswerer(data) {
+  return {type: 'SET_ID_ANS', data};
 }
