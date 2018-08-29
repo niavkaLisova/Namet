@@ -31,10 +31,12 @@ class PointDisplayContainer extends React.Component {
       	 {(this.props.teamInfo[this.props.index])? 
           (
             <div>
+              {((this.props.teamInfo[this.props.index]).doc.point)? (
               <img 
                 class='coinImg'
                 src={API_DOMAIN + 'public/upload/team/' +(this.props.teamInfo[this.props.index]).doc.point} 
                />
+              ): ''}
               <span>{this.props.teamInfo[this.props.index].doc.count}</span>
             </div>
           ):

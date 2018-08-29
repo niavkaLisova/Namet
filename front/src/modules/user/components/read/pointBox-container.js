@@ -48,18 +48,22 @@ class PointBoxContainer extends React.Component {
 	}
 
 	render() {
-		let coin = this.props.full.coin;
+		let coin = (this.props.full)? (this.props.full.coin): this.props.coin;
 
 	    return (
-	      <div>
-	      	{(this.props.full.author != localStorage.getItem('userId'))?
-	      		(	
-	      			<p onClick={this.sendPoint}>Send Point</p>
-	      		):
-	      	''}
-	        {(!coin)? '' : (
-	        	<CoinInfoContainer coin={coin} />
-	        )}
+	    	<div>
+	    		{(this.props.full)? (
+		      <div>
+		      	{(this.props.full.author != localStorage.getItem('userId'))?
+		      		(	
+		      			<p onClick={this.sendPoint}>Send Point</p>
+		      		):
+		      	''}
+		        {(!coin)? '' : (
+		        	<CoinInfoContainer coin={coin} />
+		        )}
+		      </div>
+		      ): ''}
 	      </div>
 	    )
 	}

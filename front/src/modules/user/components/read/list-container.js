@@ -43,7 +43,7 @@ class ListContainer extends React.Component {
 		} else {
 			this.props.dispatch(RecordActions.setReview(record._id));
 		}
-		console.log('active', record._id)
+		
 		appHistory.push('/record/' + this.props.id + '/' + record._id)
 	}
 

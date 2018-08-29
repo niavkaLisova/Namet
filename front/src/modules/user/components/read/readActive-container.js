@@ -68,7 +68,7 @@ class ReadActiveContainer extends React.Component {
           </div>
           <div>
             {(this.props.full && this.props.full.coin)? (
-              <PointBoxContainer />
+              <PointBoxContainer coin={this.props.full.coin} />
             ): ''}
           </div>
         
