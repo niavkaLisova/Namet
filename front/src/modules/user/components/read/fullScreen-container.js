@@ -9,6 +9,7 @@ import { connect } from "react-redux"
 import Parser from 'html-react-parser'
 
 import PointBoxContainer from './pointBox-container'
+import BoxContainer from '../../../comment/components/box-container'
 
 @connect((store, ownProps) => {
   return {
@@ -42,6 +43,7 @@ class FullScreenContainer extends React.Component {
 	        	{Parser('' + this.props.full.text)}
 	        </div>
 	        <PointBoxContainer />
+	        <BoxContainer idRecord={this.props.id} />
 	      </div>
 	    )
 	}

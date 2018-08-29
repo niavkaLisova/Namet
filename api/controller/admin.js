@@ -161,7 +161,7 @@ adminRoutes.post('/send/report', function(req, res) {
       .exec()
       .then(function(user) {
         if(user.banned == report.time) {
-           const newReport = new Report({
+          const newReport = new Report({
             donor,
             type: report.type,
             text: report.text,

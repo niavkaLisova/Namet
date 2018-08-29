@@ -34,7 +34,7 @@ class BudgetContainer extends React.Component {
 
     return (
       <div>
-        <h2>BudgetContainer</h2>
+        <h2>Budget</h2>
         {(this.props.info.coin) ? (
           <div>
             <CoinInfoContainer coin={coinArr} />
