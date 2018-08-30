@@ -10,6 +10,7 @@ import { localeReducer as locale, initialize  } from 'react-localize-redux';
 import notificationReducer from '../modules/notification/reducers/notification-reducer'
 import teamReducer from '../modules/team/reducers/team-reducer';
 import commentReducer from '../modules/comment/reducers/comment-reducer'
+import gameReducer from '../modules/game/reducers/game-reducer'
 
 const rootReducer = combineReducers({
   login: loginReducer,
@@ -22,7 +23,8 @@ const rootReducer = combineReducers({
   record: recordReducer,
   recordEdit: recordEditReducer,
   team: teamReducer,
-  comment: commentReducer
+  comment: commentReducer,
+  game: gameReducer
 });
 
 export default rootReducer;

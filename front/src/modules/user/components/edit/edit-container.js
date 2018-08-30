@@ -190,7 +190,7 @@ class EditContainer extends React.Component {
       this.props.dispatch(UserActions.saveEditRecord(record));
     }
 
-    this.props.dispatch(RecordActions.setRecordActive(record));
+    // this.props.dispatch(RecordActions.setRecordActive(record));
     
     appHistory.push('/record/' + localStorage.getItem('userId'))
   }

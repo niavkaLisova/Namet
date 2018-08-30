@@ -14,6 +14,7 @@ const adminRoutes = require('./controller/admin')
 const recordRoutes = require('./controller/record')
 const teamRoutes = require('./controller/team')
 const commentRoutes = require('./controller/comment')
+const gameRoutes = require('./controller/game')
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
@@ -38,3 +39,4 @@ app.use('/admin', adminRoutes);
 app.use('/record', recordRoutes);
 app.use('/team', teamRoutes);
 app.use('/comment', commentRoutes);
+app.use('/game', gameRoutes);

@@ -12,6 +12,9 @@ import FollowContainer from '../modules/user/components/follow/follow-container'
 import CollectionEditContainer from '../modules/user/components/edit/collectionEdit-container'
 import TeamSettingsContainer from '../modules/user/components/settings/teamSettings-container'
 import BudgetContainer from '../modules/budget/components/budget-container'
+import GameCreateBoxContainer from '../modules/game/components/create/gameCreateBox-container'
+import GameContainer from '../modules/game/components/home/game-container'
+import JoinContainer from '../modules/game/components/join/join-container'
 
 import AdminPanelContainer from '../modules/admin/components/adminPanel-container'
 import AdminJuniorContainer from '../modules/admin/components/adminJunior-container'
@@ -55,6 +58,9 @@ export default (
 			<Route path='/select/team' component={TeamSettingsContainer} />
 			<Route path='/team/:idTeam?' component={TeamPageContainer} />
 			<Route path='/budget/:idUser?' component={BudgetContainer} />
+			<Route path='/game/create' component={GameCreateBoxContainer} />
+			<Route path='/game/home' component={GameContainer} />
+			<Route path='/game/join/:idGame?' component={JoinContainer} />
 		</DashboardContainer>
 	</Switch>
 );
