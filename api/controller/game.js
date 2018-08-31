@@ -124,6 +124,19 @@ gameRoutes.post('/vote/record', function(req, res) {
     });
 });
 
+gameRoutes.post('/vote/count', function(req, res) {
+  const { idGame, idRecord } = req.body;
+  
+  Vote
+    .find({ '$and': [ 
+        { idRecord },
+        { idGame }
+     ]})
+    .exec()
+    .then(function(votes) {
+      res.json({success: true, doc: votes.length});    
+    });
+});
 gameRoutes.post('/clear', function(req, res) {
   // const { idComment } = req.body;
 

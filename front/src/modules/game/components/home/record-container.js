@@ -18,7 +18,7 @@ class RecordContainer extends React.Component {
   constructor(props) {
     super(props);
     
-    this.props.dispatch(GameActions.findRecordById(this.props.idRecord))
+    this.props.dispatch(GameActions.findRecordById(this.props.idRecord, this.props.idGame));
   }
 
   handleVote = () => {
@@ -34,6 +34,7 @@ class RecordContainer extends React.Component {
           <div class='recordGame'>
             <p>{info.title}</p>
             <Link to={`/read/` + info._id}>See</Link>
+            <p>Votes: {info.count}</p>
             <p onClick={this.handleVote}>Vote</p>
           </div>
         ): ''}

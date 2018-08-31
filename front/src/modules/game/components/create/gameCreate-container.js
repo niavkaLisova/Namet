@@ -6,6 +6,7 @@ import appHistory from '../../../../utils/app-history'
 import { connect } from "react-redux"
 import { ToastContainer, ToastStore } from 'react-toasts'
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator'
+import { Link } from 'react-router-dom'
 
 import Button from '@material-ui/core/Button'
 
@@ -23,7 +24,6 @@ class GameCreateContainer extends React.Component {
   }
 
   handleCreate = () => {
-    console.log('create');
     this.props.dispatch(GameActions.createGame(this.state.thema));
 
     this.setState({ thema: '' })
@@ -36,10 +36,13 @@ class GameCreateContainer extends React.Component {
   render() {
     return (
       <div>
+        <Link to='/game/home'>
+          Game Home
+        </Link>
         <ValidatorForm
-            ref="form"
-            onSubmit={this.handleCreate}
-          >
+          ref="form"
+          onSubmit={this.handleCreate}
+        >
 
           <TextValidator
             label='Thema'

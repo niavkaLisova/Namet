@@ -69,6 +69,10 @@ class LeftMenu extends React.Component {
     appHistory.push('/budget/' + localStorage.getItem('userId'))
   }
 
+  goToGame() {
+    appHistory.push('/game/home');
+  }
+
   handleClick = () => {
     this.setState(state => ({ open: !state.open }));
   };
@@ -131,6 +135,13 @@ class LeftMenu extends React.Component {
               <Icon>settings_applications</Icon>
             </ListItemIcon>
             <ListItemText inset primary="Budget" />
+          </ListItem>
+
+          <ListItem button onClick={this.goToGame}>
+            <ListItemIcon>
+              <Icon>settings_applications</Icon>
+            </ListItemIcon>
+            <ListItemText inset primary="Game" />
           </ListItem>
        
         </List>

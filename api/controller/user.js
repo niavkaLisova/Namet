@@ -46,7 +46,6 @@ userRoutes.post('/authenticate', function(req, res) {
 
       const psswordRes = passwordHash.verify(password, user.password);
       if (psswordRes) {
-        console.log('USER', user._id)
         setTimeout(function() {
           return res.json({
             token: generateToken(email),
@@ -146,11 +145,15 @@ userRoutes.get('/users/:id', function(req, res) {
 });
 
 userRoutes.post('/users/online/:id', function(req, res) {
-  User.update({ _id: req.params.id }, { $addToSet: {online: req.body.online}}, function (err, user) {
-    if (err) throw err;
+  if (req.params.id != 'null') {
+    User.update({ '_id': req.params.id }, { $addToSet: {online: req.body.online}}, function (err, user) {
+      if (err) throw err;
 
-    res.json(user)
-  });
+      res.json(user)
+    });
+  } else {
+    res.json(null)
+  }
 });
 
 userRoutes.post('/users/online/del/:id', function(req, res) {
@@ -566,7 +569,6 @@ userRoutes.post('/upload/team', function(req, res) {
   const files = req.files;
   const file = files.file;
   const point = files.point;
-  console.log('point upload ream', point);
 
   const name = ObjectId();
   const namePoint = ObjectId();
@@ -687,7 +689,7 @@ userRoutes.post('/user/unsubscribe', function(req, res) {
     .findById(myId)
     .exec()
     .then(function(user) {
-      console.log('user', user.following);
+      // console.log('user', user.following);
       let newFollowing = user.following.filter(item => item != unsub);
       user.following = newFollowing;
       user.save(function(err, doc) {
@@ -699,14 +701,12 @@ userRoutes.post('/user/unsubscribe', function(req, res) {
 
 userRoutes.post('/find/info/following/', function(req, res) {
   const { id } = req.body;
-  console.log('array', id);
 
   if (id) {
     User
       .findById(id)
       .exec()
       .then(function(doc) {
-        console.log(doc.following, 'users');
         User
           .find({'_id': {$in: doc.following }})
           .exec()

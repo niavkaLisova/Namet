@@ -7,6 +7,7 @@ import { connect } from "react-redux"
 import { Redirect } from 'react-router-dom'
 import { ToastContainer, ToastStore } from 'react-toasts'
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator'
+import { Link } from 'react-router-dom'
 
 import Button from '@material-ui/core/Button'
 
@@ -57,6 +58,9 @@ class JoinContainer extends React.Component {
   render() {
     return (
       <div>
+        <Link to='/game/home'>
+          Game Home
+        </Link>
         <ValidatorForm
             ref="form"
             onSubmit={this.handleJoin}

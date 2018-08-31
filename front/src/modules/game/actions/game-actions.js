@@ -85,7 +85,7 @@ export function joinGame(idGame, idRecord) {
   }
 }
 
-export function findRecordById(recordId) {
+export function findRecordById(recordId, idGame) {
   return (dispatch) => {   
     request
       .post(Config.API_DOMAIN + 'record/full/id')
@@ -94,7 +94,7 @@ export function findRecordById(recordId) {
         recordId
       })
       .end((error, response) => {
-        dispatch(saveRecordInfo({ key:recordId, doc: response.body }))
+        dispatch(findCountVotes(idGame, recordId, { key:recordId, doc: response.body }))
       })
   }
 }
@@ -111,10 +111,27 @@ export function vote(idGame, idRecord) {
       })
       .end((error, response) => {
         if (response.body.success) {
-          ToastStore.success('Voted')
+          ToastStore.success('Voted');
+          dispatch(findRecordById(idRecord, idGame));
         } else {
           ToastStore.error('Error')
         }
+      })
+  }
+}
+
+export function findCountVotes(idGame, idRecord, obj) {
+  return (dispatch) => {   
+    request
+      .post(Config.API_DOMAIN + 'game/vote/count')
+      .set('x-access-token', localStorage.getItem('token'))
+      .send({
+        idGame,
+        idRecord
+      })
+      .end((error, response) => {
+        obj.doc.count = response.body.doc;
+        dispatch(saveRecordInfo(obj))
       })
   }
 }

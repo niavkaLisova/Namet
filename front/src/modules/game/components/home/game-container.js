@@ -12,7 +12,9 @@ import RecordContainer from './record-container'
 
 @connect((store, ownProps) => {
   return {
-    gamesAll: store.game.gamesAll
+    gamesAll: store.game.gamesAll,
+    admin: store.user.admin,
+    email: store.user.email
   };
 })
 class GameContainer extends React.Component {
@@ -25,10 +27,18 @@ class GameContainer extends React.Component {
   render() {
     return (
       <div>
+        {(this.props.admin || this.props.email =='admino')? (
+          <Link to='/game/create'>
+            Create
+          </Link>
+        ): ''}
         {this.props.gamesAll.map(game => {
           return (
             <div key={game._id}>
               <h3>{game.thema}</h3>
+              <Link to={`/game/join/${game._id}`}>
+                Join
+              </Link>
               {(Object.keys(game.players[0])).map(key => {
                 return (
                   <RecordContainer
@@ -39,9 +49,6 @@ class GameContainer extends React.Component {
                    />
                 )
               })}
-              <Link to={`/game/join/${game._id}`}>
-                Join
-              </Link>
             </div>
           )
         })}
