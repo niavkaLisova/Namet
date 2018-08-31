@@ -4,7 +4,8 @@ import _ from 'lodash';
 let init = {
 	gamesAuthor: [],
 	gamesAll: [],
-	records: []
+	records: [],
+	recordInfo: {}
 }
 
 function gameReducer(state = init, action) {
@@ -26,6 +27,16 @@ function gameReducer(state = init, action) {
 	        ...state,
 	        records: action.data
 	      }
+	      break;
+	    case 'SAVE_RECORD_INFO':
+	      let keys = (Object.keys(state.recordInfo));
+	      let newInfo = state.recordInfo;
+
+		  newInfo[action.data.key] = action.data.doc
+
+	      return Object.assign({}, state, {
+	        recordInfo: Object.assign({}, newInfo)
+	      })
 	      break;
 
 	    default: return state;

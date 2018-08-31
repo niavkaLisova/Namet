@@ -85,6 +85,40 @@ export function joinGame(idGame, idRecord) {
   }
 }
 
+export function findRecordById(recordId) {
+  return (dispatch) => {   
+    request
+      .post(Config.API_DOMAIN + 'record/full/id')
+      .set('x-access-token', localStorage.getItem('token'))
+      .send({
+        recordId
+      })
+      .end((error, response) => {
+        dispatch(saveRecordInfo({ key:recordId, doc: response.body }))
+      })
+  }
+}
+
+export function vote(idGame, idRecord) {
+  return (dispatch) => {   
+    request
+      .post(Config.API_DOMAIN + 'game/vote/record')
+      .set('x-access-token', localStorage.getItem('token'))
+      .send({
+        idUser: localStorage.getItem('userId'),
+        idGame,
+        idRecord
+      })
+      .end((error, response) => {
+        if (response.body.success) {
+          ToastStore.success('Voted')
+        } else {
+          ToastStore.error('Error')
+        }
+      })
+  }
+}
+
 export function saveGamesAuthor(data) {
   return {type: 'SAVE_GAMES_AUTHOR', data};
 }
@@ -95,4 +129,8 @@ export function saveGamesAll(data) {
 
 export function saveRecords(data) {
   return {type: 'SAVE_RECORDS', data};
+}
+
+export function saveRecordInfo(data) {
+  return {type: 'SAVE_RECORD_INFO', data};
 }

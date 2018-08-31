@@ -6,8 +6,9 @@ import appHistory from '../../../../utils/app-history'
 import { connect } from "react-redux"
 import { Redirect } from 'react-router-dom'
 import { ToastContainer, ToastStore } from 'react-toasts'
-
 import { Link } from 'react-router-dom'
+
+import RecordContainer from './record-container'
 
 @connect((store, ownProps) => {
   return {
@@ -28,6 +29,16 @@ class GameContainer extends React.Component {
           return (
             <div key={game._id}>
               <h3>{game.thema}</h3>
+              {(Object.keys(game.players[0])).map(key => {
+                return (
+                  <RecordContainer
+                    key={key}
+                    idAuthor={key}
+                    idRecord={game.players[0][key]}
+                    idGame={game._id}
+                   />
+                )
+              })}
               <Link to={`/game/join/${game._id}`}>
                 Join
               </Link>

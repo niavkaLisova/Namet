@@ -6,6 +6,7 @@ const bson = require('bson')
 const Game = require('../models/game')
 const User = require('../models/user')
 const Record = require('../models/record')
+const Vote = require('../models/vote')
 const config = require('../config/config')
 const { ObjectId } = require('mongodb')
  
@@ -72,15 +73,22 @@ gameRoutes.post('/join/record', function(req, res) {
   Game
     .findById(idGame)
     .exec()
-    .then(function(docs) {
-      const result = docs.players.includes(author);
-
+    .then(function(games) {
+      let result = false;
+      
+      if (games.players.length > 0) {
+        const keys = Object.keys(games.players[0]);
+        result = keys.includes(author);
+      }
+      
       if (result) {
         return throwFailed(res, 'You have already joined')
       } else{
-        docs.players = (docs.players).concat(author);
+        let newPlayers = Object.assign({}, games.players[0]);
+        newPlayers[author] = idRecord;
+        games.players = newPlayers;
  
-        docs.save((err, game) => {
+        games.save((err, game) => {
           if (err) console.log(err);
 
           res.json({ success: true, doc: game })
@@ -89,6 +97,32 @@ gameRoutes.post('/join/record', function(req, res) {
     });
 });
 
+gameRoutes.post('/vote/record', function(req, res) {
+  const { idUser, idGame, idRecord } = req.body;
+  
+  Vote
+    .findOne({ '$and': [ 
+        { idUser },
+        { idGame }
+     ]})
+    .exec()
+    .then(function(votes) {
+      if (votes) {
+        return throwFailed(res, 'You have already voted')
+      }
+
+      const newVote = new Vote({
+        idUser,
+        idGame,
+        idRecord
+      })
+
+      newVote.save(function(err, docs) {
+        res.json({success: true, doc: docs});
+      });
+        
+    });
+});
 
 gameRoutes.post('/clear', function(req, res) {
   // const { idComment } = req.body;
