@@ -14,7 +14,7 @@ export function createGame(thema) {
       })
       .end((error, response) => {
         console.log('create action after', response.body)
-        // dispatch(betweenName(response.body));
+        dispatch(findByAuthor(localStorage.getItem('userId')));
       })
   }
 }
@@ -43,6 +43,22 @@ export function findGameAll() {
       .end((error, response) => {
         if (response.body.success) {
           dispatch(saveGamesAll(response.body.doc));
+        }
+      })
+  }
+}
+
+export function findGameById(id) {
+  return (dispatch) => {   
+    request
+      .post(Config.API_DOMAIN + 'game/find/game/by/id')
+      .set('x-access-token', localStorage.getItem('token'))
+      .send({
+        id
+      })
+      .end((error, response) => {
+        if (response.body.success) {
+          dispatch(saveGameInfo(response.body.doc));
         }
       })
   }
@@ -136,6 +152,51 @@ export function findCountVotes(idGame, idRecord, obj) {
   }
 }
 
+export function updateGame(id, thema, status) {
+  return (dispatch) => {   
+    request
+      .post(Config.API_DOMAIN + 'game/update')
+      .set('x-access-token', localStorage.getItem('token'))
+      .send({
+        id,
+        thema,
+        status
+      })
+      .end((error, response) => {
+        dispatch(findByAuthor(localStorage.getItem('userId')));
+      })
+  }
+}
+
+export function deleteGame(id) {
+  return (dispatch) => {   
+    request
+      .post(Config.API_DOMAIN + 'game/delete')
+      .set('x-access-token', localStorage.getItem('token'))
+      .send({
+        id
+      })
+      .end((error, response) => {
+        dispatch(findByAuthor(localStorage.getItem('userId')));
+      })
+  }
+}
+
+export function resultCount(id) {
+  return (dispatch) => {   
+    request
+      .post(Config.API_DOMAIN + 'game/result/count')
+      .set('x-access-token', localStorage.getItem('token'))
+      .send({
+        id
+      })
+      .end((error, response) => {
+        console.log('result coint ', response.body);
+        // dispatch(findByAuthor(localStorage.getItem('userId')));
+      })
+  }
+}
+
 export function saveGamesAuthor(data) {
   return {type: 'SAVE_GAMES_AUTHOR', data};
 }
@@ -150,4 +211,8 @@ export function saveRecords(data) {
 
 export function saveRecordInfo(data) {
   return {type: 'SAVE_RECORD_INFO', data};
+}
+
+export function saveGameInfo(data) {
+  return {type: 'SAVE_GAME_INFO', data};
 }

@@ -41,6 +41,17 @@ gameRoutes.post('/find/game/by/author', function(req, res) {
     });
 });
 
+gameRoutes.post('/find/game/by/id', function(req, res) {
+  const { id } = req.body;
+
+  Game
+    .findById(id)
+    .exec()
+    .then(function(game) {
+      res.json({success: true, doc: game});
+    });
+});
+
 gameRoutes.get('/find/game/all', function(req, res) {
   Game
     .find()
@@ -137,13 +148,46 @@ gameRoutes.post('/vote/count', function(req, res) {
       res.json({success: true, doc: votes.length});    
     });
 });
-gameRoutes.post('/clear', function(req, res) {
-  // const { idComment } = req.body;
 
-  // Comment.remove({'_id': idComment}, (err) => {
-  //   if(err) throw err;
-  //   res.json({ success: true, message: 'comment clear' });
-  // });
+gameRoutes.post('/result/count', function(req, res) {
+  const { idGame } = req.body;
+  
+  let agg = [
+    {$group: {
+      _id: "$idRecord",
+      total: {$sum: 1}
+    }}
+  ];
+
+
+  Vote.aggregate(agg, function(err, logs){
+    if (err) { return def.reject(err); }
+
+    return res.json(logs.slice(0, 3));
+  });
+});
+
+gameRoutes.post('/update', function(req, res) {
+  const { id, thema, status } = req.body;
+  
+  Game
+    .update({ _id: id }, { thema, status }, function (err, game) {
+    if (err) throw err;
+
+    res.json(game)
+  });
+});
+
+gameRoutes.post('/delete', function(req, res) {
+  const { id } = req.body;
+
+  Vote.remove({ idGame: id }, err => {
+    if(err) throw err;
+    Game.remove({'_id': id}, (err) => {
+      if(err) throw err;
+      res.json({ success: true, message: 'game deleted' });
+    });
+  })
 });
 
 module.exports = gameRoutes;

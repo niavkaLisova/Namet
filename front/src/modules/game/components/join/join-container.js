@@ -16,6 +16,8 @@ import RecordListContainer from './recordList-container'
 @connect((store, ownProps) => {
   return {
     idGame: ownProps.match.params.idGame,
+    status: store.game.game.status,
+    thema: store.game.game.thema,
     records: store.game.records
   };
 })
@@ -26,6 +28,14 @@ class JoinContainer extends React.Component {
     this.state = {
       record: '',
       idRecord: null 
+    }
+
+    this.props.dispatch(GameActions.findGameById(this.props.idGame));
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.idGame != this.props.idGame) {
+      this.props.dispatch(GameActions.findGameById(this.props.idGame));
     }
   }
 
@@ -58,33 +68,40 @@ class JoinContainer extends React.Component {
   render() {
     return (
       <div>
-        <Link to='/game/home'>
-          Game Home
-        </Link>
-        <ValidatorForm
-            ref="form"
-            onSubmit={this.handleJoin}
-          >
+        {(this.props.status != 'undefined' && this.props.status == 'disabled')? (
+          <Redirect to='/game/home' />
+        ): (
+        <div>
+          <Link to='/game/home'>
+            Game Home
+          </Link>
+          <h3>{this.props.thema}</h3>
+          <ValidatorForm
+              ref="form"
+              onSubmit={this.handleJoin}
+            >
 
-          <TextValidator
-            label='Select Record'
-            onChange={this.handleChangeRecord}
-            value={this.state.record}
-            name='record'
-            validators={['required']}
-            errorMessages={['this field is required']}
-          />
+            <TextValidator
+              label='Select Record'
+              onChange={this.handleChangeRecord}
+              value={this.state.record}
+              name='record'
+              validators={['required']}
+              errorMessages={['this field is required']}
+            />
 
-          <RecordListContainer
-            handleSelect={this.handleSelect}
-           />
-          <Button
-            variant='contained'
-            color='primary'
-            type='submit'
-           > Join
-          </Button>
-        </ValidatorForm>
+            <RecordListContainer
+              handleSelect={this.handleSelect}
+             />
+            <Button
+              variant='contained'
+              color='primary'
+              type='submit'
+             > Join
+            </Button>
+          </ValidatorForm>
+        </div>
+        )}
       </div>
     )
   }

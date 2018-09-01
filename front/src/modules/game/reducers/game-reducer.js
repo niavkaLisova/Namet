@@ -4,6 +4,7 @@ import _ from 'lodash';
 let init = {
 	gamesAuthor: [],
 	gamesAll: [],
+	game: [],
 	records: [],
 	recordInfo: {}
 }
@@ -20,6 +21,12 @@ function gameReducer(state = init, action) {
 	      return {
 	        ...state,
 	        gamesAll: action.data
+	      }
+	      break;
+	    case 'SAVE_GAME_INFO':
+	      return {
+	        ...state,
+	        game: action.data
 	      }
 	      break;
 	    case 'SAVE_RECORDS':
