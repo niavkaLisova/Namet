@@ -18,9 +18,7 @@ import Icon from '@material-ui/core/Icon'
 })
 class InfoContainer extends React.Component {
   handleAnswerTo = () => {
-    if (this.props.info._id != localStorage.getItem('userId'))  {
-      this.props.dispatch(CommentActions.setIdAnswerer(this.props.info.name));
-    }
+    this.props.dispatch(CommentActions.setIdAnswerer(this.props.idComment));
   }
   
   render() {
@@ -29,25 +27,27 @@ class InfoContainer extends React.Component {
         
         <div class='distance info'>
           <div>
-            <span 
-              class='pointer'
-              onClick={this.handleAnswerTo}
-             >
+            <span>
               {this.props.info.name}
             </span>
             <span>
-              {(this.props.comment.answerer)? (
-                <span> answer to {this.props.comment.answerer}</span>
-              ): '' }
             </span>
           </div>
           <div>
+            {(this.props.show)? (
+              <div
+                class='pointer' 
+                onClick={this.handleAnswerTo}
+               >
+                Answer
+              </div>
+            ): ''}
             <FormattedRelative value={this.props.comment.createdAt} />
             {(this.props.info._id == localStorage.getItem('userId'))? (
               <span>
                 <Icon
                   class='pointer'
-                  onClick={this.props.clearComment}
+                  onClick={() => this.props.clearComment(this.props.comment)}
                 >clear</Icon>
               </span>
             ): ''}

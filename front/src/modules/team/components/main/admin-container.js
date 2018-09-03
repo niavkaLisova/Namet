@@ -20,7 +20,7 @@ class AdminContainer extends React.Component {
   render() {
     return (
       <div>
-        {this.props.adminTeam.map(admin => {
+        {this.props.adminTeam.map((admin, index) => {
           return (
             <Col md={4} key={admin._id}>
               <h4>{admin.nickname}</h4>

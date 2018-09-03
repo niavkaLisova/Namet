@@ -159,7 +159,6 @@ gameRoutes.post('/result/count', function(req, res) {
     }}
   ];
 
-
   Vote.aggregate(agg, function(err, logs){
     if (err) { return def.reject(err); }
 
@@ -179,7 +178,7 @@ gameRoutes.post('/update', function(req, res) {
 });
 
 gameRoutes.post('/delete', function(req, res) {
-  const { id } = req.body;
+  const { idGame } = req.body;
 
   Vote.remove({ idGame: id }, err => {
     if(err) throw err;

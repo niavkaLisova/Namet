@@ -35,24 +35,17 @@ class CommentContainer extends React.Component {
       this.setState({ text: '' });
       this.props.dispatch(CommentActions.setIdAnswerer(null));
       this.props.dispatch(CommentActions.sendComment(
-          this.state.text,
-          this.props.idRecord,
-          this.props.answerer
-        ));
+        this.state.text,
+        this.props.idRecord,
+        this.props.answerer
+      ));
     }
   }
-
-  clearAnswers = () => {
-    this.props.dispatch(CommentActions.setIdAnswerer(null));
-  }
-
+  
   render() {
     return (
       <div class='textareaBox'>
         <div>
-          {(this.props.answerer)? (
-            <p onClick={this.clearAnswers}>Answer to: {this.props.answerer}</p>
-          ): ''}
           <TextField
             label="Comment"
             multiline

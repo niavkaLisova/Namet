@@ -21,12 +21,11 @@ class FollowItemContainer extends React.Component {
     return (
       <div>
         <div
-          alt={follower.nickname}
           class='followImg'
           style={{backgroundImage: image }}
           onClick={this.goToUser}  
          ></div>
-
+        <div>{this.props.follower.name}</div>
       </div>
     )
   }

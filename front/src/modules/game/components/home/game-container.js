@@ -10,6 +10,8 @@ import { Link } from 'react-router-dom'
 
 import RecordContainer from './record-container'
 
+import '../Game.sass'
+
 @connect((store, ownProps) => {
   return {
     gamesAll: store.game.gamesAll,

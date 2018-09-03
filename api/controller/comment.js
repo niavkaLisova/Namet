@@ -33,7 +33,19 @@ commentRoutes.post('/find/by/id', function(req, res) {
   const { idRecord } = req.body;
 
   Comment
-    .find({idRecord})
+    .find({idRecord, answerer: null})
+    .sort({createdAt: '-1'})
+    .exec()
+    .then(function(comments) {
+      res.json({success: true, doc: comments});
+    });
+});
+
+commentRoutes.post('/find/answer/by/id', function(req, res) {
+  const { idComment } = req.body;
+
+  Comment
+    .find({answerer: idComment})
     .sort({createdAt: '-1'})
     .exec()
     .then(function(comments) {
@@ -42,12 +54,26 @@ commentRoutes.post('/find/by/id', function(req, res) {
 });
 
 commentRoutes.post('/clear', function(req, res) {
-  const { idComment } = req.body;
+  const { comment } = req.body;
 
-  Comment.remove({'_id': idComment}, (err) => {
-    if(err) throw err;
-    res.json({ success: true, message: 'comment clear' });
-  });
+  if (typeof(comment) == 'string') {
+    Comment
+      .remove({ '_id': comment })
+      .exec()
+      .then(function(result) {
+        res.json({ success: true, doc: result })
+      })
+  } else {
+    Comment
+      .remove({ '$or': [ 
+        { answerer: comment._id },
+        { '_id': comment._id }
+      ]})
+      .exec()
+      .then(function(comments) {
+        res.json({ success:true, doc: comments })
+      })
+    }
 });
 
 module.exports = commentRoutes;

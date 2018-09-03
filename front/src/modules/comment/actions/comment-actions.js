@@ -15,18 +15,22 @@ export function sendComment(text, idRecord, answerer) {
         answerer
       })
       .end((error, response) => {
-        dispatch(pushCommentByRecord(response.body))
+        if (!answerer) {
+          dispatch(pushCommentByRecord(response.body));
+        } else {
+          dispatch(findAnswerByComment(answerer));
+        }
       })
   }
 }
 
-export function clearComment(idComment) {
+export function clearComment(comment) {
   return (dispatch) => {   
     request
       .post(Config.API_DOMAIN + 'comment/clear/')
       .set('x-access-token', localStorage.getItem('token'))
       .send({
-        idComment
+        comment
       })
       .end((error, response) => {
         if (response.body.success) {
@@ -49,6 +53,22 @@ export function findCommentByRecord(idRecord) {
       .end((error, response) => {
         if (response.body.success) {
           dispatch(saveCommentByRecord(response.body.doc));
+        }
+      })
+  }
+}
+
+export function findAnswerByComment(idComment) {
+  return (dispatch) => {   
+    request
+      .post(Config.API_DOMAIN + 'comment/find/answer/by/id')
+      .set('x-access-token', localStorage.getItem('token'))
+      .send({
+        idComment
+      })
+      .end((error, response) => {
+        if (response.body.success && response.body.doc.length > 0) {
+          dispatch(saveAnswer({key: idComment, doc: response.body.doc}))
         }
       })
   }
@@ -81,4 +101,8 @@ export function saveUserInfo(data) {
 
 export function setIdAnswerer(data) {
   return {type: 'SET_ID_ANS', data};
+}
+
+export function saveAnswer(data) {
+  return {type: 'SAVE_ANSWER', data};
 }

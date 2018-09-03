@@ -4,7 +4,8 @@ import _ from 'lodash';
 let init = {
 	comments: [],
 	info: {},
-	idAnswerer: null
+	idAnswerer: null,
+	answer: {}
 }
 
 function commentReducer(state = init, action) {
@@ -36,6 +37,15 @@ function commentReducer(state = init, action) {
 	        ...state,
 	        idAnswerer: action.data
 	      }
+	      break;
+	    case 'SAVE_ANSWER':
+	      let newAnswer= state.answer;
+
+		  newAnswer[action.data.key] = action.data.doc
+
+	      return Object.assign({}, state, {
+	        answer: Object.assign({}, newAnswer)
+	      })
 	      break;
 
 	    default: return state;

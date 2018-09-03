@@ -34,7 +34,7 @@ class GamePageContainer extends React.Component {
         </Link>
         {(game && game.thema)? (
           <div>
-            <h3>{game.thema}</h3>
+            <h3 class='gameThemaLook'>{game.thema}</h3>
             {(game.status == 'active')? (
             (game.players[0])? (
               (Object.keys(game.players[0])).map(key => {
