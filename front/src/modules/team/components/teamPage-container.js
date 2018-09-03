@@ -8,8 +8,7 @@ import { Container, Row, Col } from 'react-grid-system'
 
 import MainContainer from './main/main-container'
 import AdminContainer from './main/admin-container'
-import RecordContainer from './recently/record-container'
-import BoxChatContainer from './chat/boxChat-container'
+import SidebarContainer from './sidebar-container'
 
 import { connect } from "react-redux"
 
@@ -63,10 +62,10 @@ class TeamPageContainer extends React.Component {
 						<AdminContainer />
 					</Col>
 					<Col md={3}>
-						<RecordContainer />
+						<p>Some Records will be here</p>
 					</Col>
 					<Col md={3}>
-						<BoxChatContainer idTeam={this.props.idTeam} />
+						<SidebarContainer idTeam={this.props.idTeam} />
 					</Col>
 				</Row>
 			</Container>

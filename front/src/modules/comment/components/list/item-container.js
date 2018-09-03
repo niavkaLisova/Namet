@@ -13,7 +13,7 @@ import { IntlProvider } from 'react-intl'
 
 import InfoContainer from './info-container'
 import AvatarContainer from './avatar-container'
-import ItemAnswerContainer from'./itemAnswer-container'
+import ListAnswerContainer from'./listAnswer-container'
 import CommentContainer from '../box/comment-container'
 
 @connect((store, ownProps) => {
@@ -69,27 +69,17 @@ class ItemContainer extends React.Component {
                 <div class='text'>{this.props.comment.text}</div>
               </div>
 
-              {(this.props.answerer)? (
+              {(this.props.answerer && this.props.answerer == this.props.comment._id)? (
                 <div>
                   <CommentContainer />
                 </div>
               ): ''}
             
               {(this.props.answer[this.props.comment._id])? (
-                <div>
-                  {(this.props.answer[this.props.comment._id]).map(comment => {
-                    return (
-                      <ItemAnswerContainer
-                        key={comment._id}
-                        comment={comment}
-                        clearComment={this.clearComment}
-                        idComment={comment._id}
-                       />
-                    )
-
-                  })}
-
-                </div>
+                <ListAnswerContainer
+                  answers={this.props.answer[this.props.comment._id]}
+                  clearComment={this.clearComment}
+                 />
               ): ''}
             </div>
           </div>
