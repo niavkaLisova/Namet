@@ -104,10 +104,6 @@ class UserContainer extends React.Component {
     appHistory.push('/follow/' + this.props.id)
   }
 
-  goToChatWith = () => {
-    this.props.dispatch(UserActions.checkChat(this.props.id, this, window.location));
-  }
-
   render() {
     const { user } = this.props;
 
@@ -135,9 +131,6 @@ class UserContainer extends React.Component {
             </Button>
           ): (
             <div>
-              <Button variant="outlined" color="primary" onClick={this.goToChatWith}>
-                Go to chat
-              </Button>
               {(list)? ''
                 : (
                 <div> 

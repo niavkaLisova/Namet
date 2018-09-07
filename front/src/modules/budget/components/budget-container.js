@@ -37,6 +37,9 @@ class BudgetContainer extends React.Component {
         <h2>Budget</h2>
         {(this.props.info.coin) ? (
           <div>
+            {(this.props.idUser == localStorage.getItem('userId'))? (
+              <div>neutral: {this.props.info.coin.neutral}</div>
+            ): ''}
             <CoinInfoContainer coin={coinArr} />
           </div>
         ): 'points'}
