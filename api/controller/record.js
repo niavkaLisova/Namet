@@ -5,6 +5,7 @@ const bson = require('bson')
 
 const Sections = require('../models/sections')
 const Record = require('../models/record')
+const Feature = require('../models/feature')
 const Team = require('../models/team')
 const User = require('../models/user')
 const config = require('../config/config')
@@ -294,6 +295,87 @@ recordRoutes.post('/find/team/by/id', function(req, res) {
 
   Team
     .findById(id)
+    .exec()
+    .then(function(team) {
+      res.json(team);
+    });
+});
+
+recordRoutes.post('/admin/decision', function(req, res) {
+  const { record, team, idAdmin } = req.body;
+
+  Feature
+    .findOne({ idOriginal: record._id })
+    .exec()
+    .then(function(feature) {
+      if (feature) return throwFailed(res, 'Already exist');
+
+      Feature
+        .find(
+          { '$and': [ 
+            { idAdmin },
+            { createdAt : { 
+              $lte: new Date(), 
+              $gte: new Date(new Date().setDate(new Date().getDate()-7))
+              } 
+            }
+         ]}
+        )
+        .sort({createdAt: -1})
+        .exec()
+        .then(function(docs) {
+
+          if (docs.length > 0) {
+            let feature = docs[0];
+
+            feature.idOriginal = record._id;
+            feature.idAdmin = idAdmin;
+            feature.title = record.title;
+            feature.text = record.text;
+            feature.author = record.author;
+            feature.type = record.type;
+            feature.gift = record.gift;
+            feature.describe = record.describe;
+            feature.img = record.img;
+            feature.genre = record.genre;
+            feature.language = record.language;
+            feature.team = team;
+
+            feature.save(function(err, doc) {
+              if (err) throw err;
+              return res.json({ success: true, message: 'Record updated successfully.', doc });
+            });
+          } else {
+            let feature = new Feature({
+              idOriginal: record._id,
+              idAdmin: idAdmin,
+              title: record.title,
+              text: record.text,
+              author: record.author,
+              type: record.type,
+              gift: record.gift,
+              describe: record.describe,
+              img: record.img,
+              genre: record.genre,
+              language: record.language,
+              team
+            })
+
+            feature.save(function(err, doc) {
+              if (err) throw err;
+              return res.json({ success: true, message: 'Record added successfully.', doc });
+            });
+          }
+
+        })
+      })
+});
+
+recordRoutes.post('/admin/get/decision/team', function(req, res) {
+  const { team } = req.body;
+
+  Feature
+    .find({ team })
     .exec()
     .then(function(team) {
       res.json(team);

@@ -5,7 +5,8 @@ let init = {
   recentlyRecord: [],
   listChat: [],
   infoTeam: null,
-  adminTeam: []
+  adminTeam: [],
+  adminDecision: []
 }
 
 function teamReducer(state = init, action) {
@@ -38,6 +39,12 @@ function teamReducer(state = init, action) {
       return {
         ...state,
         adminTeam: action.data
+      }
+      break;
+    case 'SET_ADMIN_DECISION':
+      return {
+        ...state,
+        adminDecision: action.data
       }
       break;
 

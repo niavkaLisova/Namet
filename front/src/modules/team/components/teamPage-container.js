@@ -2,6 +2,7 @@ import React from 'react'
 import { socketConnect } from 'socket.io-react'
 
 import * as TeamActions from '../actions/team-actions'
+import * as RecordActions from '../../user/actions/record-actions'
 import appHistory from '../../../utils/app-history'
 
 import { Container, Row, Col } from 'react-grid-system'
@@ -9,6 +10,7 @@ import { Container, Row, Col } from 'react-grid-system'
 import MainContainer from './main/main-container'
 import AdminContainer from './main/admin-container'
 import SidebarContainer from './sidebar-container'
+import RecordContainer from './wall/record-container'
 
 import { connect } from "react-redux"
 
@@ -49,8 +51,10 @@ class TeamPageContainer extends React.Component {
   		if (localStorage.getItem('userId')) {
   			this.props.socket.emit('join room', this.props.idTeam);
   		}
+
+  		this.props.dispatch(RecordActions.getAdminDecision(this.props.idTeam))
   	}
-	}
+  }
 
 	render() {
 		return (
@@ -62,7 +66,7 @@ class TeamPageContainer extends React.Component {
 						<AdminContainer />
 					</Col>
 					<Col md={3}>
-						<p>Some Records will be here</p>
+						<RecordContainer />
 					</Col>
 					<Col md={3}>
 						<SidebarContainer idTeam={this.props.idTeam} />

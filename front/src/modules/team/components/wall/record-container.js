@@ -1,7 +1,4 @@
 import React from 'react'
-import { socketConnect } from 'socket.io-react'
-
-import * as TeamActions from '../../actions/team-actions'
 import appHistory from '../../../../utils/app-history'
 
 import { connect } from "react-redux"
@@ -9,13 +6,9 @@ import { API_DOMAIN } from '../../../../utils/config.js'
 import Parser from 'html-react-parser'
 import Button from '@material-ui/core/Button'
 
-import DecisionContainer from '../../../decision/decision-container'
-
-import '../../../decision/Style.sass'
-
 @connect((store, ownProps) => {
     return {
-    	recentlyRecord: store.team.recentlyRecord
+      adminDecision: store.team.adminDecision
     };
 })
 class RecordContainer extends React.Component {
@@ -26,7 +19,7 @@ class RecordContainer extends React.Component {
 	render() {
 		return (
 			<div class='wall'>
-				{this.props.recentlyRecord.slice(0, 8).map(record => {
+				{this.props.adminDecision.slice(0, 8).map(record => {
 					return (
 						<div key={record._id} class='wallRecord'>
 							<h3 class='wallHead'>{record.title}</h3>
@@ -39,7 +32,6 @@ class RecordContainer extends React.Component {
               {(record.text && record.text.length > 1)? 
                 (Parser('' + record.text.slice(0, 65))): ''}
               <div class='wallBottom'>
-                <p>Review: {record.review}</p>
                 <Button 
                   variant="outlined" 
                   color="primary"
@@ -48,7 +40,6 @@ class RecordContainer extends React.Component {
                   Read
                 </Button>
 
-                <DecisionContainer record={record} />
               </div>
 						</div>
 					)

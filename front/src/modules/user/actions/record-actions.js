@@ -333,6 +333,40 @@ export function givePoint(idUser, point) {
   }
 }
 
+export function adminDecision(record, team) {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'record/admin/decision')
+        .set('x-access-token', localStorage.getItem('token'))
+        .send({
+          record,
+          team,
+          idAdmin: localStorage.getItem('userId')
+        })
+        .end((error, response) => {
+          if (response.body.success) {
+            ToastStore.success('You made decision')
+          } else {
+            ToastStore.error('Error')
+          }
+        });
+  }
+}
+
+export function getAdminDecision(team) {
+  return (dispatch) => {
+      request
+        .post(Config.API_DOMAIN + 'record/admin/get/decision/team')
+        .set('x-access-token', localStorage.getItem('token'))
+        .send({
+          team
+        })
+        .end((error, response) => {
+          dispatch(setAadminDecisionList(response.body));
+        });
+  }
+}
+
 export function setcollectionsList(data) {
   return {type: 'SET_COLLECTIONS', data};
 }
@@ -379,4 +413,8 @@ export function myTeamInfo(data) {
 
 export function myTeamInfoStart(data) {
   return {type: 'SET_START_TEAM', data};
+}
+
+export function setAadminDecisionList(data) {
+  return {type: 'SET_ADMIN_DECISION', data};
 }

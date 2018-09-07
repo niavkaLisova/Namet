@@ -10,6 +10,7 @@ import Parser from 'html-react-parser'
 
 import PointBoxContainer from './pointBox-container'
 import BoxContainer from '../../../comment/components/box-container'
+import DecisionContainer from '../../../decision/decision-container'
 
 @connect((store, ownProps) => {
   return {
@@ -55,6 +56,7 @@ class FullScreenContainer extends React.Component {
 	        <div>
 	        	{Parser('' + this.props.full.text)}
 	        </div>
+	        <DecisionContainer record={this.props.full} />
 	        <PointBoxContainer />
 	        <BoxContainer idRecord={this.props.id} />
 	      </div>

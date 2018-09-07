@@ -34,9 +34,9 @@ class SidebarContainer extends React.Component {
             className={classNames({
               'switch-active': this.state.switch == 'chat'
             })}
-           >
-            Chat
-          </div>
+	          		 >
+	            Chat
+	          </div>
 					<div
             onClick={() => this.handleSwitch('recently')}
             className={classNames({
