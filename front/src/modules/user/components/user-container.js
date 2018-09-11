@@ -28,6 +28,7 @@ import UserInfoContainer from './home/userInfo-container'
 import { Container, Row, Col } from 'react-grid-system'
 import { connect } from "react-redux"
 import { setActiveLanguage } from 'react-localize-redux'
+import { Translate } from 'react-localize-redux'
 
 @connect((store, ownProps) => {
   return {

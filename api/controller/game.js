@@ -162,7 +162,7 @@ gameRoutes.post('/result/count', function(req, res) {
   Vote.aggregate(agg, function(err, logs){
     if (err) { return def.reject(err); }
 
-    return res.json(logs.slice(0, 3));
+    return res.json(logs.slice(0, 5));
   });
 });
 
@@ -179,10 +179,10 @@ gameRoutes.post('/update', function(req, res) {
 
 gameRoutes.post('/delete', function(req, res) {
   const { idGame } = req.body;
-
-  Vote.remove({ idGame: id }, err => {
+  console.log('idGame', idGame)
+  Vote.remove({ idGame }, err => {
     if(err) throw err;
-    Game.remove({'_id': id}, (err) => {
+    Game.remove({'_id': idGame }, (err) => {
       if(err) throw err;
       res.json({ success: true, message: 'game deleted' });
     });

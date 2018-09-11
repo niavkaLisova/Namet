@@ -16,12 +16,17 @@ import { List, ListItem } from 'material-ui/List'
 import Icon from '@material-ui/core/Icon'
 import { Redirect } from 'react-router-dom'
 import { ToastContainer, ToastStore } from 'react-toasts'
+import { setActiveLanguage} from 'react-localize-redux'
+import { Translate } from 'react-localize-redux'
 
 import './Style.sass'
 
+import LanguageMenu from './language-menu'
+
 @connect((store, ownProps) => {
   return {
-    user: store.user
+    user: store.user,
+    languages: store.locale.languages
   };
 })
 class DashboardContainer extends React.Component {
@@ -62,15 +67,6 @@ class DashboardContainer extends React.Component {
     this.setState({open: !this.state.open});
   }
 
-  onLogout() {
-    // this.props.socket.emit('disconnect', localStorage.getItem('userId'))
-    localStorage.removeItem('token');
-    localStorage.removeItem('userId');
-    this.props.dispatch(NotificationActions.show('Logged out!'));
-    appHistory.replace('/');
-    window.location.reload();
-  }
-
   render() {
     let self = this;
 
@@ -83,11 +79,10 @@ class DashboardContainer extends React.Component {
             <AppBar
               title={"Намет"}
               iconElementRight={
-                <FlatButton
-                  label={this.props.user.name + " Logout" }
-                  secondary={true}
-                  onClick={self.onLogout.bind(self)}
-                />
+                <div>
+                  <LanguageMenu />
+                  
+                </div>
               }
               iconElementLeft={
                 <div>

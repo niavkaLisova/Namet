@@ -236,11 +236,15 @@ recordRoutes.post('/find/record/wall', function(req, res) {
 });
 
 recordRoutes.post('/find/record/recently', function(req, res) {
+  let { limit } = req.body;
+  if (!limit) limit = 50;
+
   Record
     .find({
       type: { $elemMatch: {$in: ["work"]}},
       state: "public"
     })
+    .limit(limit)
     .sort({ 'createdAt': -1 })
     .exec()
     .then(function(record) {

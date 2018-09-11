@@ -49,7 +49,7 @@ class GamePageContainer extends React.Component {
               })
             ): 'No Records'
             ): (
-              <div>Winers</div>
+              <div>+</div>
             )}
             
           </div>

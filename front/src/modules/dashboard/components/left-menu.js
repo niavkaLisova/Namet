@@ -77,6 +77,16 @@ class LeftMenu extends React.Component {
     this.setState(state => ({ open: !state.open }));
   };
 
+
+  onLogout() {
+    // this.props.socket.emit('disconnect', localStorage.getItem('userId'))
+    localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+
+    appHistory.replace('/');
+    window.location.reload();
+  }
+
   render() {
     const { classes } = this.props;
 
@@ -137,13 +147,12 @@ class LeftMenu extends React.Component {
             <ListItemText inset primary="Budget" />
           </ListItem>
 
-          <ListItem button onClick={this.goToGame}>
+          <ListItem button onClick={this.onLogout}>
             <ListItemIcon>
-              <Icon>settings_applications</Icon>
+              <Icon>logout</Icon>
             </ListItemIcon>
-            <ListItemText inset primary="Game" />
+            <ListItemText inset primary={this.props.user.name + " logout"} />
           </ListItem>
-       
         </List>
       </div>
     );

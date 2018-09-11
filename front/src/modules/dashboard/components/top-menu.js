@@ -8,11 +8,11 @@ import RaisedButton from 'material-ui/RaisedButton'
 import { Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle } from 'material-ui/Toolbar'
 import { connect } from 'react-redux'
 import appHistory from '../../../utils/app-history'
-import { setActiveLanguage,} from 'react-localize-redux'
+import { setActiveLanguage} from 'react-localize-redux'
 
 @connect((store, ownProps) => {
     return {
-       languages: store.locale.languages
+      languages: store.locale.languages
     };
 })
 class TopMenu extends React.Component { 
@@ -32,8 +32,11 @@ class TopMenu extends React.Component {
               </IconButton>
             }>
             { this.props.languages.map(language => 
-              <MenuItem primaryText={language.code} key={language.code} onClick={ () => this.props.dispatch(setActiveLanguage(language.code)) } />
-            )}
+              <MenuItem primaryText={language.code}
+                key={language.code}
+                onClick={ () => this.props.dispatch(setActiveLanguage(language.code)) } />
+              )
+            }
           </IconMenu>
         </ToolbarGroup>
       </Toolbar>

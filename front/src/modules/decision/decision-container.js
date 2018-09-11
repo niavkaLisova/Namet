@@ -30,7 +30,7 @@ class DecisionContainer extends React.Component {
           || (this.props.email == 'admino')
           )? (
           	<div>
-							{(day > 5)? (
+							{(day > 24)? (
 								<div
 									class='decisionHover'
 									onClick={this.handleAdminDecision}

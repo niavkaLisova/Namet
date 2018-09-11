@@ -22,7 +22,7 @@ class MenuListContainer extends React.Component {
   render() {
     return (
     	<List component="nav">
-    		<Link to='/user'>
+    		<Link to={'/user/' + localStorage.getItem('userId')}>
 		        <ListItem button>
 		        	<ListItemIcon>
 		            	<Icon>home</Icon>

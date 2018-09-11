@@ -235,11 +235,14 @@ export function findWallRecord(idUser) {
   }
 }
 
-export function findRecentlyRerords() {
+export function findRecentlyRerords(limit) {
   return (dispatch) => {
       request
         .post(Config.API_DOMAIN + 'record/find/record/recently')
         .set('x-access-token', localStorage.getItem('token'))
+        .send(
+          limit
+        )
         .end((error, response) => {
           dispatch(setRecentlyRecord(response.body));
         });

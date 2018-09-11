@@ -21,7 +21,7 @@ class RecentlyRecordContainer extends React.Component {
   constructor(props) {
     super(props);
 
-    this.props.dispatch(RecordActions.findRecentlyRerords());
+    this.props.dispatch(RecordActions.findRecentlyRerords(50));
   }
 
   goToRecord = record => {
@@ -32,7 +32,7 @@ class RecentlyRecordContainer extends React.Component {
     return (
       <div class='recently'>
         <Link to="/recently/records">See More</Link>
-        {this.props.recently.slice(0,4).map(record => {
+        {this.props.recently.slice(0,15).map(record => {
           return (
             <div
               key={record._id}
