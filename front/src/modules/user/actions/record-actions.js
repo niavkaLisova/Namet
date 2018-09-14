@@ -370,6 +370,18 @@ export function getAdminDecision(team) {
   }
 }
 
+export function findTopRecords() {
+  console.log('action')
+  return (dispatch) => {
+    request
+      .get(Config.API_DOMAIN + 'record/find/top')
+      .set('x-access-token', localStorage.getItem('token'))
+      .end((error, response) => {
+        console.log('find top', response.body)
+      });
+  }
+}
+
 export function setcollectionsList(data) {
   return {type: 'SET_COLLECTIONS', data};
 }

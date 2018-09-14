@@ -386,4 +386,50 @@ recordRoutes.post('/admin/get/decision/team', function(req, res) {
     });
 });
 
+recordRoutes.get('/find/top', function(req, res) {
+  Record
+    .find(
+      { '$and': [ 
+        { state: 'public' },
+        { 
+          createdAt : {
+            $gte: new Date(new Date().setDate(new Date().getDate()- 30))
+          } 
+        }
+      ]}
+    )
+    .exec()
+    .then(function(records) {
+      let result = [];
+      records.map(record => {
+        let values = Object.values(record.coin);
+        let sum = 0;
+        values.map(key => sum += key);
+        let index =  result.length - 1;
+        let flag = true;
+
+        if (index >= 0) {
+          while(sum > result[index].point) {
+            if (index - 1 >=0) {
+              index -= 1;
+            } else {
+              break;
+            }
+          }
+
+          if (result[index].point < sum){
+            result.splice(index, 0, { record: record, point: sum })
+          } else {
+            result.push({ record: record, point: sum })
+          }
+    
+        } else{
+          result.push({ record: record, point: sum })
+        }
+      })
+
+      res.json(result);
+    });
+});
+
 module.exports = recordRoutes;
