@@ -28,7 +28,8 @@ class ItemContainer extends React.Component {
     super(props);
 
     this.state = {
-      visible: true
+      visible: true,
+      text: ''
     }
 
     this.props.dispatch(CommentActions.findUserById(this.props.comment.author));
@@ -38,6 +39,10 @@ class ItemContainer extends React.Component {
   clearComment = (comment) => {
     this.setState({ visible: false });
     this.props.dispatch(CommentActions.clearComment(comment))
+  }
+
+  handleChange = name => {
+    this.setState({ text: '&' + name })
   }
 
   render() {
@@ -71,7 +76,9 @@ class ItemContainer extends React.Component {
 
               {(this.props.answerer && this.props.answerer == this.props.comment._id)? (
                 <div>
-                  <CommentContainer />
+                  <CommentContainer 
+                    text={this.state.text}
+                   />
                 </div>
               ): ''}
             
@@ -79,6 +86,8 @@ class ItemContainer extends React.Component {
                 <ListAnswerContainer
                   answers={this.props.answer[this.props.comment._id]}
                   clearComment={this.clearComment}
+                  handleChange={this.handleChange}
+                  asnwerParent={this.props.comment._id}
                  />
               ): ''}
             </div>

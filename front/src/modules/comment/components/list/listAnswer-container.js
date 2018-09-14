@@ -25,6 +25,8 @@ class ListAnswerContainer extends React.Component {
                 comment={comment}
                 clearComment={this.props.clearComment}
                 idComment={comment._id}
+                handleChange={this.props.handleChange}
+                asnwerParent={this.props.asnwerParent}
                />
             </div>
           )

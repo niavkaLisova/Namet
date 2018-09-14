@@ -25,6 +25,12 @@ class CommentContainer extends React.Component {
     };
   }
 
+  componentDidUpdate(prevProps) {
+    if (!(this.state.text.includes(this.props.text))) {
+      this.setState({ text: this.props.text + ', ' + this.state.text })
+    }
+  }
+
   handleChange = e => {
     this.setState({ text: e.target.value })
   }

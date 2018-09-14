@@ -14,17 +14,22 @@ import Icon from '@material-ui/core/Icon'
 
 @connect((store, ownProps) => {
   return {
+    answerer: store.comment.idAnswerer,
+    admin: store.user.admin
   };
 })
 class InfoContainer extends React.Component {
   handleAnswerTo = () => {
     this.props.dispatch(CommentActions.setIdAnswerer(this.props.idComment));
   }
+
+  handleAnsw = e => {
+    this.props.handleChange(this.props.info.name);
+  }
   
   render() {
     return (
       <div class='infoBox'>
-        
         <div class='distance info'>
           <div>
             <span>
@@ -41,9 +46,19 @@ class InfoContainer extends React.Component {
                >
                 Answer
               </div>
-            ): ''}
+            ): (
+              (this.props.answerer == this.props.asnwerParent)? (
+                <div
+                  class='pointer'
+                  onClick={this.handleAnsw}
+                 >
+                  Answ
+                </div>
+              ): ''
+            )}
             <FormattedRelative value={this.props.comment.createdAt} />
-            {(this.props.info._id == localStorage.getItem('userId'))? (
+            {((this.props.info._id == localStorage.getItem('userId')) ||
+              this.props.admin)? (
               <span>
                 <Icon
                   class='pointer'

@@ -51,6 +51,8 @@ class ItemAnswerContainer extends React.Component {
                 clearComment={this.clearComment}
                 idComment={this.props.comment._id}
                 show={false}
+                handleChange={this.props.handleChange}
+                asnwerParent={this.props.asnwerParent}
                />
             </IntlProvider>
             <div class='item distance'>
